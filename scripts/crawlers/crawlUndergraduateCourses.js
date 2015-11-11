@@ -14,14 +14,16 @@ var fs = require('fs');
 
 var Navigation = {};
 var Evaluation = {};
-var url = "http://dartmouth.smartcatalogiq.com/en/" + new Date().getFullYear() + "/orc/Departments-Programs-Undergraduate";
+var year = new Date().getFullYear();
+var orc = "http://dartmouth.smartcatalogiq.com/en/" + year + "/orc/"
+var undergradDepartmentsURL = orc + "Departments-Programs-Undergraduate/";
 
 // programs which cannot be parsed from department pages.
 var additionalPrograms = [
   {
     code: "ENVS",
     programName: "Environmental Studies",
-    url: "http://dartmouth.smartcatalogiq.com/en/2015/orc/Departments-Programs-Undergraduate/Environmental-Studies-Program/ENVS-Environmental-Studies/"
+    url: undergradDepartmentsURL + "Environmental-Studies-Program/ENVS-Environmental-Studies/"
   }
 ];
 
@@ -37,7 +39,7 @@ Navigation.start = function() {
 
 Navigation.departmentDirectory = function() {
   var page = llcommon.createPage();
-  llcommon.openPage(page, url, function() {
+  llcommon.openPage(page, undergradDepartmentsURL, function() {
     console.log("...retrieving departments to process");
     var departmentsToProcess = page.evaluate(Evaluation.getDepartmentLinksFromDepartmentDirectory);
     console.log("...retrieved.");
