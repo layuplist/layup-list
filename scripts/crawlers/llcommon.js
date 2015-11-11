@@ -6,9 +6,10 @@
  * import into phantomjs script using:
  *  `phantom.page.injectJs('llcommon.js');`
  */
+console.log("...loading llcommon.js");
 
 var webpage = require('webpage');
-console.log("...loading llcommon.js");
+var system = require('system');
 
 // print phantom errors
 phantom.onError = function(msg, trace) {
@@ -74,5 +75,9 @@ var llcommon = {
       }
     });
   },
+  exportDataToJSON: function(data, filename, success) {
+    require('fs').write(filename, JSON.stringify(data), 'w');
+    success(data);
+  }
 }
 console.log("...loaded")

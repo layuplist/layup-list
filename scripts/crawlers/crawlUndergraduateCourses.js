@@ -10,8 +10,6 @@
  */
 phantom.page.injectJs('llcommon.js');
 
-var fs = require('fs');
-
 var Navigation = {};
 var Evaluation = {};
 var year = new Date().getFullYear();
@@ -26,12 +24,6 @@ var additionalPrograms = [
     url: undergradDepartmentsURL + "Environmental-Studies-Program/ENVS-Environmental-Studies/"
   }
 ];
-
-var exportDataAndFinish = function(data) {
-  fs.write('courses.json', JSON.stringify(data), 'w');
-  console.log("success! " + data.length + " courses crawled and exported.");
-  phantom.exit()
-}
 
 Navigation.start = function() {
   Navigation.departmentDirectory();
@@ -79,7 +71,10 @@ Navigation.departments = function(remainingDepartments, programs) {
 
 Navigation.programs = function (remainingPrograms, courses) {
   if (remainingPrograms.length === 0) {
-    exportDataAndFinish(courses);
+    llcommon.exportDataToJSON(courses, "courses.json", function() {
+      console.log("success! " + courses.length + " courses crawled and exported.");
+      phantom.exit()
+    });
   } else {
     var program = remainingPrograms.pop();
 
