@@ -2,7 +2,7 @@
  * Extracts median information from Dartmouth.
  *
  * Example Usage:
- *  phantomjs crawlMedians.js 13s 13x 13f 14w 14s 14x 14f 15w 15s 15x
+ *  phantomjs crawl_medians.js 13s 13x 13f 14w 14s 14x 14f 15w 15s 15x
  *
  * Available terms are shown on:
  * http://www.dartmouth.edu/~reg/transcript/medians/
