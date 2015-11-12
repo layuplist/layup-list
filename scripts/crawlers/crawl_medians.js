@@ -11,7 +11,7 @@
  */
 phantom.page.injectJs('llcommon.js');
 
-var terms = system.args.slice(1).map(function(term) { return term.toLowerCase(); });
+var terms = ARGS.slice(1).map(function(term) { return term.toLowerCase(); });
 var mediansURL = "http://www.dartmouth.edu/~reg/transcript/medians/";
 
 var parseMediansAtURLs = function(urls, medians) {
