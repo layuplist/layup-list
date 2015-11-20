@@ -23,6 +23,10 @@ if (ARGS.length !== 3) {
   phantom.exit(-1);
 }
 
+var cleanData = function(data) {
+  return String(data).trim()
+}
+
 var createTerm = function(year, season) {
   season = season.toLowerCase();
   if (season === "w") {
@@ -56,28 +60,33 @@ page.open(url, 'post', data, function(status) {
 
   page.includeJs(llcommon.jqueryCDN, function() {
     console.log("Loaded page. Retrieving rows.");
-    var data = page.evaluate(function(includeVariableAttribute) {
+    var data = page.evaluate(function(includeVariableAttribute, cleanData) {
       var courses = [];
       $(".data-table > table > tbody > tr").each(function(idx) {
         if (idx !== 0) {
           var cells = $(this).find("td");
+
+          var numbers = $(cells[3]).text().split(".");
+          var subnumber = numbers[1];
+          subnumber = typeof subnumber === "undefined" ? "" : subnumber;
+
           courses.push({
-            crn: String($(cells[1]).text()).trim(),
-            program: String($(cells[2]).text()).trim(),
-            number: String($(cells[3]).text().split(".")[0]).trim(),
-            subnumber: String($(cells[3]).text().split(".")[1]).trim(),
-            section: String($(cells[4]).text()).trim(),
-            title: String($(cells[5]).text()).trim(),
-            crosslisted: String($(cells[7]).text()).trim(),
-            period: String($(cells[8]).text()).trim(),
-            room: String($(cells[9]).text()).trim(),
-            building: String($(cells[10]).text()).trim(),
-            instructor: String($(cells[11]).text()).trim(),
-            world_culture: String($(cells[12]).text()).trim(),
-            distribs: String($(cells[13]).text()).trim(),
-            limit: String($(cells[14]).text()).trim(),
-            enrollment: String($(cells[15]).text()).trim(),
-            status: String($(cells[16]).text()).trim(),
+            crn: cleanData($(cells[1]).text()),
+            program: cleanData($(cells[2]).text()),
+            number: cleanData(numbers[0]),
+            subnumber: cleanData(subnumber),
+            section: cleanData($(cells[4]).text()),
+            title: cleanData($(cells[5]).text()),
+            crosslisted: cleanData($(cells[7]).text()),
+            period: cleanData($(cells[8]).text()),
+            room: cleanData($(cells[9]).text()),
+            building: cleanData($(cells[10]).text()),
+            instructor: cleanData($(cells[11]).text()),
+            world_culture: cleanData($(cells[12]).text()),
+            distribs: cleanData($(cells[13]).text()),
+            limit: cleanData($(cells[14]).text()),
+            enrollment: cleanData($(cells[15]).text()),
+            status: cleanData($(cells[16]).text()),
           });
 
           for (attribute in includeVariableAttribute) {
@@ -88,7 +97,7 @@ page.open(url, 'post', data, function(status) {
         }
       });
       return courses;
-    }, includeVariableAttribute);
+    }, includeVariableAttribute, cleanData);
 
     data.sort(function(a, b) { return a.crn - b.crn; });
     llcommon.exportDataToJSON(data, term + "_courses.json", function() {
