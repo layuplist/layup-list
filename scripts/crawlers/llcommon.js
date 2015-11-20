@@ -75,7 +75,7 @@ var llcommon = {
     });
   },
   exportDataToJSON: function(data, filename, success) {
-    require('fs').write(filename, JSON.stringify(data), 'w');
+    require('fs').write(filename, JSON.stringify(data, null, 2), 'w');
     success(data);
   }
 }
