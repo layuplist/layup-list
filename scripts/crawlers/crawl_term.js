@@ -9,6 +9,12 @@
 phantom.page.injectJs('llcommon.js');
 
 var url = 'http://oracle-www.dartmouth.edu/dart/groucho/timetable.display_courses';
+var includeVariableAttribute = {
+  room: false,
+  building: false,
+  enrollment: false,
+  status: false,
+};
 
 if (ARGS.length !== 3) {
   console.log("Usage:   \tphantomjs " + ARGS[0] + " [YEAR] [TERM]");
@@ -50,7 +56,7 @@ page.open(url, 'post', data, function(status) {
 
   page.includeJs(llcommon.jqueryCDN, function() {
     console.log("Loaded page. Retrieving rows.");
-    var data = page.evaluate(function() {
+    var data = page.evaluate(function(includeVariableAttribute) {
       var courses = [];
       $(".data-table > table > tbody > tr").each(function(idx) {
         if (idx !== 0) {
@@ -73,10 +79,16 @@ page.open(url, 'post', data, function(status) {
             enrollment: String($(cells[15]).text()).trim(),
             status: String($(cells[16]).text()).trim(),
           });
+
+          for (attribute in includeVariableAttribute) {
+            if (!includeVariableAttribute[attribute]) {
+              delete courses[courses.length - 1][attribute];
+            }
+          }
         }
       });
       return courses;
-    });
+    }, includeVariableAttribute);
 
     data.sort(function(a, b) { return a.crn - b.crn; });
     llcommon.exportDataToJSON(data, term + "_courses.json", function() {
