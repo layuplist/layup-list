@@ -14,21 +14,35 @@ phantom.page.injectJs('llcommon.js');
 var terms = ARGS.slice(1).map(function(term) { return term.toLowerCase(); });
 var mediansURL = "http://www.dartmouth.edu/~reg/transcript/medians/";
 
-var parseMediansAtURLs = function(urls, medians) {
+var parseMediansAtURLs = function(terms, urls) {
   if (urls.length === 0) {
-    llcommon.exportDataToJSON(medians, "medians.json", function() {
-      console.log("success! " + medians.length + " medians crawled and exported.");
-      phantom.exit();
-    });
+    console.log("success!");
+    phantom.exit();
   } else {
     var url = urls.pop();
+    var term = terms.pop();
     console.log("Parsing medians from: " + url);
     var page = llcommon.createPage();
     llcommon.openPage(page, url, function() {
       var mediansOnPage = page.evaluate(extractMediansFromPage);
-      console.log(mediansOnPage.length + " found.");
-      medians = medians.concat(mediansOnPage);
-      setTimeout(function() { parseMediansAtURLs(urls, medians); }, llcommon.timeout);
+      console.log(mediansOnPage.length + " found!");
+
+      mediansOnPage.sort(function(a, b) {
+        if (a.course.department === b.course.department) {
+          if (a.course.number === b.course.number) {
+            return a.course.subnumber - b.course.subnumber;
+          } else {
+            return a.course.number - b.course.number;
+          }
+        } else {
+          return a.course.department - b.course.department;
+        }
+      });
+
+      llcommon.exportDataToJSON(mediansOnPage, term + "_medians.json", function() {
+        console.log("Exported.");
+      });
+      setTimeout(function() { parseMediansAtURLs(terms, urls); }, llcommon.timeout);
     });
   }
 }
@@ -52,6 +66,6 @@ var extractMediansFromPage = function() {
   return medians;
 }
 
-parseMediansAtURLs(terms.map(function(term) {
+parseMediansAtURLs(terms, terms.map(function(term) {
   return mediansURL + term + ".html"
-}), []);
+}));
