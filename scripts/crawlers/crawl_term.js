@@ -99,7 +99,7 @@ page.open(url, 'post', data, function(status) {
       return courses;
     }, includeVariableAttribute, cleanData);
 
-    data.sort(function(a, b) { return a.crn - b.crn; });
+    data.sort(function(a, b) { return parseInt(a.crn) - parseInt(b.crn); });
     llcommon.exportDataToJSON(data, term + "_courses.json", function() {
       console.log("success! " + data.length + " courses crawled and exported.");
       phantom.exit()

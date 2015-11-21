@@ -71,6 +71,18 @@ Navigation.departments = function(remainingDepartments, programs) {
 
 Navigation.programs = function (remainingPrograms, courses) {
   if (remainingPrograms.length === 0) {
+    courses.sort(function(a, b) {
+      if (a.department === b.department) {
+        if (a.number === b.number) {
+          return parseInt(a.subnumber) - parseInt(b.subnumber);
+        } else {
+          return parseInt(a.number) - parseInt(b.number);
+        }
+      } else {
+        return a.department < b.department ? -1 : 1;
+      }
+    });
+
     llcommon.exportDataToJSON(courses, "undergraduate_courses.json", function() {
       console.log("success! " + courses.length + " courses crawled and exported.");
       phantom.exit()

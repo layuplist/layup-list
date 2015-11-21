@@ -30,12 +30,12 @@ var parseMediansAtURLs = function(terms, urls) {
       mediansOnPage.sort(function(a, b) {
         if (a.course.department === b.course.department) {
           if (a.course.number === b.course.number) {
-            return a.course.subnumber - b.course.subnumber;
+            return parseInt(a.course.subnumber) - parseInt(b.course.subnumber);
           } else {
-            return a.course.number - b.course.number;
+            return parseInt(a.course.number) - parseInt(b.course.number);
           }
         } else {
-          return a.course.department - b.course.department;
+          return a.course.department < b.course.department ? -1 : 1;
         }
       });
 
