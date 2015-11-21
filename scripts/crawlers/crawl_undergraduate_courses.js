@@ -71,7 +71,7 @@ Navigation.departments = function(remainingDepartments, programs) {
 
 Navigation.programs = function (remainingPrograms, courses) {
   if (remainingPrograms.length === 0) {
-    llcommon.exportDataToJSON(courses, "courses.json", function() {
+    llcommon.exportDataToJSON(courses, "undergraduate_courses.json", function() {
       console.log("success! " + courses.length + " courses crawled and exported.");
       phantom.exit()
     });
