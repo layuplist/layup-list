@@ -59,6 +59,7 @@ var extractMediansFromPage = function() {
         number: medianData[1].innerHTML.split("-")[1].split(".")[0],
         subnumber: medianData[1].innerHTML.split("-")[1].split(".")[1]
       },
+      section: medianData[1].innerHTML.split("-")[2],
       enrollment: medianData[2].innerHTML,
       median: medianData[3].innerHTML
     });
