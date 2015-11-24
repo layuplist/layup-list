@@ -149,10 +149,12 @@ Evaluation.getCourseLinksFromProgram = function() {
   for (var i = 0; i < courses.length; i++) {
     var values = courses[i].innerHTML.split("&nbsp;");
     if (values.length !== 3) { continue; }
-    var numbers = values[1].split(".");
+    var numbers = values[1].split("-")[0].split(".");
+    var cleanedNumber = numbers[0].split(" ")
+    cleanedNumber = cleanedNumber[cleanedNumber.length - 1]
     c.push({
       department: values[0],
-      number: numbers[0],
+      number: cleanedNumber,
       subnumber: numbers[1],
       course_name: values[2],
       url: courses[i].href
