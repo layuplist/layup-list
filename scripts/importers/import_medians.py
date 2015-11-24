@@ -15,20 +15,19 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "layup_list.settings")
 django.setup()
 from web.models import Course, CourseMedian
 
-DEFAULT_FILENAME = "data/undergraduate_courses.json"
-
 
 MEDIAN_DIR = "./data/medians"
 
-ERROR_LOG = "./median_importer_errors.log"
 
-
-with open(ERROR_LOG, "w") as logfile:
+with open("./median_importer_errors.log", "w") as logfile:
     for f in os.listdir(MEDIAN_DIR):
         curr_file = os.path.join(MEDIAN_DIR, f)
 
         if not os.path.isfile(curr_file):
-            logfile.write("invalid filename: " + curr_file + "\n")
+            logfile.write("The following is not a file: " + curr_file + "\n")
+
+        elif not curr_file.lower.endswith(".json"):
+            logfile.write("Not a JSON file: " + curr_file + "\n")
 
         else:
             with open(curr_file) as data_file:
@@ -53,11 +52,10 @@ with open(ERROR_LOG, "w") as logfile:
                     term = m["term"]
 
                     try:
-
                         with transaction.atomic():
 
-                            # some courses missing subnumbers...so getting a list
-                            # instead
+                            # some courses are missing subnumbers...so getting
+                            # querying for a list instead
                             course_matches = Course.objects.filter(
                                 department=department,
                                 number=number
@@ -74,7 +72,7 @@ with open(ERROR_LOG, "w") as logfile:
                                     url=""
                                 )
                                 logfile.write(
-                                    "Failed to query database for. Will create a new instance of course: " + curr + "\n")
+                                    "Failed to query course table for current median. Will create a new instance of course: " + curr + "\n")
 
                             # for all the sections of that course
                             for course in course_matches:
@@ -87,7 +85,8 @@ with open(ERROR_LOG, "w") as logfile:
                                         subnumber=section
                                     )
 
-                                # resolve the duplicate key issue - only do it when it doesn't exist
+                                # resolve the duplicate key issue - only do this
+                                # when it doesn't exist
                                 except Course.DoesNotExist:
                                     ret = course.coursemedian_set.create(
                                         section=section,
@@ -97,42 +96,8 @@ with open(ERROR_LOG, "w") as logfile:
                                     )
 
                     except DataError:
-                        print "Data error for: ", curr
+                        logfile.write("Data error for: " + curr + "\n")
 
                     except IntegrityError:
                         logfile.write(
                             "Unique constraint violated for: " + curr + "\n")
-
-
-# filename = DEFAULT_FILENAME if len(sys.argv) == 1 else sys.argv[1]
-
-# with transaction.atomic():
-#     with open(filename) as data_file:
-
-#         course_list = json.load(data_file)
-#         for c in course_list:
-
-#             title = c["course_name"].encode('utf-8')
-#             print "importing {}".format(title)
-#             department = c["department"]
-#             number = int(c["number"])
-#             subnumber = int(c["subnumber"]) if "subnumber" in c else None
-#             url = c["url"]
-
-#             try:
-#                 course = Course.objects.get(
-#                     department=department,
-#                     number=number,
-#                     subnumber=subnumber
-#                 )
-#                 course.title = title
-#                 course.url = url
-#                 course.save
-#             except Course.DoesNotExist:
-#                 Course.objects.create(
-#                     title=title,
-#                     department=department,
-#                     number=number,
-#                     subnumber=subnumber,
-#                     url=url,
-#                 )
