@@ -154,7 +154,7 @@ Evaluation.getCourseLinksFromProgram = function() {
       department: values[0],
       number: numbers[0],
       subnumber: numbers[1],
-      courseName: values[2],
+      course_name: values[2],
       url: courses[i].href
     });
   }
