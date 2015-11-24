@@ -153,7 +153,7 @@ Evaluation.getCourseLinksFromProgram = function() {
     var cleanedNumber = numbers[0].split(" ")
     cleanedNumber = cleanedNumber[cleanedNumber.length - 1]
     c.push({
-      department: values[0],
+      department: values[0].split(" ")[0],
       number: cleanedNumber,
       subnumber: numbers[1],
       course_name: values[2],
