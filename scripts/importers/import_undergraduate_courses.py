@@ -23,12 +23,12 @@ with transaction.atomic():
         course_list = json.load(data_file)
         for c in course_list:
 
-            title = c["course_name"].encode('utf-8')
-            # print "importing {}".format(title)
-            department = c["department"]
+            title = c["course_name"].encode('utf-8').strip()
+            print "importing {}".format(title)
+            department = c["department"].strip()
             number = int(c["number"])
             subnumber = int(c["subnumber"]) if "subnumber" in c else None
-            url = c["url"]
+            url = c["url"].strip()
 
             try:
                 course = Course.objects.get(

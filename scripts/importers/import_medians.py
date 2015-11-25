@@ -15,100 +15,88 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "layup_list.settings")
 django.setup()
 from web.models import Course, CourseMedian
 
-
 MEDIAN_DIR = "./data/medians"
+DEPARTMENT_CORRECTIONS = {
+    "M&amp;SS": "M&SS"
+}
 
+ambiguous_subnumber = 0
+missing_course = 0
+processed = 0
 
-with open("./median_importer_errors.log", "w") as logfile:
-    for f in os.listdir(MEDIAN_DIR):
-        curr_file = os.path.join(MEDIAN_DIR, f)
+for f in os.listdir(MEDIAN_DIR):
+    curr_file = os.path.join(MEDIAN_DIR, f)
 
-        if not os.path.isfile(curr_file):
-            logfile.write("The following is not a file: " + curr_file + "\n")
+    if not os.path.isfile(curr_file):
+        logfile.write("The following is not a file: " + curr_file + "\n")
 
-        elif not curr_file.lower().endswith(".json"):
-            logfile.write("Not a JSON file: " + curr_file + "\n")
+    elif not curr_file.lower().endswith(".json"):
+        logfile.write("Not a JSON file: " + curr_file + "\n")
 
-        else:
+    else:
+        with transaction.atomic():
             with open(curr_file) as data_file:
                 medians = json.load(data_file)
-
                 for m in medians:
-                    curr = (m["course"]["department"] +
-                            m["course"]["number"]).encode('utf-8')
-                    print "importing {}".format(curr)
 
-                    department = m["course"]["department"]
-
-                    # malformated crawled string for M&SS
-                    if department == "M&amp;SS":
-                        department = "M&SS"
+                    department = m["course"]["department"].strip()
+                    if department in DEPARTMENT_CORRECTIONS:
+                        department = DEPARTMENT_CORRECTIONS[department]
 
                     number = int(m["course"]["number"])
-
                     try:
                         subnumber = int(m["course"]["subnumber"])
-                    except KeyError:
-                        subnumber = 0
-                    except ValueError:
-                        subnumber = 0
-
+                    except (KeyError, ValueError):
+                        subnumber = None
                     section = int(m["section"])
                     enrollment = int(m["enrollment"])
-                    median = m["median"]
-                    term = m["term"]
+                    median = m["median"].strip()
+                    term = m["term"].strip()
 
+                    course = None
                     try:
-                        with transaction.atomic():
-
-                            # some courses are missing subnumbers...so getting
-                            # querying for a list instead
-                            course_matches = Course.objects.filter(
+                        course = Course.objects.get(
+                            department=department,
+                            number=number,
+                            subnumber=subnumber
+                        )
+                    except Course.DoesNotExist:
+                        try:
+                            # subnumber may have been missing or incorrect
+                            course = Course.objects.get(
                                 department=department,
-                                number=number
+                                number=number,
                             )
+                        except Course.DoesNotExist:
+                            print "Could not find course for {}{}.{} term {}".format(
+                                department, number, subnumber, term
+                            )
+                            missing_course += 1
+                        except Course.MultipleObjectsReturned:
+                            print "Ambiguous course for {}{}.{} term {}".format(
+                                department, number, subnumber, term
+                            )
+                            ambiguous_subnumber += 1
 
-                            # ORC missing the course in catalog...but a median
-                            # exists for it
-                            if len(course_matches) == 0:
-                                Course.objects.create(
-                                    title="",
-                                    department=department,
-                                    number=number,
-                                    subnumber=subnumber,
-                                    url=""
-                                )
-                                logfile.write(
-                                    "Failed to query course table for current median. Will create a new instance of course: " + curr + "\n")
+                    if course is not None:
+                        try:
+                            m = CourseMedian.objects.get(
+                                course=course,
+                                section=section,
+                                term=term
+                            )
+                            m.enrollment = enrollment
+                            m.term = term
+                            m.save
+                        except CourseMedian.DoesNotExist:
+                            course.coursemedian_set.create(
+                                section=section,
+                                enrollment=enrollment,
+                                median=median,
+                                term=term
+                            )
+                        processed += 1
 
-                            # for all the sections of that course
-                            for course in course_matches:
-
-                                try:
-                                    # check exists
-                                    print course
-                                    print section, enrollment, median, term
-
-                                    CourseMedian.objects.get(
-                                        section=section,
-                                        enrollment=enrollment,
-                                        median=median,
-                                        term=term
-                                    )
-
-                                # resolve the duplicate key issue - only do this
-                                # when it doesn't exist
-                                except CourseMedian.DoesNotExist:
-                                    ret = course.coursemedian_set.create(
-                                        section=section,
-                                        enrollment=enrollment,
-                                        median=median,
-                                        term=term
-                                    )
-
-                    except DataError:
-                        logfile.write("Data error for: " + curr + "\n")
-
-                    except IntegrityError:
-                        logfile.write(
-                            "Unique constraint violated for: " + curr + "\n")
+print "missing {}, ambiguous {}, processed {}".format(
+    missing_course, ambiguous_subnumber, processed
+)
