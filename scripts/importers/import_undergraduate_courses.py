@@ -24,7 +24,7 @@ with transaction.atomic():
         for c in course_list:
 
             title = c["course_name"].encode('utf-8')
-            print "importing {}".format(title)
+            # print "importing {}".format(title)
             department = c["department"]
             number = int(c["number"])
             subnumber = int(c["subnumber"]) if "subnumber" in c else None

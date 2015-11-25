@@ -26,7 +26,7 @@ with open("./median_importer_errors.log", "w") as logfile:
         if not os.path.isfile(curr_file):
             logfile.write("The following is not a file: " + curr_file + "\n")
 
-        elif not curr_file.lower.endswith(".json"):
+        elif not curr_file.lower().endswith(".json"):
             logfile.write("Not a JSON file: " + curr_file + "\n")
 
         else:
@@ -45,6 +45,13 @@ with open("./median_importer_errors.log", "w") as logfile:
                         department = "M&SS"
 
                     number = int(m["course"]["number"])
+
+                    try:
+                        subnumber = int(m["course"]["subnumber"])
+                    except KeyError:
+                        subnumber = 0
+                    except ValueError:
+                        subnumber = 0
 
                     section = int(m["section"])
                     enrollment = int(m["enrollment"])
@@ -68,7 +75,7 @@ with open("./median_importer_errors.log", "w") as logfile:
                                     title="",
                                     department=department,
                                     number=number,
-                                    subnumber=section,
+                                    subnumber=subnumber,
                                     url=""
                                 )
                                 logfile.write(
@@ -76,18 +83,22 @@ with open("./median_importer_errors.log", "w") as logfile:
 
                             # for all the sections of that course
                             for course in course_matches:
-                                print course
 
                                 try:
-                                    course = Course.objects.get(
-                                        department=department,
-                                        number=number,
-                                        subnumber=section
+                                    # check exists
+                                    print course
+                                    print section, enrollment, median, term
+
+                                    CourseMedian.objects.get(
+                                        section=section,
+                                        enrollment=enrollment,
+                                        median=median,
+                                        term=term
                                     )
 
                                 # resolve the duplicate key issue - only do this
                                 # when it doesn't exist
-                                except Course.DoesNotExist:
+                                except CourseMedian.DoesNotExist:
                                     ret = course.coursemedian_set.create(
                                         section=section,
                                         enrollment=enrollment,
