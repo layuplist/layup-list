@@ -1,7 +1,7 @@
 """
-Imports courses from json blob produced by crawl_undergraduate_courses.js
+Imports courses from json blob produced by crawl_medians.js
 
-to run: python scripts/importers/import_undergraduate_courses.py
+to run: python scripts/importers/import_medians.py
 """
 import os
 import sys
