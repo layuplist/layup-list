@@ -34,10 +34,11 @@ with transaction.atomic():
                 course = Course.objects.get(
                     department=department,
                     number=number,
-                    subnumber=subnumber
+                    subnumber=subnumber,
                 )
                 course.title = title
                 course.url = url
+                course.source = Course.SOURCES.ORC
                 course.save
             except Course.DoesNotExist:
                 Course.objects.create(
@@ -46,4 +47,5 @@ with transaction.atomic():
                     number=number,
                     subnumber=subnumber,
                     url=url,
+                    source=Course.SOURCES.ORC,
                 )
