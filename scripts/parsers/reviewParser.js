@@ -1,11 +1,11 @@
 /**
- * parse.js
+ * reviewParser.js
  *
  * Parse the crawled HTML from course picker. Does things synchronously (relieves
  * callback confusion & done once anyways).
  *
  *
- * Usage: node parse.js [path to NEW REVIEW files] [path to OLD REVIEW FILES]
+ * Usage: node reviewParser.js [path to NEW REVIEW files] [path to OLD REVIEW FILES]
  * Output: new_reviews.json old_reviews.json (JSON array in both)
  *
  */
@@ -13,7 +13,7 @@
 var cheerio = require('cheerio');
 var fs = require('fs');
 var jsonfile = require('jsonfile');
-var path = require('path')
+var path = require('path');
 
 
 /**
