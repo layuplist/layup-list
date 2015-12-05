@@ -20,6 +20,8 @@ class Course(models.Model):
     subnumber = models.IntegerField(null=True, db_index=True)
     url = models.URLField(null=True)
     source = models.CharField(max_length=16, choices=SOURCES.CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ("department", "number", "subnumber")
@@ -44,6 +46,8 @@ class CourseOffering(models.Model):
     section = models.IntegerField()
     period = models.CharField(max_length=64, db_index=True)
     limit = models.IntegerField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ("term", "course", "section")
@@ -62,6 +66,8 @@ class DistributiveRequirement(models.Model):
 
     name = models.CharField(max_length=16, unique=True)
     distributive_type = models.CharField(max_length=16, choices=DISTRIBUTE_TYPE_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return self.name
@@ -69,6 +75,8 @@ class DistributiveRequirement(models.Model):
 
 class Instructor(models.Model):
     name = models.CharField(max_length=255, unique=True, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return self.name
@@ -81,6 +89,8 @@ class CourseMedian(models.Model):
     enrollment = models.IntegerField()
     median = models.CharField(max_length=6, db_index=True)
     term = models.CharField(max_length=4, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return "{} {}: {}".format(self.term, self.course.short_name(), self.median)
