@@ -1,7 +1,11 @@
 dj-database-url==0.3.0
 Django==1.9
+django-pipeline==1.5.4
 django-postgrespool==0.3.0
+futures==3.0.3
 gunicorn==19.3.0
+Jinja2==2.8
+MarkupSafe==0.23
 psycopg2==2.6
 SQLAlchemy==1.0.4
 wheel==0.24.0

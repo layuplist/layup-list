@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pipeline',
     'web'
 ]
 
@@ -114,5 +115,36 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'pipeline.finders.PipelineFinder',
+)
 ROOT_ASSETS_DIR = os.path.join(BASE_DIR, 'root_assets')
+
+PIPELINE_CSS = {
+    'app': {
+        'source_filenames': (
+            'css/web/base.css',
+            'css/web/current_term.css',
+            'css/web/course.css',
+        ),
+        'output_filename': 'css/app.css',
+        'extra_context': {
+            'media': 'screen,projection',
+        },
+    },
+}
+
+PIPELINE_JS = {
+    'app': {
+        'source_filenames': (
+            'js/plugins.js',
+            'js/web/base.js',
+            'js/web/current_term.js',
+            'js/web/course.js',
+        ),
+        'output_filename': 'js/app.js',
+    }
+}
