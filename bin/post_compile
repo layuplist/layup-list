@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Used when deployed to Heroku.
+# See more: https://github.com/nigma/heroku-django-cookbook
+
 if [ -f bin/install_nodejs ]; then
     echo "-----> Running install_nodejs"
     chmod +x bin/install_nodejs
@@ -10,4 +13,11 @@ if [ -f bin/install_nodejs ]; then
         bin/install_yuglify
     fi
 fi
+
+if [ -f bin/run_collectstatic ]; then
+    echo "-----> Running run_collectstatic"
+    chmod +x bin/run_collectstatic
+    bin/run_collectstatic
+fi
+
 echo "-----> Post-compile done"
