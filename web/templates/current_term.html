@@ -1,4 +1,53 @@
 {% extends "base.html" %}
 {% block content %}
-<div id="hello-world"></div>
+<div class="row">
+    <div class="col-md-12">
+        <h1>{{ term }} {{ course_type }}</h1>
+        <h4>{{ count }} total</h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped">
+            <thead>
+                <th>Rank</th>
+                <th><a href="{% url 'current_term'  %}?sort=layup">Layup Score</a></th>
+                <th><a href="{% url 'current_term'  %}?sort=quality">Quality Score</a></th>
+                <th>Course</th>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td><h2>{{ forloop.counter }}</h2></td>
+                    <td><h2>{{ course.layup_score }}</h2></td>
+                    <td><h2>{{ course.quality_score }}</h2></td>
+                    <td>
+                        <h3>{{ course }}</h3>
+                        <h5>{{ period }} {{ course.distribs_string }} </h5>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<nav>
+  <ul class="pagination">
+    <li>
+      <a href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li><a href="#">1</a></li>
+    <li><a href="#">2</a></li>
+    <li><a href="#">3</a></li>
+    <li><a href="#">4</a></li>
+    <li><a href="#">5</a></li>
+    <li>
+      <a href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
 {% endblock %}

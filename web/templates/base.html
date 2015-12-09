@@ -20,7 +20,28 @@
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-        {% block content %} {% endblock %}
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+                    <object class="logo" data="{% static "img/logo.svg" %}"></object>
+                </div>
+                <div class="col-md-3 col-md-offset-6">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" placeholder="Course search...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <hr>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    {% block content %} {% endblock %}
+                </div>
+            </div>
+        </div>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="{% static "js/vendor/jquery-1.11.3.min.js" %}"><\/script>')</script>
