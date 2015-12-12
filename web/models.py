@@ -97,3 +97,19 @@ class CourseMedian(models.Model):
 
     class Meta:
         unique_together = ("course", "section", "term")
+
+
+class Review(models.Model):
+    course = models.ForeignKey("Course")
+
+    professor = models.CharField(max_length=255, db_index=True)
+    term = models.CharField(max_length=4, db_index=True)
+    comments = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return "{} {} {}: {}".format(self.course.shortname(), self.professor, self.term, self.comments)
+
+        
