@@ -1,5 +1,5 @@
 """
-Imports courses from json blob of CoursePicker reviews
+Imports reviews from json blob of CoursePicker reviews
 
 to run: python scripts/importers/import_medians.py
 """
