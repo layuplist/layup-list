@@ -123,32 +123,33 @@ STATICFILES_FINDERS = (
 )
 ROOT_ASSETS_DIR = os.path.join(BASE_DIR, 'root_assets')
 
-PIPELINE_COMPILERS = (
-  'react.utils.pipeline.JSXCompiler',
-)
-
-PIPELINE_CSS = {
-    'app': {
-        'source_filenames': (
-            'css/web/base.css',
-            'css/web/current_term.css',
-            'css/web/course.css',
-        ),
-        'output_filename': 'css/app.css',
-        'extra_context': {
-            'media': 'screen,projection',
-        },
+PIPELINE = {
+    'PIPELINE_ENABLED': True,
+    'COMPILERS': (
+      'react.utils.pipeline.JSXCompiler',
+    ),
+    'JAVASCRIPT': {
+        'app': {
+            'source_filenames': (
+                'js/plugins.jsx',
+                'js/web/base.jsx',
+                'js/web/current_term.jsx',
+                'js/web/course.jsx',
+            ),
+            'output_filename': 'js/app.js',
+        }
     },
-}
-
-PIPELINE_JS = {
-    'app': {
-        'source_filenames': (
-            'js/plugins.jsx',
-            'js/web/base.jsx',
-            'js/web/current_term.jsx',
-            'js/web/course.jsx',
-        ),
-        'output_filename': 'js/app.js',
+    'STYLESHEETS': {
+        'app': {
+            'source_filenames': (
+                'css/web/base.css',
+                'css/web/current_term.css',
+                'css/web/course.css',
+            ),
+            'output_filename': 'css/app.css',
+            'extra_context': {
+                'media': 'screen,projection',
+            },
+        }
     }
 }
