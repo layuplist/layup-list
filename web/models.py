@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 from django.db import models
-
 from django.contrib.auth.models import User
 
 class Course(models.Model):
@@ -21,6 +20,10 @@ class Course(models.Model):
     subnumber = models.IntegerField(null=True, db_index=True)
     url = models.URLField(null=True)
     source = models.CharField(max_length=16, choices=SOURCES.CHOICES)
+
+    layup_score = models.IntegerField(default=0)
+    quality_score = models.IntegerField(default=0)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -35,7 +38,6 @@ class Course(models.Model):
             return "{}{}.{}".format(self.department, self.number, self.subnumber)
         else:
             return "{}{}".format(self.department, self.number)
-
 
 
 class CourseOffering(models.Model):
@@ -114,4 +116,17 @@ class Review(models.Model):
     def __unicode__(self):
         return "{} {} {}: {}".format(self.course.short_name(), self.professor, self.term, self.comments)
 
-        
+
+class Vote(models.Model):
+
+    class Categories:
+        GOOD = "GOOD"
+        LAYUP = "LAYUP"
+        CHOICES = (
+            (GOOD, "Good"),
+            (LAYUP, "Layup"),
+        )
+
+    course = models.ForeignKey("Course", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.CharField(max_length=8, choices=Categories.CHOICES)
