@@ -86,6 +86,7 @@ for f in os.listdir(MEDIAN_DIR):
                                 term=term
                             )
                             m.enrollment = enrollment
+                            m.median = median
                             m.term = term
                             m.save
                         except CourseMedian.DoesNotExist:
