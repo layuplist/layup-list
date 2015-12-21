@@ -8,14 +8,18 @@ import os
 import sys
 import django
 import json
+import re
 from django.db import transaction
 
 sys.path.append(os.getcwd())
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "layup_list.settings")
 django.setup()
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from web.models import Review, Course
+import HTMLParser
+
+html_parser = HTMLParser.HTMLParser()
 
 LAYUPS = "./data/layups/layups.json"
 
@@ -23,6 +27,7 @@ ambiguous_course = 0
 missing_course = 0
 processed = 0
 users_created = 0
+empty_review = 0
 
 with transaction.atomic():
     with open(LAYUPS) as data_file:
@@ -36,7 +41,7 @@ with transaction.atomic():
                 professor = layup["instructor"]
                 comments = layup["comments"]
 
-                if len(layup["source"]) <= 4:
+                if len(layup["source"]) == 3 and re.match(r'[0-9][0-9][W,F,S,X]', layup["source"]):
                     term = layup["source"]
                 else:
                     term = ""
@@ -45,6 +50,11 @@ with transaction.atomic():
                 print "Dumping Layup Review (improper spreadsheet data)"
                 missing_course += 1
                 continue
+
+            if comments == "":
+                empty_review += 1
+                continue
+            comments = html_parser.unescape(comments)
 
             print department, number, course_name, professor, comments
 
@@ -56,27 +66,27 @@ with transaction.atomic():
                 user = User.objects.get(
                     username=layup["source"]
                 )
+
             except Course.DoesNotExist:
                 print "Could not find course for {}{} course_name {} professor {}".format(
                     department, number, course_name, professor
                 )
                 missing_course += 1
                 continue
+
             except Course.MultipleObjectsReturned:
                 print "Ambiguous course for {}{} course_name {} professor {}".format(
                     department, number, course_name, professor
                 )
                 ambiguous_course += 1
                 continue
+
             except User.DoesNotExist:
-                print "Could not find user: ", source, " creating now"
-
-                # security? change this pass to point to env later
-                user = User.objects.create_user(username=username, password=User.objects.make_random_password())
+                print "Could not find user: ", layup["source"], " creating now"
+                user = User.objects.create_user(username=layup["source"], password=User.objects.make_random_password())
+                user.groups.add(Group.objects.get_or_create(name="DummyUsers")[0])
+                user.groups.add(Group.objects.get_or_create(name="OldLayupListDummyUser")[0])
                 users_created += 1
-
-            except User.MultipleObjectsReturned:
-                print "This should never happen: unique username violation"
 
             review = Review.objects.create(
                 course=course,
@@ -87,7 +97,6 @@ with transaction.atomic():
             )
             processed += 1
 
-print "missing {}, ambiguous {}, processed {}, users_created {}".format(
-    missing_course, ambiguous_course, processed, users_created
+print "missing {}, ambiguous {}, processed {}, users_created {}, empty review {}".format(
+    missing_course, ambiguous_course, processed, users_created, empty_review
 )
-

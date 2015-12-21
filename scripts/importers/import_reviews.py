@@ -14,16 +14,19 @@ sys.path.append(os.getcwd())
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "layup_list.settings")
 django.setup()
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from web.models import Review, Course
+import HTMLParser
+
+html_parser = HTMLParser.HTMLParser()
 
 OLD_REVIEWS = "./data/reviews/old_reviews.json"
 NEW_REVIEWS = "./data/reviews/new_reviews.json"
 
-
 ambiguous_course = 0
 missing_course = 0
 processed = 0
+empty_review = 0
 
 for f in (OLD_REVIEWS, NEW_REVIEWS):
     with transaction.atomic():
@@ -40,15 +43,8 @@ for f in (OLD_REVIEWS, NEW_REVIEWS):
                     continue
 
                 # useful, but not essential
-                try:
-                    professor = review["professor"]
-                except KeyError:
-                    professor = ""
-
-                try:
-                    term = review["term"]
-                except KeyError:
-                    term = ""
+                professor = review.get("professor", "")
+                term = review.get("term", "")
 
                 try:
                     if f == OLD_REVIEWS:
@@ -58,7 +54,13 @@ for f in (OLD_REVIEWS, NEW_REVIEWS):
                             "comments"]["professor"] + "\n\n" + "Workload: " + review["comments"]["workload"] + "\n\n"
                 except KeyError:
                     # person writing review left it blank
-                    comments = ""
+                    empty_review += 1
+                    continue
+
+                if comments == "":
+                    empty_review += 1
+                    continue
+                comments = html_parser.unescape(comments)
 
                 print department, number, professor, term, comments
 
@@ -87,10 +89,10 @@ for f in (OLD_REVIEWS, NEW_REVIEWS):
 
                 except User.DoesNotExist:
                     user = User.objects.create_user(
-                        username="CoursePicker", password=User.objects.make_random_password())
-
-                    print "Could not find user: ", source, " creating now"
-
+                        username="CoursePicker",
+                        password=User.objects.make_random_password()
+                    )
+                    user.groups.add(Group.objects.get_or_create(name="DummyUsers")[0])
 
                 review = Review.objects.create(
                     course=course,
@@ -101,6 +103,6 @@ for f in (OLD_REVIEWS, NEW_REVIEWS):
                 )
                 processed += 1
 
-print "missing {}, ambiguous {}, processed {}".format(
-    missing_course, ambiguous_course, processed
+print "missing {}, ambiguous {}, processed {}, empty review {}".format(
+    missing_course, ambiguous_course, processed, empty_review
 )
