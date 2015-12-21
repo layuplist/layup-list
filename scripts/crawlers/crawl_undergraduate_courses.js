@@ -22,6 +22,11 @@ var additionalPrograms = [
     code: "ENVS",
     programName: "Environmental Studies",
     url: undergradDepartmentsURL + "Environmental-Studies-Program/ENVS-Environmental-Studies/"
+  },
+  {
+    code: "PBPL",
+    programName: "Public Policy",
+    url: undergradDepartmentsURL + "The-Nelson-A-Rockefeller-Center-for-Public-Policy/Public-Policy-Minor/PBPL-Public-Policy/"
   }
 ];
 
