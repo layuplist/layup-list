@@ -45,7 +45,7 @@ var parseMediansAtURLs = function(terms, urls) {
       setTimeout(function() { parseMediansAtURLs(terms, urls); }, llcommon.timeout);
     });
   }
-}
+};
 
 var extractMediansFromPage = function() {
   var rows = $("table > tbody > tr");
@@ -65,8 +65,8 @@ var extractMediansFromPage = function() {
     });
   }
   return medians;
-}
+};
 
 parseMediansAtURLs(terms, terms.map(function(term) {
-  return mediansURL + term + ".html"
+  return mediansURL + term + ".html";
 }));

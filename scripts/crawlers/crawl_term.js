@@ -24,8 +24,8 @@ if (ARGS.length !== 3) {
 }
 
 var cleanData = function(data) {
-  return String(data).trim()
-}
+  return String(data).trim();
+};
 
 var createTerm = function(year, season) {
   season = season.toLowerCase();
@@ -40,13 +40,13 @@ var createTerm = function(year, season) {
   }
 
   if (year.length === 2) {
-    year = "20" + year
+    year = "20" + year;
   } else if (year.length !== 4) {
     console.log("Year must be either four or two digits.");
     phantom.exit(-1);
   }
   return "" + year + "0" + season;
-}
+};
 
 var term = createTerm(ARGS[1], ARGS[2]);
 var data = 'distribradio=alldistribs&depts=no_value&periods=no_value&distribs=no_value&distribs_i=no_value&distribs_wc=no_value&pmode=public&term=&levl=&fys=n&wrt=n&pe=n&review=n&crnl=no_value&classyear=2008&searchtype=Subject+Area%28s%29&termradio=selectterms&terms=no_value&subjectradio=selectsubjects&hoursradio=allhours&sortorder=dept&terms=' + term;
@@ -89,7 +89,7 @@ page.open(url, 'post', data, function(status) {
             status: cleanData($(cells[16]).text()),
           });
 
-          for (attribute in includeVariableAttribute) {
+          for (var attribute in includeVariableAttribute) {
             if (!includeVariableAttribute[attribute]) {
               delete courses[courses.length - 1][attribute];
             }
@@ -102,7 +102,7 @@ page.open(url, 'post', data, function(status) {
     data.sort(function(a, b) { return parseInt(a.crn) - parseInt(b.crn); });
     llcommon.exportDataToJSON(data, term + "_courses.json", function() {
       console.log("success! " + data.length + " courses crawled and exported.");
-      phantom.exit()
+      phantom.exit();
     });
   });
 });

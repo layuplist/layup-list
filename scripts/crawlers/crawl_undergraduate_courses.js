@@ -13,7 +13,7 @@ phantom.page.injectJs('llcommon.js');
 var Navigation = {};
 var Evaluation = {};
 var year = new Date().getFullYear();
-var orc = "http://dartmouth.smartcatalogiq.com/en/" + year + "/orc/"
+var orc = "http://dartmouth.smartcatalogiq.com/en/" + year + "/orc/";
 var undergradDepartmentsURL = orc + "Departments-Programs-Undergraduate/";
 
 // programs which cannot be parsed from department pages.
@@ -27,7 +27,7 @@ var additionalPrograms = [
 
 Navigation.start = function() {
   Navigation.departmentDirectory();
-}
+};
 
 Navigation.departmentDirectory = function() {
   var page = llcommon.createPage();
@@ -42,11 +42,11 @@ Navigation.departmentDirectory = function() {
       Navigation.departments(departmentsToProcess, []);
     }, llcommon.timeout);
   });
-}
+};
 
 Navigation.departments = function(remainingDepartments, programs) {
   if (remainingDepartments.length === 0) {
-    console.log("...retrieving courses")
+    console.log("...retrieving courses");
     setTimeout(function () {
       Navigation.programs(programs.concat(additionalPrograms), []);
     }, llcommon.timeout);
@@ -61,13 +61,13 @@ Navigation.departments = function(remainingDepartments, programs) {
         programs.push(newPrograms[p]);
         programsStringBuilder.push(newPrograms[p].code);
       }
-      console.log("(" + programsStringBuilder.length + ") " + department.dptName + ": " + programsStringBuilder.join(", "))
+      console.log("(" + programsStringBuilder.length + ") " + department.dptName + ": " + programsStringBuilder.join(", "));
       setTimeout(function () {
         Navigation.departments(remainingDepartments, programs);
       }, llcommon.timeout);
     });
   }
-}
+};
 
 Navigation.programs = function (remainingPrograms, courses) {
   if (remainingPrograms.length === 0) {
@@ -85,7 +85,7 @@ Navigation.programs = function (remainingPrograms, courses) {
 
     llcommon.exportDataToJSON(courses, "undergraduate_courses.json", function() {
       console.log("success! " + courses.length + " courses crawled and exported.");
-      phantom.exit()
+      phantom.exit();
     });
   } else {
     var program = remainingPrograms.pop();
@@ -109,7 +109,7 @@ Navigation.programs = function (remainingPrograms, courses) {
       }, llcommon.timeout);
     });
   }
-}
+};
 
 Evaluation.getDepartmentLinksFromDepartmentDirectory = function() {
   /*
@@ -125,7 +125,7 @@ Evaluation.getDepartmentLinksFromDepartmentDirectory = function() {
     });
   }
   return d;
-}
+};
 
 Evaluation.getProgramLinksFromDepartment = function() {
   var programs = $("#sc-programlinks > ul > li > p > a");
@@ -141,7 +141,7 @@ Evaluation.getProgramLinksFromDepartment = function() {
     }
   }
   return p;
-}
+};
 
 Evaluation.getCourseLinksFromProgram = function() {
   var courses = $(".sc-child-item-links > li > a");
@@ -150,8 +150,8 @@ Evaluation.getCourseLinksFromProgram = function() {
     var values = courses[i].innerHTML.split("&nbsp;");
     if (values.length !== 3) { continue; }
     var numbers = values[1].split("-")[0].split(".");
-    var cleanedNumber = numbers[0].split(" ")
-    cleanedNumber = cleanedNumber[cleanedNumber.length - 1]
+    var cleanedNumber = numbers[0].split(" ");
+    cleanedNumber = cleanedNumber[cleanedNumber.length - 1];
     c.push({
       department: values[0].split(" ")[0],
       number: cleanedNumber,
@@ -161,6 +161,6 @@ Evaluation.getCourseLinksFromProgram = function() {
     });
   }
   return c;
-}
+};
 
 Navigation.start();
