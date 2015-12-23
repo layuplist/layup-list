@@ -8,17 +8,14 @@ import sys
 import django
 import json
 from django.db import transaction, IntegrityError, DataError
-import subprocess
 
 sys.path.append(os.getcwd())
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "layup_list.settings")
 django.setup()
 from web.models import Course, CourseMedian
+from importer_library import clean_department_code
 
 MEDIAN_DIR = "./data/medians"
-DEPARTMENT_CORRECTIONS = {
-    "M&amp;SS": "M&SS"
-}
 
 ambiguous_subnumber = 0
 missing_course = 0
@@ -39,9 +36,7 @@ for f in os.listdir(MEDIAN_DIR):
                 medians = json.load(data_file)
                 for m in medians:
 
-                    department = m["course"]["department"].strip()
-                    if department in DEPARTMENT_CORRECTIONS:
-                        department = DEPARTMENT_CORRECTIONS[department]
+                    department = clean_department_code(m["course"]["department"])
 
                     number = int(m["course"]["number"])
                     try:

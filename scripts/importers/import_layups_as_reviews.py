@@ -17,6 +17,8 @@ django.setup()
 
 from django.contrib.auth.models import User, Group
 from web.models import Review, Course
+from importer_library import clean_department_code
+
 import HTMLParser
 
 html_parser = HTMLParser.HTMLParser()
@@ -35,7 +37,7 @@ with transaction.atomic():
 
         for layup in layups:
             try:
-                department = layup["department"]
+                department = clean_department_code(layup["department"])
                 number = layup["number"]
                 course_name = layup["course_name"]
                 professor = layup["instructor"]

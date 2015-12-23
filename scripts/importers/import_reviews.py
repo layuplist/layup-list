@@ -16,6 +16,7 @@ django.setup()
 
 from django.contrib.auth.models import User, Group
 from web.models import Review, Course
+from importer_library import clean_department_code
 import HTMLParser
 
 html_parser = HTMLParser.HTMLParser()
@@ -35,7 +36,7 @@ for f in (OLD_REVIEWS, NEW_REVIEWS):
 
             for review in reviews:
                 try:
-                    department = review["department"]
+                    department = clean_department_code(review["department"])
                     number = review["number"]
                 except KeyError:
                     print "Dumping Review, missing critical data"
