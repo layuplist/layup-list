@@ -4,7 +4,7 @@
 python manage.py migrate
 
 # import from ORC
-python scripts/importers/import_undergraduate_courses.py
+python scripts/importers/import_orc_courses.py
 
 # import term data
 python scripts/importers/import_term.py 16W data/terms/201601_courses.json

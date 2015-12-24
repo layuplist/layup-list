@@ -7,6 +7,7 @@ import os
 import sys
 import django
 import json
+import re
 from django.db import transaction
 
 sys.path.append(os.getcwd())
@@ -14,7 +15,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "layup_list.settings")
 django.setup()
 from web.models import Course
 
-DEFAULT_FILENAME = "data/undergraduate_courses.json"
+DEFAULT_FILENAME = "data/orc_courses.json"
 filename = DEFAULT_FILENAME if len(sys.argv) == 1 else sys.argv[1]
 
 with transaction.atomic():
@@ -26,7 +27,10 @@ with transaction.atomic():
             title = c["course_name"].encode('utf-8').strip()
             print "importing {}".format(title)
             department = c["department"].strip()
-            number = int(c["number"])
+            number = int(re.sub("[^0-9]", "", c["number"]))
+            if number > 999:
+                print "Bad course number {}:{}".format(department, number)
+                raise Exception
             subnumber = int(c["subnumber"]) if "subnumber" in c else None
             url = c["url"].strip()
 

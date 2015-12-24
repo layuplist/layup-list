@@ -5,7 +5,7 @@
 
 wd=$(pwd);
 cd data;
-phantomjs $wd/scripts/crawlers/crawl_undergraduate_courses.js;
+phantomjs $wd/scripts/crawlers/crawl_orc_courses.js;
 cd medians;
 phantomjs $wd/scripts/crawlers/crawl_medians.js 13x 13f 14w 14s 14x 14f 15w 15s 15x 15f;
 cd ../terms;

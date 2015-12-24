@@ -1,5 +1,5 @@
 /*
- * Parses the Dartmouth undergraduate course listings and generates JSON.
+ * Parses the Dartmouth course listings and generates JSON.
  *
  * 1. Retrieves departments from department directory, places in stack
  * 2. Visits each department, placing programs in stack
@@ -15,6 +15,7 @@ var Evaluation = {};
 var year = new Date().getFullYear();
 var orc = "http://dartmouth.smartcatalogiq.com/en/" + year + "/orc/";
 var undergradDepartmentsURL = orc + "Departments-Programs-Undergraduate/";
+var graduateDepartmentsURL = orc + "Departments-Programs-Graduate/";
 
 // programs which cannot be parsed from department pages.
 var additionalPrograms = [
@@ -31,20 +32,28 @@ var additionalPrograms = [
 ];
 
 Navigation.start = function() {
-  Navigation.departmentDirectory();
+  Navigation.departmentDirectories();
 };
 
-Navigation.departmentDirectory = function() {
+Navigation.departmentDirectories = function() {
   var page = llcommon.createPage();
   llcommon.openPage(page, undergradDepartmentsURL, function() {
-    console.log("...retrieving departments to process");
+    console.log("...retrieving undergrad departments to process");
     var departmentsToProcess = page.evaluate(Evaluation.getDepartmentLinksFromDepartmentDirectory);
     console.log("...retrieved.");
-
     console.log("...retrieving programs");
-    departmentsToProcess.reverse();
     setTimeout(function () {
-      Navigation.departments(departmentsToProcess, []);
+      var page = llcommon.createPage();
+      llcommon.openPage(page, graduateDepartmentsURL, function() {
+        console.log("...retrieving graduate departments to process");
+        departmentsToProcess = departmentsToProcess.concat(page.evaluate(Evaluation.getDepartmentLinksFromDepartmentDirectory));
+        console.log("...retrieved.");
+        console.log("...retrieving programs");
+        departmentsToProcess.reverse();
+        setTimeout(function () {
+          Navigation.departments(departmentsToProcess, []);
+        }, llcommon.timeout);
+      });
     }, llcommon.timeout);
   });
 };
@@ -88,7 +97,7 @@ Navigation.programs = function (remainingPrograms, courses) {
       }
     });
 
-    llcommon.exportDataToJSON(courses, "undergraduate_courses.json", function() {
+    llcommon.exportDataToJSON(courses, "orc_courses.json", function() {
       console.log("success! " + courses.length + " courses crawled and exported.");
       phantom.exit();
     });
@@ -104,6 +113,9 @@ Navigation.programs = function (remainingPrograms, courses) {
           numbers.push(newCourses[c].number);
         } else {
           numbers.push(newCourses[c].number + "." + newCourses[c].subnumber);
+        }
+        if (newCourses[c].department === "") {
+            newCourses[c].department = program.code;
         }
         courses.push(newCourses[c]);
       }
