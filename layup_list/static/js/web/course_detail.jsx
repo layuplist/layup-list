@@ -1,0 +1,2 @@
+LayupList.Web.CourseDetail = function() {
+};

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>{{ course }}</h1>
+        <h4>{{ course.layup_score }} called it a layup</h4>
+        <h4>{{ course.quality_score }} said it was a good class</h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h3>Medians</h3>
+        {% for median in medians %}
+            {{ median.term }} {{ median.median }}
+        {% endfor %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h3>Reviews</h3>
+        <table class="table table-striped">
+            <tbody>
+                {% for review in reviews %}
+                    <tr><td>
+                        {{ review.comments }}
+                    </td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

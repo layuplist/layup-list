@@ -22,7 +22,7 @@
                     <td><h2>{{ course.layup_score }}</h2></td>
                     <td><h2>{{ course.quality_score }}</h2></td>
                     <td>
-                        <h3>{{ course }}</h3>
+                        <h3><a href="{% url 'course_detail' course.id %}">{{ course }}</a></h3>
                         <h5>{{ period }} {{ course.distribs_string }} </h5>
                     </td>
                 </tr>

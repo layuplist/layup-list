@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from web.models import Course
+from web.models import Course, CourseMedian
 from django.conf import settings
 
-LIMIT = 100
+LIMIT = 20
 
 def current_term(request):
 
@@ -24,4 +24,13 @@ def current_term(request):
             'distribs'
         ).order_by(primary_sort, secondary_sort)[:LIMIT],
         'page_javascript': 'LayupList.Web.CurrentTerm()'
+    })
+
+def course_detail(request, course_id):
+    course = Course.objects.get(pk=course_id)
+    return render(request, 'course_detail.html', {
+        'course': course,
+        'medians': course.coursemedian_set.all(),
+        'reviews': course.review_set.all(),
+        'page_javascript': 'LayupList.Web.CourseDetail()'
     })

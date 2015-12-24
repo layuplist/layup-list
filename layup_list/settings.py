@@ -136,7 +136,7 @@ PIPELINE = {
                 'js/plugins.jsx',
                 'js/web/base.jsx',
                 'js/web/current_term.jsx',
-                'js/web/course.jsx',
+                'js/web/course_detail.jsx',
             ),
             'output_filename': 'js/app.js',
         }
@@ -146,7 +146,7 @@ PIPELINE = {
             'source_filenames': (
                 'css/web/base.css',
                 'css/web/current_term.css',
-                'css/web/course.css',
+                'css/web/course_detail.css',
             ),
             'output_filename': 'css/app.css',
             'extra_context': {

@@ -1,2 +1,0 @@
-LayupList.Web.Course = function() {
-};
