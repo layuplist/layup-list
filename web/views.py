@@ -2,29 +2,31 @@ from django.shortcuts import render
 from web.models import Course, CourseMedian
 from django.conf import settings
 from django.views.decorators.http import require_safe
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 LIMIT = 20
 
-
 @require_safe
 def current_term(request):
-    sort = request.GET.get("sort")
-    if sort == "quality":
-        course_type = "Good Classes"
-        primary_sort = "-quality_score"
-        secondary_sort = "-layup_score"
+    if request.GET.get("sort") == "quality":
+        course_type, primary_sort, secondary_sort = "Good Classes", "-quality_score", "-layup_score"
     else:
-        course_type = "Layups"
-        primary_sort = "-layup_score"
-        secondary_sort = "-quality_score"
+        course_type, primary_sort, secondary_sort = "Layups", "-layup_score", "-quality_score"
+
+    term_courses = Course.objects.for_term(settings.CURRENT_TERM).prefetch_related('distribs').order_by(primary_sort, secondary_sort)
+
+    paginator = Paginator(term_courses, LIMIT)
+    try:
+        courses = paginator.page(request.GET.get('page'))
+    except PageNotAnInteger:
+        courses = paginator.page(1)
+    except EmptyPage:
+        courses = paginator.page(paginator.num_pages)
 
     return render(request, 'current_term.html', {
         'term': settings.CURRENT_TERM,
         'course_type': course_type,
-        'count': Course.objects.for_term(settings.CURRENT_TERM).count(),
-        'courses': Course.objects.for_term(settings.CURRENT_TERM).prefetch_related(
-            'distribs'
-        ).order_by(primary_sort, secondary_sort)[:LIMIT],
+        'courses': courses,
         'page_javascript': 'LayupList.Web.CurrentTerm()'
     })
 
