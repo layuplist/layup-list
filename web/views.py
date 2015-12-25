@@ -4,7 +4,9 @@ from django.conf import settings
 
 LIMIT = 20
 
+
 def current_term(request):
+    print request
 
     sort = request.GET.get("sort")
     if sort == "quality":
@@ -26,6 +28,7 @@ def current_term(request):
         'page_javascript': 'LayupList.Web.CurrentTerm()'
     })
 
+
 def course_detail(request, course_id):
     course = Course.objects.get(pk=course_id)
     return render(request, 'course_detail.html', {
@@ -34,3 +37,36 @@ def course_detail(request, course_id):
         'reviews': course.review_set.all(),
         'page_javascript': 'LayupList.Web.CourseDetail()'
     })
+
+
+def search(request, query):
+    info = query.split()
+
+    try:
+        department = info[0]
+    except IndexError:
+        department = ""
+
+    try:
+        number = info[1]
+    except IndexError:
+        number = None
+
+    try:
+        name = info[2]
+    except IndexError:
+        name = ""
+
+    courses = Course.objects.filter(
+        department=department,
+        number=number,
+        # title__like=name
+    )
+
+    if not courses:
+        return
+    else:
+        return render(request, 'search.html', {
+            'courses': courses,
+            'page_javascript': 'LayupList.Web.Search()'
+        })

@@ -1,0 +1,35 @@
+{% extends "base.html" %} {% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1> Search Results For </h1>
+        <h4>{{ query }}</h4>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped">
+            <thead>
+                <th>Rank</th>
+                <th>Course</th>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td>
+                        <h2>{{ forloop.counter }}</h2></td>
+                    <td>
+                        <h3><a href="{% url 'course_detail' course.id %}">{{ course }}</a></h3>
+                        <h5>{{ period }} {{ course.distribs_string }} </h5>
+                    </td>
+                    <td>
+                        <h2>{{ course.layup_score }}</h2></td>
+                    <td>
+                        <h2>{{ course.quality_score }}</h2></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
