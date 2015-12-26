@@ -2,10 +2,27 @@
 <div class="row">
     <div class="col-md-12">
         <h1> Search Results For </h1>
-        <h4>{{ query }}</h4>
+        <h4>"{{ query }}"</h4>
     </div>
 </div>
 
+{% if not query %}
+<div class="row">
+    <div class="col-md-12">
+    <h3>Empty query string. Please enter a search query. Example: COSC 001</h3>
+    </div>
+</div>
+{% endif %}
+
+{% if query and not found_results %}
+<div class="row">
+    <div class="col-md-12">
+    <h3>Could not find any results. Please double-check your search query, and make sure the department and course number are correct.</h3>
+    </div>
+</div>
+{% endif %}
+
+{% if query and found_results %}
 <div class="row">
     <div class="col-md-12">
         <table class="table table-striped">
@@ -32,4 +49,6 @@
         </table>
     </div>
 </div>
+{% endif %}
+
 {% endblock %}

@@ -50,7 +50,8 @@
     document.getElementById('search').onsubmit=function makeSearch() {
         var query = document.getElementById('query').value;
         console.log(window.location.href);
-        window.location.href = {% url 'search' query %} + query;
+        console.log("{% url 'search' query %}");
+        window.location.href = "{% url 'search' "" %}" + query;
         return false;
     }
     </script>

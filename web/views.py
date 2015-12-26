@@ -41,32 +41,37 @@ def course_detail(request, course_id):
 
 def search(request, query):
     info = query.split()
+    print request.GET
+
+    if not info:
+        return render(request, 'search.html', {
+            'query': ""
+        }) # empty query
+
+    department = info[0]
 
     try:
-        department = info[0]
-    except IndexError:
-        department = ""
-
-    try:
-        number = info[1]
-    except IndexError:
+        number = int(info[1])
+    except (ValueError, IndexError):
+        print "hit exception block"
         number = None
 
-    try:
-        name = info[2]
-    except IndexError:
-        name = ""
+    name = info[2] if len(info) > 2 else ""
 
     courses = Course.objects.filter(
-        department=department,
+        department__iexact=department,
         number=number,
-        # title__like=name
+        title__icontains=name
     )
 
     if not courses:
-        return
+        return render(request, 'search.html', {
+            'query': query,
+            'found_results': False
+        })
     else:
         return render(request, 'search.html', {
+            'query': query,
             'courses': courses,
-            'page_javascript': 'LayupList.Web.Search()'
+            'found_results': True
         })
