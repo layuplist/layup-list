@@ -14,7 +14,7 @@
 </div>
 {% endif %}
 
-{% if query and not found_results %}
+{% if query and not courses %}
 <div class="row">
     <div class="col-md-12">
     <h3>Could not find any results. Please double-check your search query, and make sure the department and course number are correct.</h3>
@@ -22,7 +22,7 @@
 </div>
 {% endif %}
 
-{% if query and found_results %}
+{% if query and courses %}
 <div class="row">
     <div class="col-md-12">
         <table class="table table-striped">

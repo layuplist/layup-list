@@ -6,8 +6,6 @@ LIMIT = 20
 
 
 def current_term(request):
-    print request
-
     sort = request.GET.get("sort")
     if sort == "quality":
         course_type = "Good Classes"
@@ -40,23 +38,15 @@ def course_detail(request, course_id):
 
 
 def search(request, query):
-    info = query.split()
-    print request.GET
+    info = query.strip().split()
 
-    if not info:
-        return render(request, 'search.html', {
-            'query': ""
-        }) # empty query
-
-    department = info[0]
+    department = info[0] if info else ""
+    name = info[2] if len(info) > 2 else ""
 
     try:
         number = int(info[1])
     except (ValueError, IndexError):
-        print "hit exception block"
         number = None
-
-    name = info[2] if len(info) > 2 else ""
 
     courses = Course.objects.filter(
         department__iexact=department,
@@ -64,14 +54,7 @@ def search(request, query):
         title__icontains=name
     )
 
-    if not courses:
-        return render(request, 'search.html', {
-            'query': query,
-            'found_results': False
-        })
-    else:
-        return render(request, 'search.html', {
-            'query': query,
-            'courses': courses,
-            'found_results': True
-        })
+    return render(request, 'search.html', {
+        'query': query,
+        'courses': courses,
+    })
