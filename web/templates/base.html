@@ -44,17 +44,6 @@
                 </div>
             </div>
         </div>
-
-    <script>
-
-    document.getElementById('search').onsubmit=function makeSearch() {
-        var query = document.getElementById('query').value;
-        console.log(window.location.href);
-        console.log("{% url 'search' query %}");
-        window.location.href = "{% url 'search' "" %}" + query;
-        return false;
-    }
-    </script>
 <!--         <script src="{% static "js/app.js" %}"></script>
  -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -71,6 +60,13 @@
 
         <script>
           $(document).ready(function() {
+            document.getElementById('search').onsubmit=function makeSearch() {
+                var query = document.getElementById('query').value;
+                console.log(window.location.href);
+                console.log("{% url 'search' query %}");
+                window.location.href = "{% url 'search' "" %}" + query;
+                return false;
+            }
           var bodyColor = $('body').css('color');
           if(bodyColor != 'rgb(51, 51, 51)') {
           $("head").prepend('<link rel="stylesheet" href="{% static "css/vendor/bootstrap.min.css" %}">');}});
