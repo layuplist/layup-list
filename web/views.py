@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from web.models import Course, CourseMedian
 from django.conf import settings
+from django.views.decorators.http import require_safe
 
 LIMIT = 20
 
 
+@require_safe
 def current_term(request):
     sort = request.GET.get("sort")
     if sort == "quality":
@@ -27,6 +29,7 @@ def current_term(request):
     })
 
 
+@require_safe
 def course_detail(request, course_id):
     course = Course.objects.get(pk=course_id)
     return render(request, 'course_detail.html', {
@@ -37,7 +40,10 @@ def course_detail(request, course_id):
     })
 
 
-def search(request, query):
+@require_safe
+def search(request):
+    query = request.GET.get("q", "")
+
     info = query.strip().split()
 
     department = info[0] if info else ""
