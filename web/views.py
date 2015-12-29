@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from web.models import Course, CourseMedian
 from django.conf import settings
 from django.views.decorators.http import require_safe
@@ -56,23 +56,16 @@ def course_detail(request, course_id):
 
 @require_safe
 def search(request):
-    query = request.GET.get("q", "")
+    query = request.GET.get("q", "").strip()
+    if len(query) < 3:
+        return render(request, 'search.html', {
+            'query': query,
+            'courses': []
+        })
+    courses = Course.objects.search(query).prefetch_related('distribs')
 
-    info = query.strip().split()
-
-    department = info[0] if info else ""
-    name = info[2] if len(info) > 2 else ""
-
-    try:
-        number = int(info[1])
-    except (ValueError, IndexError):
-        number = None
-
-    courses = Course.objects.filter(
-        department__iexact=department,
-        number=number,
-        title__icontains=name
-    )
+    if len(courses) == 1:
+        return redirect(courses[0])
 
     return render(request, 'search.html', {
         'query': query,

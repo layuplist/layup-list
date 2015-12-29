@@ -1,56 +1,48 @@
 {% extends "base.html" %} {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h1> Search Results For </h1>
-        <h4>"{{ query }}"</h4>
+        <h1> Search Results For "{{ query }}" </h1>
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-12">
 {% if not query %}
-<div class="row">
-    <div class="col-md-12">
     <h3>Empty query string. Please enter a search query. Example: COSC 001</h3>
-    </div>
-</div>
-{% endif %}
-
-{% if query and not courses %}
-<div class="row">
-    <div class="col-md-12">
+{% elif query|length < 3 %}
+    <h3>Query must be at least 3 characters long.</h3>
+{% elif not courses %}
     <h3>Could not find any results. Please double-check your search query, and make sure the department and course number are correct.</h3>
+{% else %}
+    <table class="table table-striped">
+        <thead>
+            <th>Rank</th>
+            <th>Course</th>
+            <th>Layup Score</th>
+            <th>Quality Score</th>
+        </thead>
+        <tbody>
+            {% for course in courses %}
+            <tr>
+                <td>
+                    <h2>{{ forloop.counter }}</h2>
+                </td>
+                <td>
+                    <h3><a href="{% url 'course_detail' course.id %}">{{ course }}</a></h3>
+                    <h5>{{ period }} {{ course.distribs_string }} </h5>
+                </td>
+                <td>
+                    <h2>{{ course.layup_score }}</h2>
+                </td>
+                <td>
+                    <h2>{{ course.quality_score }}</h2>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
     </div>
 </div>
-{% endif %}
-
-{% if query and courses %}
-<div class="row">
-    <div class="col-md-12">
-        <table class="table table-striped">
-            <thead>
-                <th>Rank</th>
-                <th>Course</th>
-                <th>Layup Score</th>
-                <th>Quality Score</th>
-            </thead>
-            <tbody>
-                {% for course in courses %}
-                <tr>
-                    <td>
-                        <h2>{{ forloop.counter }}</h2></td>
-                    <td>
-                        <h3><a href="{% url 'course_detail' course.id %}">{{ course }}</a></h3>
-                        <h5>{{ period }} {{ course.distribs_string }} </h5>
-                    </td>
-                    <td>
-                        <h2>{{ course.layup_score }}</h2></td>
-                    <td>
-                        <h2>{{ course.quality_score }}</h2></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-{% endif %}
 
 {% endblock %}
