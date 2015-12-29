@@ -13,8 +13,8 @@ python scripts/importers/import_term.py 16W data/terms/201601_courses.json
 python scripts/importers/import_medians.py
 
 # import reviews
-python scripts/importers/import_reviews.py
 python scripts/importers/import_layups_as_reviews.py
+python scripts/importers/import_reviews.py
 
 # compute the initial scorings
 python scripts/compute/compute_initial_scores.py

@@ -4,7 +4,10 @@ from django.conf import settings
 from django.views.decorators.http import require_safe
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-LIMIT = 20
+LIMITS = {
+    "courses": 20,
+    "reviews": 8,
+}
 
 @require_safe
 def current_term(request):
@@ -15,7 +18,7 @@ def current_term(request):
 
     term_courses = Course.objects.for_term(settings.CURRENT_TERM).prefetch_related('distribs').order_by(primary_sort, secondary_sort)
 
-    paginator = Paginator(term_courses, LIMIT)
+    paginator = Paginator(term_courses, LIMITS["courses"])
     try:
         courses = paginator.page(request.GET.get('page'))
     except PageNotAnInteger:
@@ -34,10 +37,19 @@ def current_term(request):
 @require_safe
 def course_detail(request, course_id):
     course = Course.objects.get(pk=course_id)
+
+    paginator = Paginator(course.review_set.all().order_by("-created_at"), LIMITS["reviews"])
+    try:
+        reviews = paginator.page(request.GET.get('page'))
+    except PageNotAnInteger:
+        reviews = paginator.page(1)
+    except EmptyPage:
+        reviews = paginator.page(paginator.num_pages)
+
     return render(request, 'course_detail.html', {
         'course': course,
         'medians': course.coursemedian_set.all(),
-        'reviews': course.review_set.all(),
+        'reviews': reviews,
         'page_javascript': 'LayupList.Web.CourseDetail()'
     })
 

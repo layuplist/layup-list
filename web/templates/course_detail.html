@@ -29,5 +29,22 @@
         </table>
     </div>
 </div>
+<nav>
+    <ul class="pager">
+        {% if reviews.has_previous %}
+            <li><a href="{% url 'course_detail' course.id %}?page={{ reviews.previous_page_number }}"><span aria-hidden="true">&larr;</span> Previous</a></li>
+        {% else %}
+            <li class="disabled"><a><span aria-hidden="true">&larr;</span> Previous</a></li>
+        {% endif %}
+
+        <li>{{ reviews.number }} of {{ reviews.paginator.num_pages }}</li>
+
+        {% if reviews.has_next %}
+            <li><a href="{% url 'course_detail' course.id %}?page={{ reviews.next_page_number }}">Next <span aria-hidden="true">&rarr;</span></a></li>
+        {% else %}
+            <li class="disabled"><a>Next <span aria-hidden="true">&rarr;</span></a></li>
+        {% endif %}
+    </ul>
+</nav>
 
 {% endblock %}
