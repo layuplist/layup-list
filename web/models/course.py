@@ -75,6 +75,7 @@ class Course(models.Model):
     subnumber = models.IntegerField(null=True, db_index=True)
     url = models.URLField(null=True)
     source = models.CharField(max_length=16, choices=SOURCES.CHOICES)
+    description = models.TextField(null=True)
 
     layup_score = models.IntegerField(default=0)
     quality_score = models.IntegerField(default=0)
