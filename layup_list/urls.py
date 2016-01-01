@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.current_term, name="current_term"),
     url(r'^course/(?P<course_id>[0-9].*)$', views.course_detail, name="course_detail"),
-    url(r'^search/?', views.search, name="search")
+    url(r'^search/?', views.search, name="search"),
+    url(r'^api/medians/(?P<course_id>[0-9].*)', views.medians, name="medians")
 ]

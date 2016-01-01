@@ -3,6 +3,10 @@ from web.models import Course, CourseMedian
 from django.conf import settings
 from django.views.decorators.http import require_safe
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import JsonResponse
+from django.core.urlresolvers import reverse
+from lib.grades import numeric_value_for_grade
+from lib.terms import numeric_value_of_term
 
 LIMITS = {
     "courses": 20,
@@ -48,9 +52,8 @@ def course_detail(request, course_id):
 
     return render(request, 'course_detail.html', {
         'course': course,
-        'medians': course.coursemedian_set.all(),
         'reviews': reviews,
-        'page_javascript': 'LayupList.Web.CourseDetail()'
+        'page_javascript': 'LayupList.Web.CourseDetail({})'.format(course_id)
     })
 
 
@@ -71,3 +74,31 @@ def search(request):
         'query': query,
         'courses': courses,
     })
+
+@require_safe
+def medians(request, course_id):
+
+    # retrieve course medians for term, and group by term for averaging
+    medians_by_term = {}
+    for course_median in CourseMedian.objects.filter(course=course_id):
+        if course_median.term not in medians_by_term:
+            medians_by_term[course_median.term] = []
+
+        medians_by_term[course_median.term].append({
+            'median': course_median.median,
+            'enrollment': course_median.enrollment,
+            'section': course_median.section,
+            'numeric_value': numeric_value_for_grade(course_median.median)
+        })
+
+    return JsonResponse({ 'medians': sorted(
+        [
+            {
+            'term': term,
+            'avg_numeric_value': sum([m['numeric_value'] for m in term_medians]) / len(term_medians),
+            'courses': term_medians,
+            } for term, term_medians in medians_by_term.iteritems()
+        ],
+        key=lambda x: numeric_value_of_term(x['term']),
+        reverse=True
+    )})
