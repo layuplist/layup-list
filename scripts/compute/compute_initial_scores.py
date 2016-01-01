@@ -25,24 +25,26 @@ LEGACY_LAYUPS_FILE = "./data/layups/layups.json"
 QUALITY_WORDS = ["enjoy", "love", "awesome", "enthusiastic", "passionate", "personal"]
 
 def compute_and_import_initial_scores():
-    compute_and_import_initial_layup_scores()
-    compute_and_import_initial_quality_scores()
+    with transaction.atomic():
 
-    print "---- OVERALL LAYUP ----"
-    for c in Course.objects.order_by("-layup_score")[:50]:
-        print c, c.layup_score
+        compute_and_import_initial_layup_scores()
+        compute_and_import_initial_quality_scores()
 
-    print "---- {} LAYUP ----".format(TEST_TERM)
-    for c in CourseOffering.objects.select_related("course").filter(term=TEST_TERM).order_by("-course__layup_score")[:50]:
-        print c.course, c.course.layup_score
+        print "---- OVERALL LAYUP ----"
+        for c in Course.objects.order_by("-layup_score")[:50]:
+            print c, c.layup_score
 
-    print "---- OVERALL GOOD ----"
-    for c in Course.objects.order_by("-quality_score")[:50]:
-        print c, c.quality_score
+        print "---- {} LAYUP ----".format(TEST_TERM)
+        for c in CourseOffering.objects.select_related("course").filter(term=TEST_TERM).order_by("-course__layup_score")[:50]:
+            print c.course, c.course.layup_score
 
-    print "---- {} GOOD ----".format(TEST_TERM)
-    for c in CourseOffering.objects.select_related("course").filter(term=TEST_TERM).order_by("-course__quality_score")[:50]:
-        print c.course, c.course.quality_score
+        print "---- OVERALL GOOD ----"
+        for c in Course.objects.order_by("-quality_score")[:50]:
+            print c, c.quality_score
+
+        print "---- {} GOOD ----".format(TEST_TERM)
+        for c in CourseOffering.objects.select_related("course").filter(term=TEST_TERM).order_by("-course__quality_score")[:50]:
+            print c.course, c.course.quality_score
 
 def compute_and_import_initial_layup_scores():
     legacy_layup_references, llr_with_comments = initialize_legacy_layup_references()
