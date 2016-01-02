@@ -144,6 +144,7 @@ PIPELINE = {
         'app': {
             'source_filenames': (
                 'css/web/base.css',
+                'css/web/landing.css',
                 'css/web/current_term.css',
                 'css/web/course_detail.css',
             ),
