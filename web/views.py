@@ -3,7 +3,7 @@ from web.models import Course, CourseMedian
 from django.conf import settings
 from django.views.decorators.http import require_safe
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseNotFound
 from django.core.urlresolvers import reverse
 from lib.grades import numeric_value_for_grade
 from lib.terms import numeric_value_of_term
@@ -40,7 +40,10 @@ def current_term(request):
 
 @require_safe
 def course_detail(request, course_id):
-    course = Course.objects.get(pk=course_id)
+    try:
+        course = Course.objects.get(pk=course_id)
+    except Course.DoesNotExist:
+        return HttpResponseNotFound('<h1>Page not found</h1>')
 
     paginator = Paginator(course.review_set.all().order_by("-created_at"), LIMITS["reviews"])
     try:
