@@ -61,17 +61,19 @@
         <script>window.d3 || document.write('<script src="{% static "js/vendor/d3.min.js" %}"><\/script>')</script>
 
         <script>
-          $(document).ready(function() {
-          var bodyColor = $('body').css('color');
-          if(bodyColor != 'rgb(51, 51, 51)') {
-          $("head").prepend('<link rel="stylesheet" href="{% static "css/vendor/bootstrap.min.css" %}">');}});
+            $(document).ready(function() {
+            var bodyColor = $('body').css('color');
+            if(bodyColor != 'rgb(51, 51, 51)') {
+            $("head").prepend('<link rel="stylesheet" href="{% static "css/vendor/bootstrap.min.css" %}">');}});
         </script>
 
         {% javascript 'app' %}
 
         <script>
-            LayupList.Web.Base();
-            {{ page_javascript }}
+            $(document).ready(function() {
+                LayupList.Web.Base();
+                {{ page_javascript }}
+            });
         </script>
 
         <script>
