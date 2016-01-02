@@ -14,7 +14,7 @@
         <div class="median-chart"></div>
     </div>
 </div>
-<div class="row">
+<div id="reviews" class="row">
     <div class="col-md-12">
         <h3>Reviews</h3>
         <table class="table table-striped">
@@ -31,7 +31,7 @@
 <nav>
     <ul class="pager">
         {% if reviews.has_previous %}
-            <li><a href="{% url 'course_detail' course.id %}?page={{ reviews.previous_page_number }}"><span aria-hidden="true">&larr;</span> Previous</a></li>
+            <li><a href="{% url 'course_detail' course.id %}?page={{ reviews.previous_page_number }}#reviews"><span aria-hidden="true">&larr;</span> Previous</a></li>
         {% else %}
             <li class="disabled"><a><span aria-hidden="true">&larr;</span> Previous</a></li>
         {% endif %}
@@ -39,7 +39,7 @@
         <li>{{ reviews.number }} of {{ reviews.paginator.num_pages }}</li>
 
         {% if reviews.has_next %}
-            <li><a href="{% url 'course_detail' course.id %}?page={{ reviews.next_page_number }}">Next <span aria-hidden="true">&rarr;</span></a></li>
+            <li><a href="{% url 'course_detail' course.id %}?page={{ reviews.next_page_number }}#reviews">Next <span aria-hidden="true">&rarr;</span></a></li>
         {% else %}
             <li class="disabled"><a>Next <span aria-hidden="true">&rarr;</span></a></li>
         {% endif %}

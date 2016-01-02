@@ -20,3 +20,7 @@
 .x.axis path {
     display: none;
 }
+
+.median-chart {
+    height: 250px;
+}
