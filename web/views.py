@@ -10,7 +10,7 @@ from lib.terms import numeric_value_of_term
 
 LIMITS = {
     "courses": 20,
-    "reviews": 8,
+    "reviews": 5,
 }
 
 @require_safe
