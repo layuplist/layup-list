@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col-md-12">
         <h1>{{ course }}</h1>
-        <p>{{ course.description }}</p>
+        {% if course.description %}<p>{{ course.description }}</p>{% endif %}
         <h4>{{ course.layup_score }} called it a layup</h4>
         <h4>{{ course.quality_score }} said it was a good class</h4>
     </div>
@@ -17,6 +17,7 @@
 <div id="reviews" class="row">
     <div class="col-md-12">
         <h3>Reviews</h3>
+        {% if reviews %}
         <table class="table table-striped">
             <tbody>
                 {% for review in reviews %}
@@ -26,24 +27,27 @@
                 {% endfor %}
             </tbody>
         </table>
+        <nav>
+            <ul class="pager">
+                {% if reviews.has_previous %}
+                    <li><a href="{% url 'course_detail' course.id %}?page={{ reviews.previous_page_number }}#reviews"><span aria-hidden="true">&larr;</span> Previous</a></li>
+                {% else %}
+                    <li class="disabled"><a><span aria-hidden="true">&larr;</span> Previous</a></li>
+                {% endif %}
+
+                <li>{{ reviews.number }} of {{ reviews.paginator.num_pages }}</li>
+
+                {% if reviews.has_next %}
+                    <li><a href="{% url 'course_detail' course.id %}?page={{ reviews.next_page_number }}#reviews">Next <span aria-hidden="true">&rarr;</span></a></li>
+                {% else %}
+                    <li class="disabled"><a>Next <span aria-hidden="true">&rarr;</span></a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% else %}
+            <p>No reviews found</p>
+        {% endif %}
     </div>
 </div>
-<nav>
-    <ul class="pager">
-        {% if reviews.has_previous %}
-            <li><a href="{% url 'course_detail' course.id %}?page={{ reviews.previous_page_number }}#reviews"><span aria-hidden="true">&larr;</span> Previous</a></li>
-        {% else %}
-            <li class="disabled"><a><span aria-hidden="true">&larr;</span> Previous</a></li>
-        {% endif %}
-
-        <li>{{ reviews.number }} of {{ reviews.paginator.num_pages }}</li>
-
-        {% if reviews.has_next %}
-            <li><a href="{% url 'course_detail' course.id %}?page={{ reviews.next_page_number }}#reviews">Next <span aria-hidden="true">&rarr;</span></a></li>
-        {% else %}
-            <li class="disabled"><a>Next <span aria-hidden="true">&rarr;</span></a></li>
-        {% endif %}
-    </ul>
-</nav>
 
 {% endblock %}

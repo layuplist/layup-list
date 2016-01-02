@@ -1,9 +1,15 @@
 LayupList.Web.CourseDetail = function(courseId) {
     $.getJSON('/api/medians/' + courseId, function(data) {
         data = data.medians;
+        $medianChart = $(".median-chart");
+        if (data.length === 0) {
+            $medianChart.css('height', 'auto');
+            $medianChart.append("<p>No medians found.</p>");
+            return;
+        }
 
         var margin = {top: 20, right: 20, bottom: 30, left: 40},
-            width = $(".median-chart").width() - margin.left - margin.right,
+            width = $medianChart.width() - margin.left - margin.right,
             height = 250 - margin.top - margin.bottom;
 
         var x = d3.scale.ordinal().rangeRoundBands([0, width], 0.1);
