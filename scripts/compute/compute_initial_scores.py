@@ -105,6 +105,9 @@ def calculate_initial_layup_score(course, legacy_layup_references, llr_with_comm
 
     The ultimate score calculated is this raw score multiplied by 2.5, rounded up.
     """
+    if course.subnumber is not None:
+        return 0
+
     try:
         legacy_mentions = legacy_layup_references[course.department][course.number]
         legacy_mentions_with_comment = llr_with_comments[course.department][course.number]
