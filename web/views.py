@@ -5,6 +5,7 @@ from django.views.decorators.http import require_safe
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
+from django.core.mail import send_mail
 from lib.grades import numeric_value_for_grade
 from lib.terms import numeric_value_of_term
 from django.views.decorators.csrf import csrf_exempt
@@ -66,9 +67,11 @@ def signup(request):
 
         new_student = Student.objects.create(user=new_user, confirmation_link=link)
 
+
         full_link = request.META['HTTP_HOST'] + '/confirmation?link=' + link
         print full_link # remove on prod
-        sys.stdout.flush() # pythonunbuffered
+        send_mail('Your confirmation link', 'Please navigate to the following confirmation link: ' + full_link, 'support@layuplist.com', [email])
+        # sys.stdout.flush() # pythonunbuffered
 
         return render(request, 'instructions.html', {"auth_page": True})
 
