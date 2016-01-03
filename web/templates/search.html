@@ -14,29 +14,20 @@
 {% elif not courses %}
     <h3>Could not find any results. Please double-check your search query, and make sure the department and course number are correct.</h3>
 {% else %}
-    <table class="table table-striped">
+    <table class="table">
         <thead>
-            <th>Rank</th>
             <th>Course</th>
-            <th>Layup Score</th>
+            <th>Number of Reviews</th>
             <th>Quality Score</th>
+            <th>Layup Score</th>
         </thead>
         <tbody>
             {% for course in courses %}
             <tr>
-                <td>
-                    <h2>{{ forloop.counter }}</h2>
-                </td>
-                <td>
-                    <h3><a href="{% url 'course_detail' course.id %}">{{ course }}</a></h3>
-                    <h5>{{ period }} {{ course.distribs_string }} </h5>
-                </td>
-                <td>
-                    <h2>{{ course.layup_score }}</h2>
-                </td>
-                <td>
-                    <h2>{{ course.quality_score }}</h2>
-                </td>
+                <td> <a href="{% url 'course_detail' course.id %}">{{ course }}</a> </td>
+                <td> {{ course.review_set.count }} </td>
+                <td> {{ course.quality_score }} </td>
+                <td> {{ course.layup_score }} </td>
             </tr>
             {% endfor %}
         </tbody>

@@ -68,14 +68,13 @@ def search(request):
             'query': query,
             'courses': []
         })
-    courses = Course.objects.search(query).prefetch_related('distribs')
-
+    courses = Course.objects.search(query).prefetch_related('review_set')
     if len(courses) == 1:
         return redirect(courses[0])
 
     return render(request, 'search.html', {
         'query': query,
-        'courses': courses,
+        'courses': sorted(courses, key=lambda c: c.review_set.count(), reverse=True),
     })
 
 @require_safe
