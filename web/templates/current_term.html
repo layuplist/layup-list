@@ -10,9 +10,9 @@
         <table class="table">
             <thead>
                 {% if request.GET.sort == "quality" %}
-                    <th>Quality Score</th>
+                    <th class="text-center">Quality Score</th>
                 {% else %}
-                    <th>Layup Score</th>
+                    <th class="text-center">Layup Score</th>
                 {% endif %}
                 <th>Course</th>
             </thead>
@@ -32,10 +32,8 @@
                         <h3><a href="{% url 'course_detail' course.id %}">{{ course }}</a></h3>
                         <h5>
                             {{ course.review_set.count }} reviews
-                            |
-                            {{ course.distribs_string }}
-                            |
-                            Offered during {{ course.offered_times }}
+                            {% if course.distribs_string %} | {{ course.distribs_string }} {% endif %}
+                            {% if course.offered_times %} | Offered during {{ course.offered_times }} {% endif %}
                         </h5>
                     </td>
                 </tr>

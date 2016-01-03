@@ -78,9 +78,12 @@ def search(request):
     if len(courses) == 1:
         return redirect(courses[0])
 
+    if len(query) not in Course.objects.DEPARTMENT_LENGTHS:
+        courses = sorted(courses, key=lambda c: c.review_set.count(), reverse=True)
+
     return render(request, 'search.html', {
         'query': query,
-        'courses': sorted(courses, key=lambda c: c.review_set.count(), reverse=True),
+        'courses': courses
     })
 
 @require_safe
