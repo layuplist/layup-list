@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <script src="{% static " js/vendor/modernizr-2.8.3.min.js " %}"></script>
+    <script src="{% static "js/vendor/modernizr-2.8.3.min.js" %}"></script>
     {% stylesheet 'app' %}
 </head>
 
@@ -35,18 +35,18 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <p id="medium-large"><b>Dartmouth's new course review site...</b></p>
-                <p id="small">Dartmouth's new course review site. We've imported all the reviews and sentiment from the defunct CoursePicker, various layup lists, median data and bundled it under a simple voting system that helps you find the right classes every term.</p>
+                <p id="medium-large"><b>Welcome to Dartmouth's new course review site!</b></p>
+                <p id="small">We've imported all the reviews and sentiment from the defunct CoursePicker, various layup lists, median data and bundled it under a simple voting system that helps you find the right classes every term.</p>
             </div>
         </div>
         <br>
         <div class="row">
             <div class="col-md-12">
                 <p id="medium-large"><b>Features</b></p>
-                <p id="small-center"><span class="glyphicon glyphicon-thumbs-up"></span> Upvote courses based on both quality and easiness.</p>
-                <p id="small-center"><span class="glyphicon glyphicon glyphicon-stats"></span> Visualize information about each course.</p>
+                <p id="small-center"><span class="glyphicon glyphicon-thumbs-up"></span> Upvote classes based on both quality and easiness.</p>
+                <p id="small-center"><span class="glyphicon glyphicon glyphicon-stats"></span> Visualize information about each offering.</p>
                 <p id="small-center"><span class="glyphicon glyphicon-fire"></span> See which courses are the most popular of the term.</p>
-                
+
             </div>
         </div>
         <br>
@@ -59,13 +59,54 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="text-center">
-                    <div class="btn-group" role="group" aria-label="...">
 
-                        <button type="button" class="btn btn-default btn-font-landing">Sign up</button>
+
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".modal-signup">Sign up</button>
+
+                    <div class="modal fade bs-example-modal-sm modal-signup" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content" id="signup-modal">
+                                <h1>Sign up</h1>
+                                <form action="/signup" method="post">
+                                    {% csrf_token %}
+                                    <label for="email">Email: </label>
+                                    <input id="signup-email" class="form-control" type="text" name="email" value="">
+                                    <br>
+                                    <label for="password">Password: </label>
+                                    <input id="signup-password" class="form-control" type="password" name="password" value="">
+                                    <br>
+                                    <input type="submit" class="btn btn-primary" value="Submit">
+                                    <br>
+                                    <br>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                    <div class="btn-group" role="group" aria-label="...">
-                        <button type="button" class="btn btn-default btn-font-landing">Login</button>
+
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".modal-login">Login</button>
+
+                    <div class="modal fade bs-example-modal-sm modal-login" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content" id="signup-modal">
+                                <h1>Login</h1>
+                                <form action="/accounts/login/" method="post">
+                                    {% csrf_token %}
+                                    <label for="email">Email: </label>
+                                    <input id="login-email" class="form-control" type="text" name="email" value="">
+                                    <br>
+                                    <label for="password">Password: </label>
+                                    <input id="login-password" class="form-control" type="password" name="password" value="">
+                                    <br>
+                                    <input type="submit" class="btn btn-primary" value="Submit">
+                                    <br>
+                                    <br>
+                                </form>
+                            </div>
+                        </div>
                     </div>
+
+
+
                 </div>
             </div>
         </div>
@@ -99,17 +140,17 @@
         if (bodyColor != 'rgb(51, 51, 51)') {
             $("head").prepend('<link rel="stylesheet" href="{% static "css/vendor/bootstrap.min.css" %}">');
         }
+
     });
     </script>
 
     {% javascript 'app' %}
 
     <script>
-    LayupList.Web.Base(); {
-        {
-            page_javascript
-        }
-    }
+    $(document).ready(function() {
+        LayupList.Web.Base();
+            {{ page_javascript }}
+    });
     </script>
 
     <script>

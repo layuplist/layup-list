@@ -1,21 +1,124 @@
 from django.shortcuts import render, redirect
-from web.models import Course, CourseMedian
+from web.models import Course, CourseMedian, Student
 from django.conf import settings
 from django.views.decorators.http import require_safe
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import JsonResponse, HttpResponse, HttpResponseNotFound
+from django.http import JsonResponse, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
 from lib.grades import numeric_value_for_grade
 from lib.terms import numeric_value_of_term
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
+import sys
 
 LIMITS = {
     "courses": 20,
     "reviews": 5,
 }
 
+VALID_STUDENT = set(['16', '17', '18', '19', '20'])
+
+
 @require_safe
 def landing(request):
     return render(request, 'landing.html', {})
+
+
+def confirm_dartmouth_student_email(email):
+
+    e = email.split("@")
+    dnd_name = e[0]
+    domain = e[1] # will be 'alumni' for alumni emails
+    if domain != "dartmouth.edu":
+        return False
+
+    dnd_parts = dnd_name.split('.')
+
+    if dnd_parts[-1] not in VALID_STUDENT: # dnd student names end in number
+        return False
+
+    return True
+
+
+
+def signup(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        if not confirm_dartmouth_student_email(email):
+            return render(request, 'signup.html', {"error": "Only Dartmouth student emails are permitted for registration at this time. Contact us at support@layuplist.com for more information."})
+
+        link = User.objects.make_random_password(length=16, allowed_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789')
+        
+        try:
+            new_user = User.objects.create_user(username=email, email=email, password=password, is_active=False)
+        except IntegrityError:
+            return render(request, 'signup.html', {"error": "This email is already registered. If you believe this is a mistake, please email support@layuplist.com."})
+
+        new_student = Student.objects.create(user=new_user, confirmation_link=link)
+
+        full_link = request.META['HTTP_HOST'] + '/confirmation?link=' + link
+        print full_link # remove on prod
+        sys.stdout.flush() # pythonunbuffered
+
+        return render(request, 'instructions.html', {})
+
+    elif request.method == 'GET':
+        return render(request, 'signup.html', {})
+
+    else:
+        return render(request, 'signup.html', {"error": "Improper request type."})
+
+
+def auth_login(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        if email and password:
+            user = authenticate(username=email, password=password)
+
+            if user.is_active:
+                login(request, user)
+                return redirect('/current_term')
+
+            else:
+                return render(request, 'login.html', {"error": "This account is not active."})
+
+        else:
+            return render(request, 'login.html', {"error": "Must provide both email and password."})
+
+    elif request.method == 'GET':
+        return render(request, 'login.html', {})
+
+    else:
+        return render(request, 'login.html', {"error": "Please authenticate."})
+
+@login_required
+def auth_logout(request):
+    logout(request)
+    return render(request, 'logout.html', {})
+
+
+@require_safe
+def confirmation(request):
+    link = request.GET.get('link')
+
+    if link:
+        student = Student.objects.get(confirmation_link=link)
+
+        if student.user.is_active:
+            return render(request, 'confirmation.html', {'already_confirmed': True})
+
+        # print "is not active!"
+        student.user.is_active = True
+        student.user.save()
+        return render(request, 'confirmation.html', {'already_confirmed': False})
+
 
 @require_safe
 def current_term(request):
@@ -43,6 +146,7 @@ def current_term(request):
 
 
 @require_safe
+@login_required
 def course_detail(request, course_id):
     try:
         course = Course.objects.get(pk=course_id)
