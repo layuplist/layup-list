@@ -21,7 +21,14 @@
         <![endif]-->
 
         <div class="container">
+            <!-- {{ auth }} -->
+            {% if not auth_page %}
             {% include "navbar.html" %}
+            {% else %}
+            <p id="large">
+                <object class="logo" data="{% static "img/logo.svg" %}"></object>
+            </p>
+            {% endif %}
             <div class="row">
                 <div class="col-md-12">
                     {% block content %} {% endblock %}

@@ -20,7 +20,12 @@ from web import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', views.current_term, name="current_term"),
+    url(r'^$', views.landing, name="landing"),
+    url(r'^signup$', views.signup, name="signup"),
+    url(r'^accounts/login/$', views.auth_login, name="auth_login"),
+    url(r'^accounts/logout$', views.auth_logout, name="auth_logout"),
+    url(r'^confirmation$', views.confirmation, name="confirmation"),
+    url(r'^current_term$', views.current_term, name="current_term"),
     url(r'^course/(?P<course_id>[0-9].*)$', views.course_detail, name="course_detail"),
     url(r'^search/?', views.search, name="search"),
     url(r'^api/medians/(?P<course_id>[0-9].*)', views.medians, name="medians")

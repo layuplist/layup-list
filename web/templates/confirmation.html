@@ -1,0 +1,27 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+        </div>
+    </div>
+    <div class="row">
+        <hr>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% if already_confirmed %}
+            <p id="medium">This email is already confirmed. Please <a href="/accounts/login/">login</a>.</p>
+            {% else %}
+            <p id="medium">Email successfully confirmed! Please click here to <a href="/accounts/login">login</a>.</p>
+            {% endif %}
+            <!-- <p id="signupError">{{ error }}</p> -->
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+</div>
+
+{% endblock %}

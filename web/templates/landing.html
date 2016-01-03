@@ -1,0 +1,96 @@
+{% extends "base.html" %} {% block content %}
+<!-- <style>
+body{padding-top:10px}hr{border:0;border-top:1px solid #434857}.form-control{border:1px #434857 solid}#large{font-size:36px;text-align:center}#medium-large{font-size:24px;text-align:center}#medium{font-size:20px;text-align:center}#small{font-size:18px;text-align:justify}#small-center{font-size:18px;text-align:center}.btn-font-landing{font-size:30px}#signup-modal{padding-left:25px;padding-right:25px}#signupError{font-size:14px;color:red;text-align:center}#bigcaps{font-size:50px}
+
+</style> -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <p id="large">
+                </p>
+                <p id="large">Finding the perfect schedule for you </p>
+            </div>
+        </div>
+        <div class="row">
+            <hr>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p id="medium-large"><b>Welcome to Dartmouth's new course review site!</b></p>
+                <p id="small">We've imported all the reviews and sentiment from the defunct CoursePicker, median data and course offerings from the ORC, and various layup lists written by students, so that you have a centralized platform for finding the right classes every term.</p>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <p id="medium-large"><b>Features</b></p>
+                <p id="small-center"><span class="glyphicon glyphicon-thumbs-up"></span> Upvote classes based on both quality and easiness.</p>
+                <p id="small-center"><span class="glyphicon glyphicon glyphicon-stats"></span> Visualize information about each offering.</p>
+                <p id="small-center"><span class="glyphicon glyphicon-fire"></span> See which courses are the most popular of the term.</p>
+
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <p id="medium-large">Register to start getting recommendations <em>now</em>.</p>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="text-center">
+
+
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".modal-signup">Sign up</button>
+
+                    <div class="modal fade bs-example-modal-sm modal-signup" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content" id="signup-modal">
+                                <h1>Sign up</h1>
+                                <form action="/signup" method="post">
+                                    {% csrf_token %}
+                                    <label for="email">Email: </label>
+                                    <input id="signup-email" class="form-control" type="text" name="email" value="">
+                                    <br>
+                                    <label for="password">Password: </label>
+                                    <input id="signup-password" class="form-control" type="password" name="password" value="">
+                                    <br>
+                                    <input type="submit" class="btn btn-primary" value="Submit">
+                                    <br>
+                                    <br>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".modal-login">Login</button>
+
+                    <div class="modal fade bs-example-modal-sm modal-login" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content" id="signup-modal">
+                                <h1>Login</h1>
+                                <form action="/accounts/login/" method="post">
+                                    {% csrf_token %}
+                                    <label for="email">Email: </label>
+                                    <input id="login-email" class="form-control" type="text" name="email" value="">
+                                    <br>
+                                    <label for="password">Password: </label>
+                                    <input id="login-password" class="form-control" type="password" name="password" value="">
+                                    <br>
+                                    <input type="submit" class="btn btn-primary" value="Submit">
+                                    <br>
+                                    <br>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
