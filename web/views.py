@@ -31,6 +31,10 @@ def landing(request):
 def confirm_dartmouth_student_email(email):
 
     e = email.split("@")
+    
+    if len(e) < 2:
+        return False
+
     dnd_name = e[0]
     domain = e[1] # will be 'alumni' for alumni emails
     if domain != "dartmouth.edu":
@@ -51,14 +55,14 @@ def signup(request):
         password = request.POST.get('password')
 
         if not confirm_dartmouth_student_email(email):
-            return render(request, 'signup.html', {"error": "Only Dartmouth student emails are permitted for registration at this time. Contact us at support@layuplist.com for more information."})
+            return render(request, 'signup.html', {"auth_page": True, "error": "Only Dartmouth student emails are permitted for registration at this time. Contact us at support@layuplist.com for more information."})
 
         link = User.objects.make_random_password(length=16, allowed_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789')
         
         try:
             new_user = User.objects.create_user(username=email, email=email, password=password, is_active=False)
         except IntegrityError:
-            return render(request, 'signup.html', {"error": "This email is already registered. If you believe this is a mistake, please email support@layuplist.com."})
+            return render(request, 'signup.html', {"auth_page": True, "error": "This email is already registered. If you believe this is a mistake, please email support@layuplist.com."})
 
         new_student = Student.objects.create(user=new_user, confirmation_link=link)
 
@@ -69,10 +73,10 @@ def signup(request):
         return render(request, 'instructions.html', {})
 
     elif request.method == 'GET':
-        return render(request, 'signup.html', {})
+        return render(request, 'signup.html', {"auth_page": True})
 
     else:
-        return render(request, 'signup.html', {"error": "Improper request type."})
+        return render(request, 'signup.html', {"auth_page": True, "error": "Improper request type."})
 
 
 def auth_login(request):
@@ -102,7 +106,7 @@ def auth_login(request):
 @login_required
 def auth_logout(request):
     logout(request)
-    return render(request, 'logout.html', {})
+    return render(request, 'logout.html', {"auth_page": True})
 
 
 @require_safe
