@@ -83,13 +83,17 @@ def auth_login(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
+        next_url = request.GET.get('next')
+
+        if not next_url:
+            next_url = '/current_term'
 
         if email and password:
             user = authenticate(username=email, password=password)
 
             if user.is_active:
                 login(request, user)
-                return redirect('/current_term')
+                return redirect(next_url)
 
             else:
                 return render(request, 'login.html', {"auth_page": True, "error": "This account is not active."})
