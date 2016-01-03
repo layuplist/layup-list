@@ -6,3 +6,15 @@ html {
     height: 25px;
 }
 
+<<<<<<< HEAD
+=======
+.footer {
+    height: 125px;
+    background-color: #201D24;
+    line-height: 125px;
+}
+
+.support-link {
+    color: white;
+}
+>>>>>>> master
