@@ -13,6 +13,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 import sys
+from lib import constants
 
 LIMITS = {
     "courses": 20,
@@ -127,7 +128,9 @@ def current_term(request):
     else:
         course_type, primary_sort, secondary_sort = "Layups", "-layup_score", "-quality_score"
 
-    term_courses = Course.objects.for_term(settings.CURRENT_TERM).prefetch_related('distribs').order_by(primary_sort, secondary_sort)
+    term_courses = Course.objects.for_term(constants.CURRENT_TERM).prefetch_related(
+        'distribs', 'review_set', 'courseoffering_set'
+    ).order_by(primary_sort, secondary_sort)
 
     paginator = Paginator(term_courses, LIMITS["courses"])
     try:
@@ -138,7 +141,7 @@ def current_term(request):
         courses = paginator.page(paginator.num_pages)
 
     return render(request, 'current_term.html', {
-        'term': settings.CURRENT_TERM,
+        'term': constants.CURRENT_TERM,
         'course_type': course_type,
         'courses': courses,
         'page_javascript': 'LayupList.Web.CurrentTerm()'
@@ -162,8 +165,11 @@ def course_detail(request, course_id):
         reviews = paginator.page(paginator.num_pages)
 
     return render(request, 'course_detail.html', {
+        'term': constants.CURRENT_TERM,
         'course': course,
         'reviews': reviews,
+        'distribs': course.distribs_string(),
+        'xlist': course.crosslisted_courses.all(),
         'page_javascript': 'LayupList.Web.CourseDetail({})'.format(course_id)
     })
 
@@ -176,14 +182,16 @@ def search(request):
             'query': query,
             'courses': []
         })
-    courses = Course.objects.search(query).prefetch_related('distribs')
-
+    courses = Course.objects.search(query).prefetch_related('review_set')
     if len(courses) == 1:
         return redirect(courses[0])
 
+    if len(query) not in Course.objects.DEPARTMENT_LENGTHS:
+        courses = sorted(courses, key=lambda c: c.review_set.count(), reverse=True)
+
     return render(request, 'search.html', {
         'query': query,
-        'courses': courses,
+        'courses': courses
     })
 
 @require_safe

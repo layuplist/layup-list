@@ -3,28 +3,39 @@
 <div class="row">
     <div class="col-md-12">
         <h1>{{ term }} {{ course_type }}</h1>
-        <h4>{{ courses.paginator.count }} total</h4>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
-        <table class="table table-striped">
+        <table class="table">
             <thead>
-                <th>Rank</th>
+                {% if request.GET.sort == "quality" %}
+                    <th class="text-center">Quality Score</th>
+                {% else %}
+                    <th class="text-center">Layup Score</th>
+                {% endif %}
                 <th>Course</th>
-                <th><a href="{% url 'current_term'  %}?sort=layup">Layup Score</a></th>
-                <th><a href="{% url 'current_term'  %}?sort=quality">Quality Score</a></th>
             </thead>
             <tbody>
                 {% for course in courses %}
                 <tr>
-                    <td><h2>{{ courses.start_index|add:forloop.counter0 }}</h2></td>
+                    {% if request.GET.sort == "quality" %}
+                        <td class="text-center">
+                            <h2>{{ course.quality_score }}</h2>
+                        </td>
+                    {% else %}
+                        <td class="text-center">
+                            <h2>{{ course.layup_score }}</h2>
+                        </td>
+                    {% endif %}
                     <td>
                         <h3><a href="{% url 'course_detail' course.id %}">{{ course }}</a></h3>
-                        <h5>{{ course.distribs_string }} </h5>
+                        <h5>
+                            {{ course.review_set.count }} reviews
+                            {% if course.distribs_string %} | {{ course.distribs_string }} {% endif %}
+                            {% if course.offered_times %} | Offered during {{ course.offered_times }} {% endif %}
+                        </h5>
                     </td>
-                    <td><h2>{{ course.layup_score }}</h2></td>
-                    <td><h2>{{ course.quality_score }}</h2></td>
                 </tr>
                 {% endfor %}
             </tbody>

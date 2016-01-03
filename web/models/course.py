@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 from django.db import models
 from course_offering import CourseOffering
 from django.core.urlresolvers import reverse
+from lib.constants import CURRENT_TERM
 import re
 
 
@@ -100,3 +101,26 @@ class Course(models.Model):
 
     def distribs_string(self, separator=", "):
         return separator.join([d.name for d in self.distribs.all()])
+
+    def offered_times(self, term=CURRENT_TERM):
+        offered_times = []
+
+        # filtering here creates an N+1 query... so we filter it ourselves.
+        all_course_offerings = self.courseoffering_set.all()
+        term_course_offerings = []
+        for offering in all_course_offerings:
+            if offering.term == term:
+                term_course_offerings.append(offering)
+
+        for offering in term_course_offerings:
+            if len(offering.period) <= 3:
+                offered_times.append(offering.period)
+
+        some_times_redacted = len(term_course_offerings) != len(offered_times)
+        offered_times = list(set(offered_times))
+        if some_times_redacted:
+            offered_times.append("other")
+        return ", ".join(offered_times)
+
+    def is_offered(self, term=CURRENT_TERM):
+        return self.courseoffering_set.count() > 0
