@@ -57,6 +57,7 @@ def course_detail(request, course_id):
         reviews = paginator.page(paginator.num_pages)
 
     return render(request, 'course_detail.html', {
+        'term': constants.CURRENT_TERM,
         'course': course,
         'reviews': reviews,
         'page_javascript': 'LayupList.Web.CourseDetail({})'.format(course_id)

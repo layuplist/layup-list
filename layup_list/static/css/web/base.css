@@ -1,23 +1,6 @@
 html {
 }
 
-hr {
-    border: 0;
-    border-top: 1px solid #434857;
-}
-
-.form-control {
-    border: 1px #434857 solid;
-}
-
-.btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    border: none;
-    background-color : transparent;
-}
-
 .logo {
     width: 25px;
     height: 25px;

@@ -24,3 +24,8 @@
 .median-chart {
     height: 250px;
 }
+
+.score-box {
+    border: 1px solid black;
+    border-radius: 5px;
+}

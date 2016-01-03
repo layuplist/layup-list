@@ -121,3 +121,6 @@ class Course(models.Model):
         if some_times_redacted:
             offered_times.append("other")
         return ", ".join(offered_times)
+
+    def is_offered(self, term=CURRENT_TERM):
+        return self.courseoffering_set.count() > 0

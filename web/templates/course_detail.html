@@ -1,11 +1,13 @@
 {% extends "base.html" %}
+{% block title %}{{ course.short_name }} | Layup List{% endblock %}
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h1>{{ course }}</h1>
-        {% if course.description %}<p>{{ course.description }}</p>{% endif %}
-        <h4>{{ course.layup_score }} called it a layup</h4>
-        <h4>{{ course.quality_score }} said it was a good class</h4>
+        <h1> {{ course }} </h1>
+        {% if course.is_offered %} <h4>Offered {{ term }} ({{ course.offered_times }})</h4> {% endif %}
+        {% if course.description %} <p> {{ course.description }} </p> {% endif %}
+        {% if course.url %} <p><a href="{{ course.url }}">View on ORC.</a></p> {% endif %}
+        {% if course.distribs_string %} <p> Distribs: {{ course.distribs_string }} </p> {% endif %}
     </div>
 </div>
 <div class="row">
@@ -14,9 +16,19 @@
         <div class="median-chart"></div>
     </div>
 </div>
+<div class="row">
+    <div class="col-md-2 col-md-offset-2 text-center score-box">
+        <h2>{{ course.layup_score }}</h2>
+        <p>called it a layup</p>
+    </div>
+    <div class="col-md-2 col-md-offset-4 text-center score-box">
+        <h2>{{ course.quality_score }}</h2>
+        <p>said it was a good class</p>
+    </div>
+</div>
 <div id="reviews" class="row">
     <div class="col-md-12">
-        <h3>Reviews</h3>
+        <h3>Reviews ({{ reviews.paginator.count }})</h3>
         {% if reviews %}
         <table class="table table-striped">
             <tbody>
