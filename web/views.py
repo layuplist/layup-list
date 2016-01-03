@@ -25,7 +25,7 @@ VALID_STUDENT = set(['16', '17', '18', '19', '20'])
 
 @require_safe
 def landing(request):
-    return render(request, 'landing.html', {})
+    return render(request, 'landing.html', {"landing": True})
 
 
 def confirm_dartmouth_student_email(email):
@@ -88,16 +88,16 @@ def auth_login(request):
                 return redirect('/current_term')
 
             else:
-                return render(request, 'login.html', {"error": "This account is not active."})
+                return render(request, 'login.html', {"auth_page": True, "error": "This account is not active."})
 
         else:
-            return render(request, 'login.html', {"error": "Must provide both email and password."})
+            return render(request, 'login.html', {"auth_page": True, "error": "Must provide both email and password."})
 
     elif request.method == 'GET':
-        return render(request, 'login.html', {})
+        return render(request, 'login.html', {"auth_page": True})
 
     else:
-        return render(request, 'login.html', {"error": "Please authenticate."})
+        return render(request, 'login.html', {"auth_page": True, "error": "Please authenticate."})
 
 @login_required
 def auth_logout(request):
