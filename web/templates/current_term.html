@@ -3,34 +3,37 @@
 <div class="row">
     <div class="col-md-12">
         <h1>{{ term }} {{ course_type }}</h1>
-        <h4>{{ courses.paginator.count }} total</h4>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
         <table class="table">
             <thead>
-                <th>Rank</th>
-                <th>Course</th>
                 {% if request.GET.sort == "quality" %}
                     <th>Quality Score</th>
                 {% else %}
                     <th>Layup Score</th>
                 {% endif %}
+                <th>Course</th>
             </thead>
             <tbody>
                 {% for course in courses %}
                 <tr>
-                    <td><h2>{{ courses.start_index|add:forloop.counter0 }}</h2></td>
-                    <td>
-                        <h3><a href="{% url 'course_detail' course.id %}">{{ course }}</a></h3>
-                        <h5>{{ course.distribs_string }} </h5>
-                    </td>
                     {% if request.GET.sort == "quality" %}
                         <td><h2>{{ course.quality_score }}</h2></td>
                     {% else %}
                         <td><h2>{{ course.layup_score }}</h2></td>
                     {% endif %}
+                    <td>
+                        <h3><a href="{% url 'course_detail' course.id %}">{{ course }}</a></h3>
+                        <h5>
+                            {{ course.review_set.count }} reviews
+                            |
+                            {{ course.distribs_string }}
+                            |
+                            Offered during {{ course.offered_times }}
+                        </h5>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
