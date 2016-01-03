@@ -12,7 +12,7 @@ phantom.page.injectJs('llcommon.js');
 
 var Navigation = {};
 var Evaluation = {};
-var year = new Date().getFullYear();
+var year = 2015;
 var orc = "http://dartmouth.smartcatalogiq.com/en/" + year + "/orc/";
 var undergradDepartmentsURL = orc + "Departments-Programs-Undergraduate/";
 var graduateDepartmentsURL = orc + "Departments-Programs-Graduate/";
