@@ -60,6 +60,8 @@ def course_detail(request, course_id):
         'term': constants.CURRENT_TERM,
         'course': course,
         'reviews': reviews,
+        'distribs': course.distribs_string(),
+        'xlist': course.crosslisted_courses.all(),
         'page_javascript': 'LayupList.Web.CourseDetail({})'.format(course_id)
     })
 

@@ -6,8 +6,16 @@
         <h1> {{ course }} </h1>
         {% if course.is_offered %} <h4>Offered {{ term }} ({{ course.offered_times }})</h4> {% endif %}
         {% if course.description %} <p> {{ course.description }} </p> {% endif %}
+        {% if xlist %}
+            <p>
+                Crosslisted with
+                {% for x in xlist %}
+                    <a href="{{ x.get_absolute_url }}">{{ x.short_name }}</a>
+                {% endfor %}
+            </p>
+        {% endif %}
         {% if course.url %} <p><a href="{{ course.url }}">View on ORC.</a></p> {% endif %}
-        {% if course.distribs_string %} <p> Distribs: {{ course.distribs_string }} </p> {% endif %}
+        {% if distribs_string %} <p> Distribs: {{ distribs_string }} </p> {% endif %}
     </div>
 </div>
 <div class="row">
