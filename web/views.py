@@ -70,7 +70,7 @@ def signup(request):
         print full_link # remove on prod
         sys.stdout.flush() # pythonunbuffered
 
-        return render(request, 'instructions.html', {})
+        return render(request, 'instructions.html', {"auth_page": True})
 
     elif request.method == 'GET':
         return render(request, 'signup.html', {"auth_page": True})
@@ -117,12 +117,12 @@ def confirmation(request):
         student = Student.objects.get(confirmation_link=link)
 
         if student.user.is_active:
-            return render(request, 'confirmation.html', {'already_confirmed': True})
+            return render(request, 'confirmation.html', {'auth_page': True, 'already_confirmed': True})
 
         # print "is not active!"
         student.user.is_active = True
         student.user.save()
-        return render(request, 'confirmation.html', {'already_confirmed': False})
+        return render(request, 'confirmation.html', {'auth_page': True, 'already_confirmed': False})
 
 
 @require_safe
