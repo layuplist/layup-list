@@ -40,5 +40,6 @@ html, body {
 }
 
 .landing-search-box {
-    width: 100px;
+    display: inline;
+    max-width: 180px;
 }
