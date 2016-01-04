@@ -15,9 +15,9 @@ LIMITS = {
 }
 
 @require_safe
-def current_term(request):
-    if request.GET.get("sort") == "quality":
-        course_type, primary_sort, secondary_sort = "Good Classes", "-quality_score", "-layup_score"
+def current_term(request, sort):
+    if sort == "best":
+        course_type, primary_sort, secondary_sort = "Best Classes", "-quality_score", "-layup_score"
     else:
         course_type, primary_sort, secondary_sort = "Layups", "-layup_score", "-quality_score"
 
@@ -35,6 +35,7 @@ def current_term(request):
 
     return render(request, 'current_term.html', {
         'term': constants.CURRENT_TERM,
+        'sort': sort,
         'course_type': course_type,
         'courses': courses,
         'page_javascript': 'LayupList.Web.CurrentTerm()'
