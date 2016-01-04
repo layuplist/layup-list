@@ -20,18 +20,16 @@
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-        <div class="container">
-            {% include "navbar.html" %}
-            <div class="row">
-                <div class="col-md-12">
-                    {% block content %} {% endblock %}
+        <div class="container-and-footer">
+            <div class="container">
+                {% include "navbar.html" %}
+                <div class="row">
+                    <div class="col-md-12">
+                        {% block content %} {% endblock %}
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row footer">
-            <div class="col-md-12 text-center">
-                <a class="support-link" href="mailto:support@layuplist.com">support@layuplist.com</a>
-            </div>
+            {% include "footer.html" %}
         </div>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

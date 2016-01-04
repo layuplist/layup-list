@@ -15,6 +15,10 @@ LIMITS = {
 }
 
 @require_safe
+def landing(request):
+    return render (request, 'landing.html')
+
+@require_safe
 def current_term(request, sort):
     if sort == "best":
         course_type, primary_sort, secondary_sort = "Best Classes", "-quality_score", "-layup_score"

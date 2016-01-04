@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Layup List</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h4>Welcome to Dartmouth's new course review site!</h4>
+        <div class="row">
+            <div class="col-md-6">
+                <p>We've imported all the median data and course offerings from the ORC, reviews from the remains of CoursePicker, and various layup lists written by students, so that you have a centralized platform for finding the right classes every term.</p>
+                <p>Note: Layup List is currently a WIP. See note in footer.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <p><span class="glyphicon glyphicon glyphicon-stats"></span> Detailed median charts and extensive reviews for every course. <a href="{% url 'course_detail' 2083 %}">See example.</a></p>
+        <p><span class="glyphicon glyphicon-fire"></span> See the best and easiest classes this term</p>
+        <p><span class="glyphicon glyphicon-thumbs-up"></span> Vote on the best and easiest classes</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <a href="{% url 'current_term' 'best' %}"><button type="button" class="btn btn-success">View Best Classes</button></a>
+        <a href="{% url 'current_term' 'layups' %}"><button type="button" class="btn btn-success">View Layups</button></a>
+    </div>
+</div>
+{% endblock %}
