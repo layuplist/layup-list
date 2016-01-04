@@ -29,6 +29,39 @@ missing_course = 0
 processed = 0
 empty_review = 0
 
+CS_NUMBER_REMAPPINGS = {
+    5: 1,
+    8: 10,
+    12: 20,
+    32: 24,
+    42: 27,
+    72: 28,
+    19: 30,
+    25: 31,
+    85: 49,
+    23: 50,
+    37: 51,
+    38: 55,
+    47: 56,
+    48: 57,
+    68: 59,
+    78: 60,
+    33: 61,
+    88: 69,
+    36: 70,
+    26: 71,
+    34: 74,
+    43: 75,
+    44: 76,
+    52: 77,
+    53: 79,
+    54: 81,
+    64: 83,
+    46: 84,
+    80: 94,
+    97: 99,
+}
+
 for f in (OLD_REVIEWS, NEW_REVIEWS):
     with transaction.atomic():
         with open(f) as data_file:
@@ -42,6 +75,9 @@ for f in (OLD_REVIEWS, NEW_REVIEWS):
                     print "Dumping Review, missing critical data"
                     missing_course += 1
                     continue
+
+                if department == "COSC" and int(number) in CS_NUMBER_REMAPPINGS:
+                    number = CS_NUMBER_REMAPPINGS[int(number)]
 
                 # useful, but not essential
                 professor = review.get("professor", "")
