@@ -53,7 +53,7 @@ def course_detail(request, course_id):
     except Course.DoesNotExist:
         return HttpResponseNotFound('<h1>Page not found</h1>')
 
-    paginator = Paginator(course.review_set.all().order_by("-created_at"), LIMITS["reviews"])
+    paginator = Paginator(course.review_set.all().order_by("-term"), LIMITS["reviews"])
     try:
         reviews = paginator.page(request.GET.get('page'))
     except PageNotAnInteger:
