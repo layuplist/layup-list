@@ -72,10 +72,10 @@ def course_detail(request, course_id):
 
 
 @require_safe
-def search(request):
+def course_search(request):
     query = request.GET.get("q", "").strip()
     if len(query) < 3:
-        return render(request, 'search.html', {
+        return render(request, 'course_search.html', {
             'query': query,
             'courses': []
         })
@@ -86,7 +86,7 @@ def search(request):
     if len(query) not in Course.objects.DEPARTMENT_LENGTHS:
         courses = sorted(courses, key=lambda c: c.review_set.count(), reverse=True)
 
-    return render(request, 'search.html', {
+    return render(request, 'course_search.html', {
         'query': query,
         'courses': courses
     })
