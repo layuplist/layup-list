@@ -92,6 +92,16 @@ def course_search(request):
     })
 
 @require_safe
+def course_review_search(request, course_id):
+    query = request.GET.get("q", "").strip()
+    course = Course.objects.get(id=course_id)
+    return render(request, 'course_review_search.html', {
+        'query': query,
+        'course': course,
+        'reviews': course.search_reviews(query),
+    })
+
+@require_safe
 def medians(request, course_id):
 
     # retrieve course medians for term, and group by term for averaging

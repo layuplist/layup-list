@@ -22,7 +22,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.landing, name="landing"),
     url(r'^(?P<sort>best|layups)/?', views.current_term, name="current_term"),
-    url(r'^course/(?P<course_id>[0-9].*)$', views.course_detail, name="course_detail"),
     url(r'^search/?', views.course_search, name="course_search"),
+    url(r'^course/(?P<course_id>[0-9]+)$', views.course_detail, name="course_detail"),
+    url(r'^course/(?P<course_id>[0-9]+)/review_search/?', views.course_review_search, name="course_review_search"),
     url(r'^api/medians/(?P<course_id>[0-9].*)', views.medians, name="medians")
 ]
