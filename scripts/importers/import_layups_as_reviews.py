@@ -59,7 +59,8 @@ with transaction.atomic():
             try:
                 course = Course.objects.get(
                     department=department,
-                    number=number
+                    number=number,
+                    subnumber=None
                 )
                 user = User.objects.get(
                     username=layup["source"]

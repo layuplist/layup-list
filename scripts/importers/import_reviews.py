@@ -105,7 +105,8 @@ for f in (OLD_REVIEWS, NEW_REVIEWS):
                     # unfortunately reviews don't have subnumbers
                     course = Course.objects.get(
                         department=department,
-                        number=number
+                        number=number,
+                        subnumber=None
                     )
                     user = User.objects.get(
                         username="CoursePicker"
