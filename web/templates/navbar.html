@@ -28,8 +28,12 @@
       </ul>
       <form class="navbar-form navbar-right" action="{% url 'course_search' %}" method="get" role="search">
           <div class="form-group">
-              <input name="q" type="text" class="form-control" placeholder="Course Search...">
-              <button type="submit" class="btn btn-default">Search</button>
+              <div class="input-group">
+                  <input name="q" type="text" class="form-control" placeholder="Course Search...">
+                  <span class="input-group-btn">
+                      <button class="btn btn-success" type="submit" class="btn btn-default">Search</button>
+                  </span>
+              </div>
           </div>
       </form>
     </div>
