@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h1>{{ reviews | length }} <a href="{% url 'course_detail' course.id %}">{{ course.short_name }}</a> review results for "{{ query }}"</h1>
+        <h1>{{ reviews | length }} <a href="{% url 'course_detail' course.id %}">{{ course.short_name }}</a> review results for "<span class="query">{{ query }}</span>"</h1>
     </div>
 </div>
 <div class="row">
@@ -27,7 +27,7 @@
     <table class="table table-striped">
         <tbody>
             {% for review in reviews %}
-                <tr><td>
+                <tr><td class="highlight-review">
                     {% if review.term %}
                         <b>{{ review.term }}:</b>
                     {% endif %}

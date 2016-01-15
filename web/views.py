@@ -99,6 +99,7 @@ def course_review_search(request, course_id):
         'query': query,
         'course': course,
         'reviews': course.search_reviews(query),
+        'page_javascript': 'LayupList.Web.CourseReviewSearch()'
     })
 
 @require_safe
