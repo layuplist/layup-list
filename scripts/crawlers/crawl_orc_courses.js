@@ -28,7 +28,12 @@ var additionalPrograms = [
     code: "PBPL",
     programName: "Public Policy",
     url: undergradDepartmentsURL + "The-Nelson-A-Rockefeller-Center-for-Public-Policy/Public-Policy-Minor/PBPL-Public-Policy/"
-  }
+  },
+  {
+    code: "SUPP",
+    programName: "2015 Supplement",
+    url: "http://dartmouth.smartcatalogiq.com/en/2015s/Supplement/Courses"
+  },
 ];
 
 Navigation.start = function() {
