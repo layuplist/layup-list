@@ -25,10 +25,14 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <form action="{% url 'course_search' %}" method="get" role="search">
+        <form class="landing-search" action="{% url 'course_search' %}" method="get" role="search">
             <div class="form-group">
-                <input name="q" type="text" class="form-control landing-search-box" placeholder="Search for Courses...">
-                <button type="submit" class="btn btn-default">Search</button>
+                <div class="input-group">
+                    <input name="q" type="text" class="form-control" placeholder="Search for Courses...">
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-default">Search</button>
+                    </span>
+                </div>
             </div>
         </form>
         <a href="{% url 'current_term' 'best' %}"><button type="button" class="btn btn-success">View Best Classes</button></a>

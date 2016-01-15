@@ -38,8 +38,3 @@ html, body {
     font-size: 1em;
     color: white;
 }
-
-.landing-search-box {
-    display: inline;
-    max-width: 180px;
-}
