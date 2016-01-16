@@ -68,9 +68,9 @@ def signup(request):
         new_student = Student.objects.create(user=new_user, confirmation_link=link)
 
 
-        full_link = request.META['HTTP_HOST'] + '/confirmation?link=' + link
+        full_link = 'http://' + request.META['HTTP_HOST'] + '/confirmation?link=' + link
+        send_mail('Your confirmation link', 'Please navigate to the following confirmation link: ' + full_link, 'support@layuplist.com', [email], fail_silently=False)
         print full_link # remove on prod
-        send_mail('Your confirmation link', 'Please navigate to the following confirmation link: ' + full_link, 'support@layuplist.com', [email])
         # sys.stdout.flush() # pythonunbuffered
 
         return render(request, 'instructions.html', {"auth_page": True})
@@ -89,7 +89,7 @@ def auth_login(request):
         next_url = request.GET.get('next')
 
         if not next_url:
-            next_url = '/current_term'
+            next_url = '/layups'
 
         if email and password:
             user = authenticate(username=email, password=password)
