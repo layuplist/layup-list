@@ -34,14 +34,34 @@
         <p>said it was a good class</p>
     </div>
 </div>
+<p></p>
 <div id="reviews" class="row">
     <div class="col-md-12">
-        <h3>Reviews ({{ reviews.paginator.count }})</h3>
+        <div class="row">
+            <div class="col-md-9">
+                <h3>Reviews ({{ reviews.paginator.count }})</h3>
+            </div>
+            <div class="col-md-3">
+                <form class="course-review-search" action="{% url 'course_review_search' course.id %}" method="get" role="search">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input name="q" type="text" class="form-control" placeholder="Review search...">
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-default">Search</button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
         {% if reviews %}
         <table class="table table-striped">
             <tbody>
                 {% for review in reviews %}
                     <tr><td>
+                        {% if review.term %}
+                            <b>{{ review.term }}:</b>
+                        {% endif %}
                         {{ review.comments }}
                     </td></tr>
                 {% endfor %}

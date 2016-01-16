@@ -130,10 +130,12 @@ PIPELINE = {
     'JAVASCRIPT': {
         'app': {
             'source_filenames': (
-                'js/plugins.jsx',
+                'js/plugins.js',
+                'js/vendor/jquery.highlight-5.js',
                 'js/web/base.jsx',
                 'js/web/current_term.jsx',
                 'js/web/course_detail.jsx',
+                'js/web/course_review_search.jsx',
             ),
             'output_filename': 'js/app.js',
         }
@@ -142,11 +144,10 @@ PIPELINE = {
         'app': {
             'source_filenames': (
                 'css/web/base.css',
-                'css/web/landing.css',
                 'css/web/current_term.css',
                 'css/web/course_detail.css',
-                'css/web/auth.css',
-
+                'css/web/course_review_search.css',
+                'css/web/landing.css',
             ),
             'output_filename': 'css/app.css',
             'extra_context': {

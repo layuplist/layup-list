@@ -12,7 +12,7 @@ phantom.page.injectJs('llcommon.js');
 
 var Navigation = {};
 var Evaluation = {};
-var year = new Date().getFullYear();
+var year = 2015;
 var orc = "http://dartmouth.smartcatalogiq.com/en/" + year + "/orc/";
 var undergradDepartmentsURL = orc + "Departments-Programs-Undergraduate/";
 var graduateDepartmentsURL = orc + "Departments-Programs-Graduate/";
@@ -28,7 +28,12 @@ var additionalPrograms = [
     code: "PBPL",
     programName: "Public Policy",
     url: undergradDepartmentsURL + "The-Nelson-A-Rockefeller-Center-for-Public-Policy/Public-Policy-Minor/PBPL-Public-Policy/"
-  }
+  },
+  {
+    code: "SUPP",
+    programName: "2015 Supplement",
+    url: "http://dartmouth.smartcatalogiq.com/en/2015s/Supplement/Courses"
+  },
 ];
 
 Navigation.start = function() {

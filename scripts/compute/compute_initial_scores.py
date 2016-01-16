@@ -105,7 +105,7 @@ def calculate_initial_layup_score(course, legacy_layup_references, llr_with_comm
 
     The ultimate score calculated is this raw score multiplied by 2.5, rounded up.
     """
-    if course.subnumber is not None:
+    if course.subnumber is not None or course.department == "ECON":
         return 0
 
     try:

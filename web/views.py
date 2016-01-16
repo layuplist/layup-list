@@ -133,9 +133,13 @@ def confirmation(request):
 
 
 @require_safe
-def current_term(request):
-    if request.GET.get("sort") == "quality":
-        course_type, primary_sort, secondary_sort = "Good Classes", "-quality_score", "-layup_score"
+def landing(request):
+    return render (request, 'landing.html')
+
+@require_safe
+def current_term(request, sort):
+    if sort == "best":
+        course_type, primary_sort, secondary_sort = "Best Classes", "-quality_score", "-layup_score"
     else:
         course_type, primary_sort, secondary_sort = "Layups", "-layup_score", "-quality_score"
 
@@ -153,6 +157,7 @@ def current_term(request):
 
     return render(request, 'current_term.html', {
         'term': constants.CURRENT_TERM,
+        'sort': sort,
         'course_type': course_type,
         'courses': courses,
         'page_javascript': 'LayupList.Web.CurrentTerm()'
@@ -167,7 +172,7 @@ def course_detail(request, course_id):
     except Course.DoesNotExist:
         return HttpResponseNotFound('<h1>Page not found</h1>')
 
-    paginator = Paginator(course.review_set.all().order_by("-created_at"), LIMITS["reviews"])
+    paginator = Paginator(course.review_set.all().order_by("-term"), LIMITS["reviews"])
     try:
         reviews = paginator.page(request.GET.get('page'))
     except PageNotAnInteger:
@@ -186,10 +191,10 @@ def course_detail(request, course_id):
 
 
 @require_safe
-def search(request):
+def course_search(request):
     query = request.GET.get("q", "").strip()
     if len(query) < 3:
-        return render(request, 'search.html', {
+        return render(request, 'course_search.html', {
             'query': query,
             'courses': []
         })
@@ -200,9 +205,20 @@ def search(request):
     if len(query) not in Course.objects.DEPARTMENT_LENGTHS:
         courses = sorted(courses, key=lambda c: c.review_set.count(), reverse=True)
 
-    return render(request, 'search.html', {
+    return render(request, 'course_search.html', {
         'query': query,
         'courses': courses
+    })
+
+@require_safe
+def course_review_search(request, course_id):
+    query = request.GET.get("q", "").strip()
+    course = Course.objects.get(id=course_id)
+    return render(request, 'course_review_search.html', {
+        'query': query,
+        'course': course,
+        'reviews': course.search_reviews(query),
+        'page_javascript': 'LayupList.Web.CourseReviewSearch()'
     })
 
 @require_safe

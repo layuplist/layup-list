@@ -17,7 +17,6 @@ from importer_library import clean_department_code
 
 MEDIAN_DIR = "./data/medians"
 
-ambiguous_subnumber = 0
 missing_course = 0
 processed = 0
 
@@ -48,7 +47,6 @@ for f in os.listdir(MEDIAN_DIR):
                     median = m["median"].strip()
                     term = m["term"].strip()
 
-                    course = None
                     try:
                         course = Course.objects.get(
                             department=department,
@@ -56,43 +54,29 @@ for f in os.listdir(MEDIAN_DIR):
                             subnumber=subnumber
                         )
                     except Course.DoesNotExist:
-                        try:
-                            # subnumber may have been missing or incorrect
-                            course = Course.objects.get(
-                                department=department,
-                                number=number,
-                            )
-                        except Course.DoesNotExist:
-                            print "Could not find course for {}{}.{} term {}".format(
-                                department, number, subnumber, term
-                            )
-                            missing_course += 1
-                        except Course.MultipleObjectsReturned:
-                            print "Ambiguous course for {}{}.{} term {}".format(
-                                department, number, subnumber, term
-                            )
-                            ambiguous_subnumber += 1
+                        print "Could not find course for {}{}.{} term {}".format(
+                            department, number, subnumber, term
+                        )
+                        missing_course += 1
+                        continue
 
-                    if course is not None:
-                        try:
-                            m = CourseMedian.objects.get(
-                                course=course,
-                                section=section,
-                                term=term
-                            )
-                            m.enrollment = enrollment
-                            m.median = median
-                            m.term = term
-                            m.save
-                        except CourseMedian.DoesNotExist:
-                            course.coursemedian_set.create(
-                                section=section,
-                                enrollment=enrollment,
-                                median=median,
-                                term=term
-                            )
-                        processed += 1
+                    try:
+                        m = CourseMedian.objects.get(
+                            course=course,
+                            section=section,
+                            term=term
+                        )
+                        m.enrollment = enrollment
+                        m.median = median
+                        m.term = term
+                        m.save
+                    except CourseMedian.DoesNotExist:
+                        course.coursemedian_set.create(
+                            section=section,
+                            enrollment=enrollment,
+                            median=median,
+                            term=term
+                        )
+                    processed += 1
 
-print "missing {}, ambiguous {}, processed {}".format(
-    missing_course, ambiguous_subnumber, processed
-)
+print "missing {}, processed {}".format( missing_course, processed )

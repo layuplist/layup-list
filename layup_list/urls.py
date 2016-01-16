@@ -25,8 +25,9 @@ urlpatterns = [
     url(r'^accounts/login/$', views.auth_login, name="auth_login"),
     url(r'^accounts/logout$', views.auth_logout, name="auth_logout"),
     url(r'^confirmation$', views.confirmation, name="confirmation"),
-    url(r'^current_term$', views.current_term, name="current_term"),
-    url(r'^course/(?P<course_id>[0-9].*)$', views.course_detail, name="course_detail"),
-    url(r'^search/?', views.search, name="search"),
+    url(r'^(?P<sort>best|layups)/?', views.current_term, name="current_term"),
+    url(r'^search/?', views.course_search, name="course_search"),
+    url(r'^course/(?P<course_id>[0-9]+)$', views.course_detail, name="course_detail"),
+    url(r'^course/(?P<course_id>[0-9]+)/review_search/?', views.course_review_search, name="course_review_search"),
     url(r'^api/medians/(?P<course_id>[0-9].*)', views.medians, name="medians")
 ]

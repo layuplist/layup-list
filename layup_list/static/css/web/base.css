@@ -1,4 +1,5 @@
-html {
+html, body {
+    height: 100%;
 }
 
 .logo {
@@ -6,12 +7,34 @@ html {
     height: 25px;
 }
 
+.container-and-footer {
+    min-height: 100%;
+    position: relative;
+}
+
+.container {
+   padding-bottom: 180px;
+}
+
 .footer {
-    height: 125px;
+    height: 160px;
     background-color: #201D24;
-    line-height: 125px;
+    color: #B5B5B5;
+    font-size: 0.9em;
+    position:absolute;
+    bottom:0;
+    width:100%;
+}
+
+.footer-inner {
+    max-width: 550px;
+    margin: 0 auto;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .support-link {
+    font-size: 1em;
     color: white;
 }

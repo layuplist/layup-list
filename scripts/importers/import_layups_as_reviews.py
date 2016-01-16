@@ -42,11 +42,7 @@ with transaction.atomic():
                 course_name = layup["course_name"]
                 professor = layup["instructor"]
                 comments = layup["comments"]
-
-                if len(layup["source"]) == 3 and re.match(r'[0-9][0-9][W,F,S,X]', layup["source"]):
-                    term = layup["source"]
-                else:
-                    term = ""
+                term = ""
 
             except KeyError: # just a safeguard against typos from manual spreadsheet cleaning
                 print "Dumping Layup Review (improper spreadsheet data)"
@@ -63,7 +59,8 @@ with transaction.atomic():
             try:
                 course = Course.objects.get(
                     department=department,
-                    number=number
+                    number=number,
+                    subnumber=None
                 )
                 user = User.objects.get(
                     username=layup["source"]
