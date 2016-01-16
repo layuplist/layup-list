@@ -91,10 +91,10 @@ def auth_login(request):
         if not next_url:
             next_url = '/layups'
 
-        u = User.objects.get(username=email)
-
-        if not u:
-            return render(request, 'login.html', {"auth_page": True, "error": "This email does not appear to be in our system. Please sign up. If you believe this is a mistake, contact support@layuplist.com."})
+        try:
+            u = User.objects.get(username=email)
+        except User.DoesNotExist:
+            return render(request, 'login.html', {"auth_page": True, "error": "This email does not appear to be in our system. If you believe this is a mistake, contact support@layuplist.com."})
 
         if email and password:
             user = authenticate(username=email, password=password)
