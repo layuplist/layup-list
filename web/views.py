@@ -32,7 +32,7 @@ def landing(request):
 def confirm_dartmouth_student_email(email):
 
     e = email.split("@")
-    
+
     if len(e) < 2:
         return False
 
@@ -59,7 +59,7 @@ def signup(request):
             return render(request, 'signup.html', {"auth_page": True, "error": "Only Dartmouth student emails are permitted for registration at this time. Contact us at support@layuplist.com for more information."})
 
         link = User.objects.make_random_password(length=16, allowed_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789')
-        
+
         try:
             new_user = User.objects.create_user(username=email, email=email, password=password, is_active=False)
         except IntegrityError:
@@ -90,6 +90,11 @@ def auth_login(request):
 
         if not next_url:
             next_url = '/layups'
+
+        u = User.objects.get(username=email)
+
+        if not u:
+            return render(request, 'login.html', {"auth_page": True, "error": "This email does not appear to be in our system. Please sign up. If you believe this is a mistake, contact support@layuplist.com."})
 
         if email and password:
             user = authenticate(username=email, password=password)
