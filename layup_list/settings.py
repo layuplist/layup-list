@@ -14,8 +14,6 @@ import os
 import dj_database_url
 import sys
 
-import sendgrid
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -163,8 +161,8 @@ PIPELINE = {
 
 
 # Email server
-EMAIL_HOST = sendgrid.EMAIL_HOST
-EMAIL_HOST_USER = sendgrid.EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = sendgrid.EMAIL_HOST_PASSWORD
-EMAIL_PORT = sendgrid.EMAIL_PORT
-EMAIL_USE_TLS = sendgrid.EMAIL_USE_TLS
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS')
