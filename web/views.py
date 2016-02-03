@@ -89,7 +89,6 @@ def auth_login(request):
 
     else:
         return render(request, 'login.html', {
-
             "error": "Please authenticate."
         })
 

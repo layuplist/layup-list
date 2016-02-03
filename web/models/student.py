@@ -35,12 +35,6 @@ class Student(models.Model):
 
     confirmation_link = models.CharField(max_length=16)
 
-    first_name = models.CharField(null=True, max_length=255, db_index=True)
-    last_name = models.CharField(null=True, max_length=255, db_index=True)
-
-    score = models.IntegerField(null=True)
-    upvotes = models.IntegerField(null=True)
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
