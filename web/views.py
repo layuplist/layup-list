@@ -33,7 +33,6 @@ def signup(request):
 
         if not Student.objects.is_valid_dartmouth_student_email(email):
             return render(request, 'signup.html', {
-                "auth_page": True,
                 "error": """
                     Only Dartmouth student emails are permitted for
                     registration at this time. Contact us at
@@ -57,16 +56,16 @@ def signup(request):
 
                 new_student.send_confirmation_link(request)
 
-                return render(request, 'instructions.html', {"auth_page": True})
+                return render(request, 'instructions.html')
 
         except IntegrityError:
-            return render(request, 'signup.html', {"auth_page": True, "error": "This email is already registered. If you believe this is a mistake, please email support@layuplist.com."})
+            return render(request, 'signup.html', { "error": "This email is already registered. If you believe this is a mistake, please email support@layuplist.com."})
 
     elif request.method == 'GET':
-        return render(request, 'signup.html', {"auth_page": True})
+        return render(request, 'signup.html')
 
     else:
-        return render(request, 'signup.html', {"auth_page": True, "error": "Improper request type."})
+        return render(request, 'signup.html', { "error": "Improper request type."})
 
 
 def auth_login(request):
@@ -81,16 +80,16 @@ def auth_login(request):
                 login(request, user)
                 return redirect(next_url)
             else:
-                return render(request, 'login.html', {"auth_page": True, "error": "This account is not active."})
+                return render(request, 'login.html', { "error": "This account is not active."})
         else:
-            return render(request, 'login.html', {"auth_page": True, "error": "Invalid login."})
+            return render(request, 'login.html', { "error": "Invalid login."})
 
     elif request.method == 'GET':
-        return render(request, 'login.html', {"auth_page": True})
+        return render(request, 'login.html')
 
     else:
         return render(request, 'login.html', {
-            "auth_page": True,
+
             "error": "Please authenticate."
         })
 
@@ -98,7 +97,7 @@ def auth_login(request):
 @login_required
 def auth_logout(request):
     logout(request)
-    return render(request, 'logout.html', {"auth_page": True})
+    return render(request, 'logout.html')
 
 
 @require_safe
@@ -106,19 +105,24 @@ def confirmation(request):
     link = request.GET.get('link')
 
     if link:
-        student = Student.objects.get(confirmation_link=link)
+        try:
+            student = Student.objects.get(confirmation_link=link)
+        except Student.DoesNotExist:
+            return render(request, 'confirmation.html', {
+                'error': 'Confirmation code expired or does not exist.'
+            })
 
         if student.user.is_active:
-            return render(request, 'confirmation.html', {'auth_page': True, 'already_confirmed': True})
+            return render(request, 'confirmation.html', { 'already_confirmed': True})
 
         student.user.is_active = True
         student.user.save()
-        return render(request, 'confirmation.html', {'auth_page': True, 'already_confirmed': False})
+        return render(request, 'confirmation.html', { 'already_confirmed': False})
 
 
 @require_safe
 def landing(request):
-    return render (request, 'landing.html')
+    return render(request, 'landing.html')
 
 
 @require_safe
