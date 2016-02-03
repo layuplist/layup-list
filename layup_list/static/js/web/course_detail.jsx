@@ -1,4 +1,8 @@
 LayupList.Web.CourseDetail = function(courseId) {
+    var com = LayupList.Web.Common;
+    var cd = LayupList.Web.CourseDetail;
+    cd.upvote = function(courseId, element, forLayups) { com.vote(1, courseId, element, forLayups); };
+    cd.downvote = function(courseId, element, forLayups) { com.vote(-1, courseId, element, forLayups); };
 
     $.getJSON('/api/course/' + courseId + '/professors', function(data) {
         $('#id_professor').autocomplete({

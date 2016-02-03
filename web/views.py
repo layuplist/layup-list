@@ -1,16 +1,16 @@
 import sys
 from django.shortcuts import render, redirect
 from django.conf import settings
-from django.views.decorators.http import require_safe
+from django.views.decorators.http import require_safe, require_POST
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import JsonResponse, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseRedirect, HttpResponseForbidden
 from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError, transaction
-from web.models import Course, CourseMedian, Student, Review
+from web.models import Course, CourseMedian, Student, Review, Vote
 from web.models.forms import ReviewForm
 from lib.grades import numeric_value_for_grade
 from lib.terms import numeric_value_of_term
@@ -124,8 +124,10 @@ def confirmation(request):
 def current_term(request, sort):
     if sort == "best":
         course_type, primary_sort, secondary_sort = "Best Classes", "-quality_score", "-layup_score"
+        vote_category = Vote.CATEGORIES.GOOD
     else:
         course_type, primary_sort, secondary_sort = "Layups", "-layup_score", "-quality_score"
+        vote_category = Vote.CATEGORIES.LAYUP
 
     term_courses = Course.objects.for_term(constants.CURRENT_TERM).prefetch_related(
         'distribs', 'review_set', 'courseoffering_set'
@@ -142,12 +144,19 @@ def current_term(request, sort):
     if courses.number > 1 and not request.user.is_authenticated():
         return HttpResponseRedirect(reverse("signup")+"?restriction=see more")
 
+    for_layups_js_boolean = str(sort != "best").lower()
+
+    courses_and_votes = Vote.objects.authenticated_group_courses_with_votes(
+        courses.object_list, vote_category, request.user
+    )
+
     return render(request, 'current_term.html', {
         'term': constants.CURRENT_TERM,
         'sort': sort,
         'course_type': course_type,
         'courses': courses,
-        'page_javascript': 'LayupList.Web.CurrentTerm()'
+        'courses_and_votes': courses_and_votes,
+        'page_javascript': 'LayupList.Web.CurrentTerm({})'.format(for_layups_js_boolean)
     })
 
 
@@ -182,9 +191,16 @@ def course_detail(request, course_id):
     if reviews.number > 1 and not request.user.is_authenticated():
         return HttpResponseRedirect(reverse("signup")+"?restriction=read more reviews")
 
+    if request.user.is_authenticated():
+        layup_vote, quality_vote = Vote.objects.for_course_and_user(course, request.user)
+    else:
+        layup_vote, quality_vote = None, None
+
     return render(request, 'course_detail.html', {
         'term': constants.CURRENT_TERM,
         'course': course,
+        'layup_vote': layup_vote,
+        'quality_vote': quality_vote,
         'reviews': reviews,
         'distribs': course.distribs_string(),
         'xlist': course.crosslisted_courses.all(),
@@ -261,4 +277,24 @@ def course_professors(request, course_id):
         'professors': list(Review.objects.filter(
             course=course_id
         ).values_list('professor', flat=True).distinct().order_by('professor'))
+    })
+
+
+@require_POST
+def vote(request, course_id):
+    if not request.user.is_authenticated():
+        return HttpResponseForbidden()
+
+    try:
+        value = request.POST["value"]
+        forLayup = request.POST["forLayup"] == "true"
+    except KeyError:
+        return HttpResponseBadRequest()
+
+    category = Vote.CATEGORIES.LAYUP if forLayup else Vote.CATEGORIES.GOOD
+    new_score, is_unvote = Vote.objects.vote(int(value), course_id, category, request.user)
+
+    return JsonResponse({
+        'new_score': new_score,
+        'was_unvote': is_unvote
     })

@@ -38,3 +38,19 @@ html, body {
     font-size: 1em;
     color: white;
 }
+
+.score {
+    margin: 0;
+}
+
+.unselected {
+    color: #A7A7A7;
+}
+
+.selected {
+    color: #000;
+}
+
+.vote-arrow {
+    cursor: pointer;
+}
