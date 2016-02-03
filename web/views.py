@@ -5,14 +5,13 @@ from django.views.decorators.http import require_safe
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
-from django.core.mail import send_mail
 from lib.grades import numeric_value_for_grade
 from lib.terms import numeric_value_of_term
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 import sys
 from lib import constants
 
@@ -21,33 +20,10 @@ LIMITS = {
     "reviews": 5,
 }
 
-VALID_STUDENT = set(['16', '17', '18', '19', '20'])
-
 
 @require_safe
 def landing(request):
     return render(request, 'landing.html', {"landing": True})
-
-
-def confirm_dartmouth_student_email(email):
-
-    e = email.split("@")
-
-    if len(e) < 2:
-        return False
-
-    dnd_name = e[0]
-    domain = e[1] # will be 'alumni' for alumni emails
-    if domain != "dartmouth.edu":
-        return False
-
-    dnd_parts = dnd_name.split('.')
-
-    if dnd_parts[-1] not in VALID_STUDENT: # dnd student names end in number
-        return False
-
-    return True
-
 
 
 def signup(request):
@@ -55,25 +31,36 @@ def signup(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
 
-        if not confirm_dartmouth_student_email(email):
-            return render(request, 'signup.html', {"auth_page": True, "error": "Only Dartmouth student emails are permitted for registration at this time. Contact us at support@layuplist.com for more information."})
-
-        link = User.objects.make_random_password(length=16, allowed_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789')
+        if not Student.objects.is_valid_dartmouth_student_email(email):
+            return render(request, 'signup.html', {
+                "auth_page": True,
+                "error": """
+                    Only Dartmouth student emails are permitted for
+                    registration at this time. Contact us at
+                    support@layuplist.com for more information.
+                """
+            })
 
         try:
-            new_user = User.objects.create_user(username=email, email=email, password=password, is_active=False)
+            with transaction.atomic():
+                new_user = User.objects.create_user(
+                    username=email,
+                    email=email,
+                    password=password,
+                    is_active=False
+                )
+
+                new_student = Student.objects.create(
+                    user=new_user,
+                    confirmation_link=User.objects.make_random_password(length=16)
+                )
+
+                new_student.send_confirmation_link(request)
+
+                return render(request, 'instructions.html', {"auth_page": True})
+
         except IntegrityError:
             return render(request, 'signup.html', {"auth_page": True, "error": "This email is already registered. If you believe this is a mistake, please email support@layuplist.com."})
-
-        new_student = Student.objects.create(user=new_user, confirmation_link=link)
-
-
-        full_link = 'http://' + request.META['HTTP_HOST'] + '/confirmation?link=' + link
-        send_mail('Your confirmation link', 'Please navigate to the following confirmation link: ' + full_link, 'support@layuplist.com', [email], fail_silently=False)
-        print full_link # remove on prod
-        # sys.stdout.flush() # pythonunbuffered
-
-        return render(request, 'instructions.html', {"auth_page": True})
 
     elif request.method == 'GET':
         return render(request, 'signup.html', {"auth_page": True})
@@ -86,34 +73,27 @@ def auth_login(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
-        next_url = request.GET.get('next')
+        next_url = request.GET.get('next', '/layups')
 
-        if not next_url:
-            next_url = '/layups'
-
-        try:
-            u = User.objects.get(username=email)
-        except User.DoesNotExist:
-            return render(request, 'login.html', {"auth_page": True, "error": "This email does not appear to be in our system. If you believe this is a mistake, contact support@layuplist.com."})
-
-        if email and password:
-            user = authenticate(username=email, password=password)
-
+        user = authenticate(username=email, password=password)
+        if user is not None:
             if user.is_active:
                 login(request, user)
                 return redirect(next_url)
-
             else:
                 return render(request, 'login.html', {"auth_page": True, "error": "This account is not active."})
-
         else:
-            return render(request, 'login.html', {"auth_page": True, "error": "Must provide both email and password."})
+            return render(request, 'login.html', {"auth_page": True, "error": "Invalid login."})
 
     elif request.method == 'GET':
         return render(request, 'login.html', {"auth_page": True})
 
     else:
-        return render(request, 'login.html', {"auth_page": True, "error": "Please authenticate."})
+        return render(request, 'login.html', {
+            "auth_page": True,
+            "error": "Please authenticate."
+        })
+
 
 @login_required
 def auth_logout(request):
@@ -131,7 +111,6 @@ def confirmation(request):
         if student.user.is_active:
             return render(request, 'confirmation.html', {'auth_page': True, 'already_confirmed': True})
 
-        # print "is not active!"
         student.user.is_active = True
         student.user.save()
         return render(request, 'confirmation.html', {'auth_page': True, 'already_confirmed': False})
@@ -140,6 +119,7 @@ def confirmation(request):
 @require_safe
 def landing(request):
     return render (request, 'landing.html')
+
 
 @require_safe
 def current_term(request, sort):
@@ -215,6 +195,7 @@ def course_search(request):
         'courses': courses
     })
 
+
 @require_safe
 def course_review_search(request, course_id):
     query = request.GET.get("q", "").strip()
@@ -225,6 +206,7 @@ def course_review_search(request, course_id):
         'reviews': course.search_reviews(query),
         'page_javascript': 'LayupList.Web.CourseReviewSearch()'
     })
+
 
 @require_safe
 def medians(request, course_id):
