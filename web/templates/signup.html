@@ -1,0 +1,41 @@
+{% extends "base.html" %} {% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <p id="large">Sign up</p>
+        </div>
+    </div>
+    <div class="row">
+        <hr>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p id="signupError">{{ error }}</p>
+        </div>
+    </div>
+    <div class="row"></div>
+    <div class="col-md-2 col-md-offset-5">
+        <div class="text-center">
+            <form action="/signup" method="post">
+                {% csrf_token %}
+                <label for="email">Email: </label>
+                <input id="signup-email" class="form-control" type="text" name="email" value="">
+                <br>
+                <label for="password">Password: </label>
+                <input id="signup-password" class="form-control" type="password" name="password" value="">
+                <br>
+                <input type="submit" class="btn btn-primary" value="Submit">
+                <br>
+                <br>
+            </form>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p id="very-small-center">Already have an account? <a href="/accounts/login/">Login</a> here.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

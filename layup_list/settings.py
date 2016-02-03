@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 
 import os
 import dj_database_url
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -148,6 +149,7 @@ PIPELINE = {
                 'css/web/course_detail.css',
                 'css/web/course_review_search.css',
                 'css/web/landing.css',
+                'css/web/auth.css',
             ),
             'output_filename': 'css/app.css',
             'extra_context': {
@@ -156,3 +158,11 @@ PIPELINE = {
         }
     }
 }
+
+
+# Email server
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS')

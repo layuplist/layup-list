@@ -5,3 +5,4 @@ from instructor import Instructor
 from course_median import CourseMedian
 from review import Review
 from vote import Vote
+from student import Student

@@ -1,0 +1,58 @@
+
+hr {
+  border: 0;
+  border-top: 1px solid #434857
+}
+
+/*.form-control {
+  border: 1px #434857 solid
+}
+*/
+#large {
+  font-size: 36px;
+  text-align: center
+}
+
+#medium-large {
+  font-size: 24px;
+  text-align: center
+}
+
+#medium {
+  font-size: 20px;
+  text-align: center
+}
+
+#small {
+  font-size: 18px;
+  text-align: justify
+}
+
+#small-center {
+  font-size: 18px;
+  text-align: center
+}
+
+#very-small-center {
+  font-size: 14px;
+  text-align: center
+}
+
+.btn-font-landing {
+  font-size: 30px
+}
+
+#signup-modal {
+  padding-left: 25px;
+  padding-right: 25px
+}
+
+#signupError {
+  font-size: 14px;
+  color: red;
+  text-align: center
+}
+
+#bigcaps {
+  font-size: 50px
+}
