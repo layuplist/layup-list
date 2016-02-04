@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
+from django.db.models import Q
 from course_offering import CourseOffering
 from django.core.urlresolvers import reverse
 from lib.constants import CURRENT_TERM
@@ -126,4 +127,6 @@ class Course(models.Model):
         return self.courseoffering_set.count() > 0
 
     def search_reviews(self, query):
-        return self.review_set.order_by("-term").filter(comments__icontains=query)
+        return self.review_set.order_by("-term").filter(
+            Q(comments__icontains=query) | Q(professor__icontains=query)
+        )

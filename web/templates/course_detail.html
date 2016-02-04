@@ -60,7 +60,8 @@
                 {% for review in reviews %}
                     <tr><td>
                         {% if review.term %}
-                            <b>{{ review.term }}:</b>
+                            <b>{{ review.term }}</b>
+                            {% if review.professor %}(<i>{{review.professor}}</i>){% endif %}:
                         {% endif %}
                         {{ review.comments }}
                     </td></tr>
