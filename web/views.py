@@ -80,7 +80,7 @@ def auth_login(request):
                 login(request, user)
                 return redirect(next_url)
             else:
-                return render(request, 'login.html', { "error": "This account is not active."})
+                return render(request, 'login.html', { "inactive": True, "error": "Please activate your account via the activation link first."})
         else:
             return render(request, 'login.html', { "error": "Invalid login."})
 

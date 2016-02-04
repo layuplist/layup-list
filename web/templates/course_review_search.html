@@ -30,7 +30,7 @@
                 <tr><td class="highlight-review">
                     {% if review.term %}
                         <b>{{ review.term }}</b>
-                        {% if review.professor %}(<i>{{review.professor}}</i>){% endif %}:
+                        {% if review.professor %}<b> with {{review.professor}}</b>{% endif %}:
                     {% endif %}
                     {{ review.comments }}
                 </td></tr>
