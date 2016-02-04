@@ -1,18 +1,19 @@
+import sys
 from django.shortcuts import render, redirect
-from web.models import Course, CourseMedian, Student
 from django.conf import settings
 from django.views.decorators.http import require_safe
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from lib.grades import numeric_value_for_grade
-from lib.terms import numeric_value_of_term
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError, transaction
-import sys
+from web.models import Course, CourseMedian, Student, Review
+from web.models.forms import ReviewForm
+from lib.grades import numeric_value_for_grade
+from lib.terms import numeric_value_of_term
 from lib import constants
 
 LIMITS = {
@@ -23,7 +24,7 @@ LIMITS = {
 
 @require_safe
 def landing(request):
-    return render(request, 'landing.html', {"landing": True})
+    return render(request, 'landing.html')
 
 
 def signup(request):
@@ -120,11 +121,6 @@ def confirmation(request):
 
 
 @require_safe
-def landing(request):
-    return render(request, 'landing.html')
-
-
-@require_safe
 def current_term(request, sort):
     if sort == "best":
         course_type, primary_sort, secondary_sort = "Best Classes", "-quality_score", "-layup_score"
@@ -155,12 +151,25 @@ def current_term(request, sort):
     })
 
 
-@require_safe
 def course_detail(request, course_id):
+
     try:
         course = Course.objects.get(pk=course_id)
     except Course.DoesNotExist:
         return HttpResponseNotFound('<h1>Page not found</h1>')
+
+    form = None
+    if request.user.is_authenticated() and Review.objects.user_can_write_review(request.user.id, course_id):
+        if request.method == 'POST':
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                review = form.save(commit=False)
+                review.course = course
+                review.user = request.user
+                review.save()
+                form = None # don't show form again after successful submission
+        else:
+            form = ReviewForm()
 
     paginator = Paginator(course.review_set.all().order_by("-term"), LIMITS["reviews"])
     try:
@@ -179,6 +188,7 @@ def course_detail(request, course_id):
         'reviews': reviews,
         'distribs': course.distribs_string(),
         'xlist': course.crosslisted_courses.all(),
+        'review_form': form,
         'page_javascript': 'LayupList.Web.CourseDetail({})'.format(course_id)
     })
 
@@ -243,3 +253,12 @@ def medians(request, course_id):
         key=lambda x: numeric_value_of_term(x['term']),
         reverse=True
     )})
+
+
+@require_safe
+def course_professors(request, course_id):
+    return JsonResponse({
+        'professors': list(Review.objects.filter(
+            course=course_id
+        ).values_list('professor', flat=True).distinct().order_by('professor'))
+    })

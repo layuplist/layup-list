@@ -1,4 +1,14 @@
 LayupList.Web.CourseDetail = function(courseId) {
+
+    $.getJSON('/api/course/' + courseId + '/professors', function(data) {
+        $('#id_professor').autocomplete({
+            minLength: 0,
+            source: data.professors
+        }).focus(function() {
+            $(this).autocomplete("search", $(this).val());
+        });
+    });
+
     $.getJSON('/api/course/' + courseId + '/medians', function(data) {
         data = data.medians;
         $medianChart = $(".median-chart");

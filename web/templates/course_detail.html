@@ -31,7 +31,7 @@
     </div>
     <div class="col-md-2 col-md-offset-4 text-center score-box">
         <h2>{{ course.quality_score }}</h2>
-        <p>said it was a good class</p>
+        <p>said it was good</p>
     </div>
 </div>
 <p></p>
@@ -87,6 +87,29 @@
         </nav>
         {% else %}
             <p>No reviews found</p>
+        {% endif %}
+    </div>
+</div>
+<div id="write-review" class="row">
+    <div class="col-md-12">
+        <h3>Write a Review for {{ course.short_name }}</h3>
+        {% if review_form %}
+            <form method="post" action="#write-review">
+                {% load crispy_forms_tags %}
+                {% csrf_token %}
+                {{ review_form|crispy }}
+                <div class="text-right">
+                    <input type="submit" class="btn btn-default" value="Submit" />
+                </div>
+            </form>
+        {% else %}
+            <p>
+                {% if request.user.is_authenticated %}
+                    You have already written a review!
+                {% else %}
+                    Login to write a review.
+                {% endif %}
+            </p>
         {% endif %}
     </div>
 </div>
