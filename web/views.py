@@ -3,7 +3,7 @@ from web.models import Course, CourseMedian, Student
 from django.conf import settings
 from django.views.decorators.http import require_safe
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import JsonResponse, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from lib.grades import numeric_value_for_grade
 from lib.terms import numeric_value_of_term
@@ -143,6 +143,9 @@ def current_term(request, sort):
     except EmptyPage:
         courses = paginator.page(paginator.num_pages)
 
+    if courses.number > 1 and not request.user.is_authenticated():
+        return HttpResponseRedirect(reverse("signup")+"?restriction=see more")
+
     return render(request, 'current_term.html', {
         'term': constants.CURRENT_TERM,
         'sort': sort,
@@ -153,7 +156,6 @@ def current_term(request, sort):
 
 
 @require_safe
-@login_required
 def course_detail(request, course_id):
     try:
         course = Course.objects.get(pk=course_id)
@@ -167,6 +169,9 @@ def course_detail(request, course_id):
         reviews = paginator.page(1)
     except EmptyPage:
         reviews = paginator.page(paginator.num_pages)
+
+    if reviews.number > 1 and not request.user.is_authenticated():
+        return HttpResponseRedirect(reverse("signup")+"?restriction=read more reviews")
 
     return render(request, 'course_detail.html', {
         'term': constants.CURRENT_TERM,
