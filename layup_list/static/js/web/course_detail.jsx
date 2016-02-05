@@ -1,5 +1,5 @@
 LayupList.Web.CourseDetail = function(courseId) {
-    $.getJSON('/api/medians/' + courseId, function(data) {
+    $.getJSON('/api/course/' + courseId + '/medians', function(data) {
         data = data.medians;
         $medianChart = $(".median-chart");
         if (data.length === 0) {
