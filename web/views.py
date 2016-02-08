@@ -19,6 +19,7 @@ from lib import constants
 LIMITS = {
     "courses": 20,
     "reviews": 5,
+    "unauthenticated_review_search": 3,
 }
 
 
@@ -234,10 +235,18 @@ def course_search(request):
 def course_review_search(request, course_id):
     query = request.GET.get("q", "").strip()
     course = Course.objects.get(id=course_id)
+    reviews = course.search_reviews(query)
+    review_count = reviews.count()
+
+    if not request.user.is_authenticated():
+        reviews = reviews[:LIMITS["unauthenticated_review_search"]]
+
     return render(request, 'course_review_search.html', {
         'query': query,
         'course': course,
-        'reviews': course.search_reviews(query),
+        'reviews_full_count': review_count,
+        'remaining': review_count - LIMITS["unauthenticated_review_search"],
+        'reviews': reviews,
         'page_javascript': 'LayupList.Web.CourseReviewSearch()'
     })
 

@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h1>{{ reviews | length }} <a href="{% url 'course_detail' course.id %}">{{ course.short_name }}</a> review results for "<span class="query">{{ query }}</span>"</h1>
+        <h1>{{ reviews_full_count }} <a href="{% url 'course_detail' course.id %}">{{ course.short_name }}</a> review results for "<span class="query">{{ query }}</span>"</h1>
     </div>
 </div>
 <div class="row">
@@ -37,6 +37,12 @@
             {% endfor %}
         </tbody>
     </table>
+
+    {% if not request.user.is_authenticated and remaining > 0 %}
+    <div class="col-md-12 text-center">
+        <h3>Please <a href="{% url 'signup' %}">signup</a> to see the remaining {{ remaining }} reviews for this search.</h3>
+    </div>
+    {% endif %}
 {% endif %}
     </div>
 </div>
