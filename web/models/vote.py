@@ -14,4 +14,4 @@ class Vote(models.Model):
 
     course = models.ForeignKey("Course", on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.CharField(max_length=8, choices=Categories.CHOICES)
+    category = models.CharField(max_length=8, choices=Categories.CHOICES, db_index=True)
