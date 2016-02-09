@@ -11,6 +11,7 @@ python scripts/importers/import_course_pages.py
 
 # import term data
 python scripts/importers/import_term.py 16W data/terms/201601_courses.json
+python scripts/importers/import_term.py 16S data/terms/201603_courses.json
 
 # import medians
 python scripts/importers/import_medians.py
