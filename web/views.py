@@ -25,7 +25,9 @@ LIMITS = {
 
 @require_safe
 def landing(request):
-    return render(request, 'landing.html')
+    return render(request, 'landing.html', {
+        'page_javascript': 'LayupList.Web.Landing()'
+    })
 
 
 def signup(request):

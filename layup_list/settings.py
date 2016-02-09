@@ -138,6 +138,7 @@ PIPELINE = {
                 'js/vendor/jquery.highlight-5.js',
                 'js/web/base.jsx',
                 'js/web/common.jsx',
+                'js/web/landing.jsx',
                 'js/web/current_term.jsx',
                 'js/web/course_detail.jsx',
                 'js/web/course_review_search.jsx',

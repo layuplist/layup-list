@@ -1,34 +1,34 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="row">
-    <div class="col-md-12">
-        <h1>Layup List</h2>
+    <div class="col-md-12 text-center">
+        <h1>Layup List</h1>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-12">
-        <h4>Welcome to Dartmouth's new course review site!</h4>
+<div class="row text-center">
+    <div class="col-md-8 col-md-offset-2">
         <div class="row">
-            <div class="col-md-6">
-                <p>We've imported all the median data and course offerings from the ORC, reviews from the remains of CoursePicker, and various layup lists written by students, so that you have a centralized platform for finding the right classes every term.</p>
-                <p>Note: Layup List is currently a WIP. See note in footer.</p>
+            <div class="col-md-4">
+                <h1><span class="glyphicon glyphicon-stats"></span></h1>
+                <p>Detailed median charts and extensive reviews</p>
+            </div>
+            <div class="col-md-4">
+                <h1><span class="glyphicon glyphicon-fire"></span></h1>
+                <p>See the best and easiest classes this term</p>
+            </div>
+            <div class="col-md-4">
+                <h1><span class="glyphicon glyphicon-thumbs-up"></span></h1>
+                <p>Vote on the best and easiest classes</p>
             </div>
         </div>
     </div>
 </div>
 <div class="row">
-    <div class="col-md-12">
-        <p><span class="glyphicon glyphicon-stats"></span> Detailed median charts and extensive reviews for every course.</p>
-        <p><span class="glyphicon glyphicon-fire"></span> See the best and easiest classes this term</p>
-        <p><span class="glyphicon glyphicon-thumbs-up"></span> Vote on the best and easiest classes</p>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6 col-md-offset-3 text-center">
         <form class="landing-search" action="{% url 'course_search' %}" method="get" role="search">
             <div class="form-group">
                 <div class="input-group">
-                    <input name="q" type="text" class="form-control" placeholder="Search for Courses...">
+                    <input name="q" type="text" class="search-input form-control" placeholder="Search for Courses...">
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-default">Search</button>
                     </span>
