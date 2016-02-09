@@ -11,7 +11,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError, transaction
 from web.models import Course, CourseMedian, Student, Review, Vote
-from web.models.forms import ReviewForm
+from web.models.forms import ReviewForm, SignupForm
 from lib.grades import numeric_value_for_grade
 from lib.terms import numeric_value_of_term
 from lib import constants
@@ -32,44 +32,15 @@ def landing(request):
 
 def signup(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-
-        if not Student.objects.is_valid_dartmouth_student_email(email):
-            return render(request, 'signup.html', {
-                "error": """
-                    Only Dartmouth student emails are permitted for
-                    registration at this time. Contact us at
-                    support@layuplist.com for more information.
-                """
-            })
-
-        try:
-            with transaction.atomic():
-                new_user = User.objects.create_user(
-                    username=email,
-                    email=email,
-                    password=password,
-                    is_active=False
-                )
-
-                new_student = Student.objects.create(
-                    user=new_user,
-                    confirmation_link=User.objects.make_random_password(length=16)
-                )
-
-                new_student.send_confirmation_link(request)
-
-                return render(request, 'instructions.html')
-
-        except IntegrityError:
-            return render(request, 'signup.html', { "error": "This email is already registered. If you believe this is a mistake, please email support@layuplist.com."})
-
-    elif request.method == 'GET':
-        return render(request, 'signup.html')
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            form.save_and_send_confirmation(request)
+            return render(request, 'instructions.html')
+        else:
+            return render(request, 'signup.html', { "form": form })
 
     else:
-        return render(request, 'signup.html', { "error": "Improper request type."})
+        return render(request, 'signup.html', { "form": SignupForm() })
 
 
 def auth_login(request):
