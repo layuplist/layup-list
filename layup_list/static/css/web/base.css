@@ -13,13 +13,12 @@ html, body {
 }
 
 .container {
-   padding-bottom: 180px;
+   padding-bottom: 140px;
 }
 
 .footer {
-    height: 160px;
-    background-color: #201D24;
-    color: #B5B5B5;
+    height: 120px;
+    background-color: #F6F6F6;
     font-size: 0.9em;
     position:absolute;
     bottom:0;
@@ -36,7 +35,6 @@ html, body {
 
 .support-link {
     font-size: 1em;
-    color: white;
 }
 
 .score {
