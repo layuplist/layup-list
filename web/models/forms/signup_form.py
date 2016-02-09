@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import transaction
@@ -23,6 +24,12 @@ class SignupForm(forms.Form):
         widget=forms.PasswordInput,
         help_text="Enter the same password as before, for verification.")
 
+    def clean_password1(self):
+        password1 = self.cleaned_data.get("password1")
+        email = self.cleaned_data.get("email")
+        validate_password(password1, User(username=email, email=email))
+        return password1
+
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
@@ -31,6 +38,7 @@ class SignupForm(forms.Form):
                 self.error_messages['password_mismatch'],
                 code='password_mismatch',
             )
+
         return password2
 
     def clean_email(self):
