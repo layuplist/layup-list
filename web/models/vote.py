@@ -92,6 +92,21 @@ class Vote(models.Model):
     class Meta:
         unique_together = ("course", "user", "category")
 
+    def __unicode__(self):
+        return "{} for {} by {}".format(
+            self.vote_type().capitalize(),
+            self.course.short_name(),
+            self.user.email
+        )
+
+    def vote_type(self):
+        if self.is_upvote():
+            return "upvote"
+        elif self.is_downvote():
+            return "downvote"
+        else:
+            return "neutral vote"
+
     def is_upvote(self):
         return self.value > 0
 
