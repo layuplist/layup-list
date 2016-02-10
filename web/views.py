@@ -45,7 +45,7 @@ def signup(request):
 
 def auth_login(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
+        email = request.POST.get('email').lower()
         password = request.POST.get('password')
         next_url = request.GET.get('next', '/layups')
 

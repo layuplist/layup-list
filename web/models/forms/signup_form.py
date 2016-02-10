@@ -42,7 +42,7 @@ class SignupForm(forms.Form):
         return password2
 
     def clean_email(self):
-        email = self.cleaned_data.get("email")
+        email = self.cleaned_data.get("email").lower()
 
         if not Student.objects.is_valid_dartmouth_student_email(email):
             raise ValidationError("Only Dartmouth student emails are permitted for registration at this time.")
