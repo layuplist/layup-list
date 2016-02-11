@@ -60,8 +60,8 @@ class CourseManager(models.Manager):
 class Course(models.Model):
     objects = CourseManager()
 
-    crosslisted_courses = models.ManyToManyField("self")
-    distribs = models.ManyToManyField("DistributiveRequirement")
+    crosslisted_courses = models.ManyToManyField("self", blank=True)
+    distribs = models.ManyToManyField("DistributiveRequirement", blank=True)
 
     class SOURCES():
         ORC = "ORC"
@@ -74,10 +74,10 @@ class Course(models.Model):
     title = models.CharField(max_length=200)
     department = models.CharField(max_length=4, db_index=True)
     number = models.IntegerField(db_index=True)
-    subnumber = models.IntegerField(null=True, db_index=True)
-    url = models.URLField(null=True)
+    subnumber = models.IntegerField(null=True, db_index=True, blank=True)
+    url = models.URLField(null=True, blank=True)
     source = models.CharField(max_length=16, choices=SOURCES.CHOICES)
-    description = models.TextField(null=True)
+    description = models.TextField(null=True, blank=True)
 
     layup_score = models.IntegerField(default=0)
     quality_score = models.IntegerField(default=0)
