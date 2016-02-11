@@ -43,14 +43,15 @@ class SignupForm(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data.get("email").lower()
+        username = email.split("@")[0]
 
         if not Student.objects.is_valid_dartmouth_student_email(email):
             raise ValidationError("Only Dartmouth student emails are permitted for registration at this time.")
 
-        if len(email.split("@")[0]) > 30:
+        if len(username) > 30:
             raise ValidationError("Please use a shorter email.")
 
-        if User.objects.filter(Q(username=email) | Q(email=email)):
+        if User.objects.filter(Q(username=username) | Q(email=email)):
             raise ValidationError("A user with that email already exists")
 
         return email
