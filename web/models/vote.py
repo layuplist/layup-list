@@ -93,8 +93,9 @@ class Vote(models.Model):
         unique_together = ("course", "user", "category")
 
     def __unicode__(self):
-        return "{} for {} by {}".format(
-            self.vote_type().capitalize(),
+        return "{} {} for {} by {}".format(
+            self.category.capitalize(),
+            self.vote_type(),
             self.course.short_name(),
             self.user.username
         )
