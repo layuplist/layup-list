@@ -62,13 +62,13 @@ class SignupForm(forms.Form):
             username=self.cleaned_data["email"].split("@")[0],
             email=self.cleaned_data["email"],
             password=self.cleaned_data["password1"],
-            is_active=False
+            is_active=True
         )
 
         new_student = Student.objects.create(
             user=new_user,
             confirmation_link=User.objects.make_random_password(length=16)
         )
-        new_student.send_confirmation_link(request)
+        # new_student.send_confirmation_link(request)
 
         return new_user
