@@ -96,7 +96,7 @@ class Vote(models.Model):
         return "{} for {} by {}".format(
             self.vote_type().capitalize(),
             self.course.short_name(),
-            self.user.email
+            self.user.username
         )
 
     def vote_type(self):
