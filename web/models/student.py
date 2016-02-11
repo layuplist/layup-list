@@ -38,14 +38,11 @@ class Student(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __unicode__(self):
-        return "{} {}: has a score of {} with {} upvotes".format(self.first_name, self.last_name, self.score, self.upvotes)
-
     def send_confirmation_link(self, request):
         full_link = request.build_absolute_uri(reverse('confirmation')) + '?link=' + self.confirmation_link
         send_mail(
             'Your confirmation link',
             'Please navigate to the following confirmation link: ' +
             full_link, constants.SUPPORT_EMAIL,
-            [self.user.username], fail_silently=False
+            [self.user.email], fail_silently=False
         )

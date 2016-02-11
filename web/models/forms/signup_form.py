@@ -47,6 +47,9 @@ class SignupForm(forms.Form):
         if not Student.objects.is_valid_dartmouth_student_email(email):
             raise ValidationError("Only Dartmouth student emails are permitted for registration at this time.")
 
+        if len(email.split("@")[0]) > 30:
+            raise ValidationError("Please use a shorter email.")
+
         if User.objects.filter(Q(username=email) | Q(email=email)):
             raise ValidationError("A user with that email already exists")
 
@@ -55,7 +58,7 @@ class SignupForm(forms.Form):
     @transaction.atomic()
     def save_and_send_confirmation(self, request):
         new_user = User.objects.create_user(
-            username=self.cleaned_data["email"],
+            username=self.cleaned_data["email"].split("@")[0],
             email=self.cleaned_data["email"],
             password=self.cleaned_data["password1"],
             is_active=False

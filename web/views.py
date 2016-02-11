@@ -45,11 +45,11 @@ def signup(request):
 
 def auth_login(request):
     if request.method == 'POST':
-        email = request.POST.get('email').lower()
+        username = request.POST.get('email').lower().split('@')[0]
         password = request.POST.get('password')
         next_url = request.GET.get('next', '/layups')
 
-        user = authenticate(username=email, password=password)
+        user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
                 login(request, user)
