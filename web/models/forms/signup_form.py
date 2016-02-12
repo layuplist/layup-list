@@ -17,7 +17,7 @@ class SignupForm(forms.Form):
         'password_mismatch': "The two password fields didn't match.",
     }
 
-    email = forms.EmailField(label="Dartmouth Email")
+    email = forms.EmailField(label="Dartmouth Undergraduate Email")
     password1 = forms.CharField(label="Password",
         widget=forms.PasswordInput)
     password2 = forms.CharField(label="Password confirmation",

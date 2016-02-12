@@ -28,7 +28,13 @@
     <div class="col-md-2 col-md-offset-2 text-center score-box">
         <span class="vote-arrow glyphicon glyphicon-chevron-up {% if layup_vote and layup_vote.is_upvote %}selected{% else %}unselected{% endif %}"
               onclick="LayupList.Web.CourseDetail.upvote({{ course.id }}, this, true);"></span>
-        <h2 class="score"> {{ course.layup_score }} </h2>
+        {% if request.user.is_authenticated %}
+            <h2 class="score"> {{ course.layup_score }} </h2>
+        {% else %}
+            <p class="score">
+                <a href="{% url 'signup'%}">Signup to reveal</a>
+            </p>
+        {% endif %}
         <span class="vote-arrow glyphicon glyphicon-chevron-down {% if layup_vote and layup_vote.is_downvote %}selected{% else %}unselected{% endif %}"
               onclick="LayupList.Web.CourseDetail.downvote({{ course.id }}, this, true);"></span>
         <p>called it a layup</p>

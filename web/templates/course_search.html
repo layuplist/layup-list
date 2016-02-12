@@ -27,7 +27,13 @@
                 <td> <a href="{% url 'course_detail' course.id %}">{{ course }}</a> </td>
                 <td> {{ course.review_set.count }} </td>
                 <td> {{ course.quality_score }} </td>
-                <td> {{ course.layup_score }} </td>
+                <td>
+                    {% if request.user.is_authenticated %}
+                        {{ course.layup_score }}
+                    {% else %}
+                        <a href="{% url 'signup'%}">Signup to reveal</a>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>

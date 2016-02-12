@@ -100,6 +100,9 @@ def current_term(request, sort):
         course_type, primary_sort, secondary_sort = "Best Classes", "-quality_score", "-layup_score"
         vote_category = Vote.CATEGORIES.GOOD
     else:
+        if not request.user.is_authenticated():
+            return HttpResponseRedirect(reverse("signup")+"?restriction=see layups")
+
         course_type, primary_sort, secondary_sort = "Layups", "-layup_score", "-quality_score"
         vote_category = Vote.CATEGORIES.LAYUP
 
