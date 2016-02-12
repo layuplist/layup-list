@@ -115,7 +115,7 @@
                 {% if request.user.is_authenticated %}
                     You have already written a review!
                 {% else %}
-                    Login to write a review.
+                    <a href="{% url 'auth_login' %}">Login</a> to write a review.
                 {% endif %}
             </p>
         {% endif %}
