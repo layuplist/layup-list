@@ -60,7 +60,7 @@
 <nav>
     <ul class="pager">
         {% if courses.has_previous %}
-            <li><a href="{% url 'current_term' sort %}?page={{ courses.previous_page_number }}"><span aria-hidden="true">&larr;</span> Previous</a></li>
+            <li><a href="{% url 'current_term' sort %}?page={{ courses.previous_page_number }}&dist={{ request.GET.dist }}"><span aria-hidden="true">&larr;</span> Previous</a></li>
         {% else %}
             <li class="disabled"><a><span aria-hidden="true">&larr;</span> Previous</a></li>
         {% endif %}
@@ -68,7 +68,7 @@
         <li>{{ courses.number }} of {{ courses.paginator.num_pages }}</li>
 
         {% if courses.has_next %}
-            <li><a href="{% url 'current_term' sort %}?page={{ courses.next_page_number }}">Next <span aria-hidden="true">&rarr;</span></a></li>
+            <li><a href="{% url 'current_term' sort %}?page={{ courses.next_page_number }}&dist={{ request.GET.dist }}">Next <span aria-hidden="true">&rarr;</span></a></li>
         {% else %}
             <li class="disabled"><a>Next <span aria-hidden="true">&rarr;</span></a></li>
         {% endif %}
