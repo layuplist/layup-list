@@ -1,8 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-10">
         <h1>{{ term }} {{ course_type }}</h1>
+    </div>
+    <div class="col-md-2 text-right">
+        <form class="form-inline">
+            <div class="form-group">
+              <label class="sr-only" for="distributive">Distrib:</label>
+              <select name="dist" class="form-control" onchange="this.form.submit()">
+                  <option value="">Filter by distrib</option>
+                  {% for distrib in distribs %}
+                      <option value="{{ distrib.name.lower }}">{{ distrib.name.upper }}</option>
+                  {% endfor %}
+              </select>
+            </div>
+        </form>
     </div>
 </div>
 <div class="row">

@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError, transaction
-from web.models import Course, CourseMedian, Student, Review, Vote
+from web.models import Course, CourseMedian, Student, Review, Vote, DistributiveRequirement
 from web.models.forms import ReviewForm, SignupForm
 from lib.grades import numeric_value_for_grade
 from lib.terms import numeric_value_of_term
@@ -106,7 +106,9 @@ def current_term(request, sort):
         course_type, primary_sort, secondary_sort = "Layups", "-layup_score", "-quality_score"
         vote_category = Vote.CATEGORIES.LAYUP
 
-    term_courses = Course.objects.for_term(constants.CURRENT_TERM).prefetch_related(
+    dist = request.GET.get('dist')
+    dist = dist.upper() if dist else dist
+    term_courses = Course.objects.for_term(constants.CURRENT_TERM, dist).prefetch_related(
         'distribs', 'review_set', 'courseoffering_set'
     ).order_by(primary_sort, secondary_sort)
 
@@ -133,6 +135,7 @@ def current_term(request, sort):
         'course_type': course_type,
         'courses': courses,
         'courses_and_votes': courses_and_votes,
+        'distribs': DistributiveRequirement.objects.all(),
         'page_javascript': 'LayupList.Web.CurrentTerm({})'.format(for_layups_js_boolean)
     })
 
