@@ -35,7 +35,7 @@ def signup(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             form.save_and_send_confirmation(request)
-            return redirect('auth_login')
+            return render(request, 'instructions.html')
         else:
             return render(request, 'signup.html', { "form": form })
 
