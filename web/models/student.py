@@ -8,7 +8,7 @@ from lib import constants
 
 
 class StudentManager(models.Manager):
-    VALID_YEARS = set([str(year) for year in range(16, 21)])
+    VALID_YEARS = set([str(year) for year in range(15, 21)])
 
     def is_valid_dartmouth_student_email(self, email):
         e = email.split("@")
