@@ -23,7 +23,7 @@ class StudentManager(models.Manager):
 
         dnd_parts = dnd_name.split('.')
 
-        return dnd_parts[-1] in self.VALID_YEARS or dnd_parts[-1] == "UG"
+        return dnd_parts[-1] in self.VALID_YEARS or dnd_parts[-1] == "ug"
 
 class Student(models.Model):
     objects = StudentManager()
