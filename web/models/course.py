@@ -106,10 +106,15 @@ class Course(models.Model):
     def distribs_string(self, separator=", "):
         return separator.join([d.name for d in self.distribs.all()])
 
+    def offered_times_string(self, term=CURRENT_TERM):
+        return ", ".join(self.offered_times(term))
+
     def offered_times(self, term=CURRENT_TERM):
         offered_times = []
 
         # filtering here creates an N+1 query... so we filter it ourselves.
+        # N+1 occurs on current_term page, as CourseOffering preloading is
+        # ignored if a filter is added here
         all_course_offerings = self.courseoffering_set.all()
         term_course_offerings = []
         for offering in all_course_offerings:
@@ -124,10 +129,10 @@ class Course(models.Model):
         offered_times = list(set(offered_times))
         if some_times_redacted:
             offered_times.append("other")
-        return ", ".join(offered_times)
+        return offered_times
 
     def is_offered(self, term=CURRENT_TERM):
-        return self.courseoffering_set.count() > 0
+        return self.courseoffering_set.filter(term=term).count() > 0
 
     def search_reviews(self, query):
         return self.review_set.order_by("-term").filter(

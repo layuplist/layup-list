@@ -48,7 +48,7 @@
                         <h5>
                             {{ course.review_set.count }} reviews
                             {% if course.distribs_string %} | {{ course.distribs_string }} {% endif %}
-                            {% if course.offered_times %} | Offered during {{ course.offered_times }} {% endif %}
+                            {% if course.offered_times_string %} | Offered during {{ course.offered_times_string }} {% endif %}
                         </h5>
                     </td>
                 </tr>
