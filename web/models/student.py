@@ -23,10 +23,7 @@ class StudentManager(models.Manager):
 
         dnd_parts = dnd_name.split('.')
 
-        if dnd_parts[-1] not in self.VALID_YEARS: # dnd student names end in number
-            return False
-
-        return True
+        return dnd_parts[-1] in self.VALID_YEARS or dnd_parts[-1] == "UG"
 
 class Student(models.Model):
     objects = StudentManager()
