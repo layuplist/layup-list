@@ -3,6 +3,7 @@ from django.db import models, transaction
 from django.contrib.auth.models import User
 from web.models import Course
 
+
 class VoteManager(models.Manager):
 
     @transaction.atomic
@@ -55,7 +56,7 @@ class VoteManager(models.Manager):
             user=user
         )
 
-        votes_dict = { vote.course_id: vote for vote in votes }
+        votes_dict = {vote.course_id: vote for vote in votes}
 
         return [(c, votes_dict.get(c.id, None)) for c in courses]
 
@@ -87,7 +88,11 @@ class Vote(models.Model):
     value = models.IntegerField(default=0)
     course = models.ForeignKey("Course", on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.CharField(max_length=8, choices=CATEGORIES.CHOICES, db_index=True)
+    category = models.CharField(
+        max_length=8, choices=CATEGORIES.CHOICES, db_index=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ("course", "user", "category")

@@ -17,13 +17,14 @@ class StudentManager(models.Manager):
             return False
 
         dnd_name = e[0]
-        domain = e[1] # will be 'alumni' for alumni emails
+        domain = e[1]  # will be 'alumni' for alumni emails
         if domain != "dartmouth.edu":
             return False
 
         dnd_parts = dnd_name.split('.')
 
         return dnd_parts[-1] in self.VALID_YEARS or dnd_parts[-1] == "ug"
+
 
 class Student(models.Model):
     objects = StudentManager()
@@ -36,7 +37,8 @@ class Student(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def send_confirmation_link(self, request):
-        full_link = request.build_absolute_uri(reverse('confirmation')) + '?link=' + self.confirmation_link
+        full_link = request.build_absolute_uri(
+            reverse('confirmation')) + '?link=' + self.confirmation_link
         send_mail(
             'Your confirmation link',
             'Please navigate to the following confirmation link: ' +

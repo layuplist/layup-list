@@ -8,11 +8,13 @@ import re
 
 
 class CourseManager(models.Manager):
-    course_search_regex = re.compile("^(?P<department_or_query>\D*)(?P<number>\d*)\.?(?P<subnumber>\d*)(?P<other>.*)")
-    DEPARTMENT_LENGTHS = [3,4]
+    course_search_regex = re.compile(
+        "^(?P<department_or_query>\D*)(?P<number>\d*)\.?(?P<subnumber>\d*)(?P<other>.*)")
+    DEPARTMENT_LENGTHS = [3, 4]
 
     def for_term(self, term, dist=None):
-        query = self.filter(id__in=CourseOffering.objects.course_ids_for_term(term))
+        query = self.filter(
+            id__in=CourseOffering.objects.course_ids_for_term(term))
         if dist:
             query = query.filter(distribs__name=dist)
         return query
