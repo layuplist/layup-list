@@ -8,7 +8,7 @@ from lib import constants
 
 
 class StudentManager(models.Manager):
-    VALID_YEARS = set([str(year) for year in range(15, 21)])
+    VALID_YEARS = set([str(year) for year in range(15, 25)])
 
     def is_valid_dartmouth_student_email(self, email):
         e = email.split("@")
@@ -23,7 +23,7 @@ class StudentManager(models.Manager):
 
         dnd_parts = dnd_name.split('.')
 
-        return dnd_parts[-1] in self.VALID_YEARS or dnd_parts[-1] == "ug"
+        return dnd_parts[-1] in self.VALID_YEARS or dnd_parts[-1].lower() == "ug"
 
 
 class Student(models.Model):
@@ -31,7 +31,7 @@ class Student(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    confirmation_link = models.CharField(max_length=16)
+    confirmation_link = models.CharField(max_length=16, unique=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

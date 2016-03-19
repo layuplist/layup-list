@@ -44,6 +44,8 @@ class VoteManager(models.Manager):
         return new_score, is_unvote
 
     def authenticated_group_courses_with_votes(self, courses, category, user):
+        # returns a list of tuples: (course, user's corresponding vote or None)
+        # if not authenticated, all votes are None
         if user.is_authenticated():
             return self.group_courses_with_votes(courses, category, user)
         else:

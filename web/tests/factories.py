@@ -74,3 +74,23 @@ class DistributiveRequirementFactory(factory.django.DjangoModelFactory):
 
     name = "ART"
     distributive_type = models.DistributiveRequirement.DISTRIBUTIVE
+
+
+class StudentFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = models.Student
+
+    user = factory.SubFactory(UserFactory)
+    confirmation_link = User.objects.make_random_password(length=16)
+
+
+class VoteFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = models.Vote
+
+    value = 0
+    course = factory.SubFactory(CourseFactory)
+    user = factory.SubFactory(UserFactory)
+    category = models.Vote.CATEGORIES.GOOD
