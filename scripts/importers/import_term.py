@@ -86,7 +86,6 @@ def import_cleaned_data(course_dict, term):
     try:
         offering = CourseOffering.objects.get(
             course=course,
-            course_registration_number=course_dict["crn"],
             section=course_dict["section"],
             term=term
         )
