@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'pipeline',
     'crispy_forms',
-    'web'
+    'web',
+    'analytics'
 ]
 
 MIDDLEWARE_CLASSES = [

@@ -17,6 +17,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from web import views
+from analytics import views as aviews
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -31,5 +32,6 @@ urlpatterns = [
     url(r'^course/(?P<course_id>[0-9]+)/review_search/?', views.course_review_search, name="course_review_search"),
     url(r'^api/course/(?P<course_id>[0-9].*)/medians', views.medians, name="medians"),
     url(r'^api/course/(?P<course_id>[0-9].*)/professors?/?', views.course_professors, name="course_professors"),
-    url(r'^api/course/(?P<course_id>[0-9].*)/vote', views.vote, name="vote")
+    url(r'^api/course/(?P<course_id>[0-9].*)/vote', views.vote, name="vote"),
+    url(r'^analytics/$', aviews.home, name='analytics_home')
 ]

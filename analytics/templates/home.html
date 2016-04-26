@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Analytics | Layup List{% endblock %}
+{% block content %}
+{% load admin_urls %}
+<div class="row">
+    <div class="col-md-12">
+        <h1> Analytics </h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table">
+            <thead>
+                <th>Range</th>
+                <th>Users</th>
+                <th>Good Votes</th>
+                <th>Layup Votes</th>
+                <th>Reviews</th>
+            </thead>
+            <tbody>
+                {% for c1, c2, c3, c4, c5 in overall_table %}
+                <tr>
+                    <th>{{ c1}}</th>
+                    <td>{{ c2 }}</td>
+                    <td>{{ c3 }}</td>
+                    <td>{{ c4 }}</td>
+                    <td>{{ c5 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Vote Breakdown</h3>
+        <table class="table">
+            <thead>
+                <th>Range</th>
+                <th>Good +</th>
+                <th>Good -</th>
+                <th>Layup +</th>
+                <th>Layup -</th>
+                <th>Total Unvotes</th>
+            </thead>
+            <tbody>
+                {% for c1, c2, c3, c4, c5, c6 in vote_table %}
+                <tr>
+                    <th>{{ c1}}</th>
+                    <td>{{ c2 }}</td>
+                    <td>{{ c3 }}</td>
+                    <td>{{ c4 }}</td>
+                    <td>{{ c5 }}</td>
+                    <td>{{ c6 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <h4>Most Votes</h4>
+        <ol>
+        {% for user, vote_count in high_voters %}
+            <li>{{ vote_count }} (<a href="/admin/auth/user/{{ user }}">#{{ user }}</a>)</li>
+        {% endfor %}
+        </ol>
+    </div>
+    <div class="col-md-3">
+        <h4>Most Good Votes</h4>
+        <ol>
+        {% for user, vote_count in high_good_voters %}
+            <li>{{ vote_count }} (<a href="/admin/auth/user/{{ user }}">#{{ user }}</a>)</li>
+        {% endfor %}
+        </ol>
+    </div>
+    <div class="col-md-3">
+        <h4>Most Layup Votes</h4>
+        <ol>
+        {% for user, vote_count in high_layup_voters %}
+            <li>{{ vote_count }} (<a href="/admin/auth/user/{{ user }}">#{{ user }}</a>)</li>
+        {% endfor %}
+        </ol>
+    </div>
+    <div class="col-md-3">
+        <h4>Top Reviewers</h4>
+        <ol>
+        {% for user, review_count in top_reviewers %}
+            <li>{{ review_count }} (<a href="/admin/auth/user/{{ user }}">#{{ user }}</a>)</li>
+        {% endfor %}
+        </ol>
+    </div>
+
+</div>
+
+{% endblock %}
