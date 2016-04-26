@@ -1,2 +1,2 @@
-CURRENT_TERM = "16S"
+CURRENT_TERM = "16X"
 SUPPORT_EMAIL = "support@layuplist.com"
