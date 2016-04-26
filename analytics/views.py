@@ -4,6 +4,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 from django.db.models import Count
 from web import models
+from collections import Counter
 import datetime
 
 LIMIT = 50
@@ -61,6 +62,15 @@ def home(request):
             models.Vote.objects.filter(value=0, created_at__gte=earliest_date).count(),
         ))
 
+    usernames = User.objects.exclude(id=course_picker.id).values_list('username', flat=True)
+    c = Counter()
+    for username in usernames:
+        year_string = username.split('.')[-1]
+        c[year_string] += 1
+    class_breakdown = sorted(
+        [(year, count,) for year, count in c.items() if len(year) == 2]
+    )
+
     return render(request, 'home.html', {
         'overall_table': overall_table,
         'vote_table': vote_table,
@@ -69,4 +79,6 @@ def home(request):
         'high_good_voters': high_good_voters,
         'high_layup_voters': high_layup_voters,
         'top_reviewers': top_reviewers,
+
+        'class_breakdown': class_breakdown,
     })

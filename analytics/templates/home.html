@@ -58,7 +58,28 @@
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+</div>
 
+<div class="row">
+    <div class="col-md-12">
+        <h3>Class Breakdown</h3>
+        <table class="table">
+            <thead>
+                <th>Class Year</th>
+                {% for year, count in class_breakdown %}
+                    <th>{{ year }}</th>
+                {% endfor %}
+            </thead>
+            <tbody>
+                <tr>
+                    <th># Users</th>
+                    {% for year, count in class_breakdown %}
+                        <td>{{ count }}</td>
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -95,7 +116,6 @@
         {% endfor %}
         </ol>
     </div>
-
 </div>
 
 {% endblock %}
