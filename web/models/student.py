@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
+from django.conf import settings
 from lib import constants
 
 
@@ -39,9 +40,10 @@ class Student(models.Model):
     def send_confirmation_link(self, request):
         full_link = request.build_absolute_uri(
             reverse('confirmation')) + '?link=' + self.confirmation_link
-        send_mail(
-            'Your confirmation link',
-            'Please navigate to the following confirmation link: ' +
-            full_link, constants.SUPPORT_EMAIL,
-            [self.user.email], fail_silently=False
-        )
+        if not settings.DEBUG:
+            send_mail(
+                'Your confirmation link',
+                'Please navigate to the following confirmation link: ' +
+                full_link, constants.SUPPORT_EMAIL,
+                [self.user.email], fail_silently=False
+            )
