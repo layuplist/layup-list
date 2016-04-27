@@ -137,7 +137,8 @@ class Course(models.Model):
         return self.courseoffering_set.filter(term=term).count() > 0
 
     def short_description(self):
-        return '. '.join(self.description.split('. ')[:2]) + '...'
+        if self.description:
+            return '. '.join(self.description.split('. ')[:2]) + '...'
 
     def search_reviews(self, query):
         return self.review_set.order_by("-term").filter(

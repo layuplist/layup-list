@@ -50,7 +50,9 @@
                             {% if course.distribs_string %} | {{ course.distribs_string }} {% endif %}
                             {% if course.offered_times_string %} | Offered during {{ course.offered_times_string }} {% endif %}
                         </h5>
-                        <p>{{ course.short_description }} <a href="{% url 'course_detail' course.id %}">(see more)</a></p>
+                        {% if course.short_description %}
+                            <p>{{ course.short_description }} <a href="{% url 'course_detail' course.id %}">(see more)</a></p>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
