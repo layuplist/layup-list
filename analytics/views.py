@@ -47,8 +47,8 @@ def home(request):
     vote_table = [(
         'Total',
         models.Vote.objects.filter(value__gt=0, category=models.Vote.CATEGORIES.GOOD).count(),
-        models.Vote.objects.filter(value__gt=0, category=models.Vote.CATEGORIES.LAYUP).count(),
         models.Vote.objects.filter(value__lt=0, category=models.Vote.CATEGORIES.GOOD).count(),
+        models.Vote.objects.filter(value__gt=0, category=models.Vote.CATEGORIES.LAYUP).count(),
         models.Vote.objects.filter(value__lt=0, category=models.Vote.CATEGORIES.LAYUP).count(),
         models.Vote.objects.filter(value=0).count(),
     )]
