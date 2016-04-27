@@ -96,6 +96,16 @@ u.is_staff = True
 u.is_admin = True
 ```
 
+Running Tests
+-------------
+
+To run tests:
+```python
+python ./manage.py test
+```
+
+Create new tests in the `web/tests` folder.
+
 Contributing
 ------------
 
