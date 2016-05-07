@@ -57,7 +57,7 @@ def clean_course_data(course_dict):
     course_dict["program"] = course_dict["program"]
     course_dict["section"] = int(course_dict["section"])
     course_dict["subnumber"] = None if course_dict["subnumber"] == '' else int(course_dict["subnumber"])
-    # course_dict["title"] = course_dict["title"]
+    course_dict["title"] = course_dict["title"].encode('ascii', 'ignore').decode('ascii')
     course_dict["world_culture"] = None if course_dict["world_culture"] == '' else course_dict["world_culture"]
 
 def import_cleaned_data(course_dict, term):
@@ -144,7 +144,5 @@ def import_cleaned_data(course_dict, term):
             except Instructor.DoesNotExist:
                 instructor = Instructor.objects.create(name=name)
             offering.instructors.add(instructor)
-
-
 
 validate_and_open_file()
