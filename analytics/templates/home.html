@@ -13,10 +13,10 @@
         <table class="table">
             <thead>
                 <th>Range</th>
-                <th>Users</th>
+                <th><a href="https://www.layuplist.com/admin/auth/user/?is_active__exact=1">Users</a></th>
                 <th>Good Votes</th>
                 <th>Layup Votes</th>
-                <th>Reviews</th>
+                <th><a href="https://www.layuplist.com/admin/web/review/">Reviews</a></th>
             </thead>
             <tbody>
                 {% for c1, c2, c3, c4, c5 in overall_table %}
@@ -68,7 +68,7 @@
             <thead>
                 <th>Class Year</th>
                 {% for year, count in class_breakdown %}
-                    <th>{{ year }}</th>
+                    <th><a href="https://www.layuplist.com/admin/auth/user/?q=.{{ year }}&is_active__exact=1">{{ year }}</a></th>
                 {% endfor %}
             </thead>
             <tbody>
