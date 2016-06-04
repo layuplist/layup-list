@@ -130,7 +130,7 @@ ROOT_ASSETS_DIR = os.path.join(BASE_DIR, 'root_assets')
 
 PIPELINE = {
     'COMPILERS': (
-      'react.utils.pipeline.JSXCompiler',
+        'react.utils.pipeline.JSXCompiler',
     ),
     'JAVASCRIPT': {
         'app': {
@@ -172,7 +172,7 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = os.environ.get('EMAIL_PORT')
 EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS')
-
+DEFAULT_FROM_EMAIL = 'support@layuplist.com'
 
 AUTH_PASSWORD_VALIDATORS = [
     {

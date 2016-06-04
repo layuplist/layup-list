@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+import django.contrib.auth.views as authviews
 from web import views
 from analytics import views as aviews
 
@@ -28,10 +29,33 @@ urlpatterns = [
     url(r'^accounts/confirmation$', views.confirmation, name="confirmation"),
     url(r'^(?P<sort>best|layups)/?', views.current_term, name="current_term"),
     url(r'^search/?', views.course_search, name="course_search"),
-    url(r'^course/(?P<course_id>[0-9]+)$', views.course_detail, name="course_detail"),
-    url(r'^course/(?P<course_id>[0-9]+)/review_search/?', views.course_review_search, name="course_review_search"),
-    url(r'^api/course/(?P<course_id>[0-9].*)/medians', views.medians, name="medians"),
-    url(r'^api/course/(?P<course_id>[0-9].*)/professors?/?', views.course_professors, name="course_professors"),
+    url(r'^course/(?P<course_id>[0-9]+)$',
+        views.course_detail, name="course_detail"),
+    url(r'^course/(?P<course_id>[0-9]+)/review_search/?',
+        views.course_review_search, name="course_review_search"),
+    url(r'^api/course/(?P<course_id>[0-9].*)/medians',
+        views.medians, name="medians"),
+    url(r'^api/course/(?P<course_id>[0-9].*)/professors?/?',
+        views.course_professors, name="course_professors"),
     url(r'^api/course/(?P<course_id>[0-9].*)/vote', views.vote, name="vote"),
-    url(r'^analytics/$', aviews.home, name='analytics_home')
+    url(r'^analytics/$', aviews.home, name='analytics_home'),
+    url(r'^accounts/password/reset/$', authviews.password_reset,
+        {
+            'post_reset_redirect': '/accounts/password/reset/done/',
+            'template_name': 'password_reset_form.html',
+            'html_email_template_name': 'password_reset_email.html',
+            'email_template_name': 'password_reset_email.html',
+        },
+        name="password_reset"),
+    url(r'^accounts/password/reset/done/$', authviews.password_reset_done,
+        {'template_name': 'password_reset_done.html'}),
+    url(r'^accounts/password/reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
+        authviews.password_reset_confirm,
+        {
+            'post_reset_redirect': '/accounts/password/done/',
+            'template_name': 'password_reset_confirm.html'
+        },
+        name="password_reset_confirm"),
+    url(r'^accounts/password/done/$', authviews.password_reset_complete,
+        {'template_name': 'password_reset_complete.html'}),
 ]
