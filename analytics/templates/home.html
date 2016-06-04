@@ -86,6 +86,7 @@
 <div class="row">
     <div class="col-md-3">
         <h4>Most Votes</h4>
+        <p> {{ num_voters }} voters </p>
         <ol>
         {% for user, vote_count in high_voters %}
             <li>{{ vote_count }} (<a href="/admin/auth/user/{{ user }}">#{{ user }}</a>)</li>
@@ -94,6 +95,7 @@
     </div>
     <div class="col-md-3">
         <h4>Most Good Votes</h4>
+        <p> {{ num_good_voters }} good voters </p>
         <ol>
         {% for user, vote_count in high_good_voters %}
             <li>{{ vote_count }} (<a href="/admin/auth/user/{{ user }}">#{{ user }}</a>)</li>
@@ -102,6 +104,7 @@
     </div>
     <div class="col-md-3">
         <h4>Most Layup Votes</h4>
+        <p> {{ num_layup_voters }} layup voters </p>
         <ol>
         {% for user, vote_count in high_layup_voters %}
             <li>{{ vote_count }} (<a href="/admin/auth/user/{{ user }}">#{{ user }}</a>)</li>
@@ -110,6 +113,7 @@
     </div>
     <div class="col-md-3">
         <h4>Top Reviewers</h4>
+        <p> {{ num_reviewers }} reviewers </p>
         <ol>
         {% for user, review_count in top_reviewers %}
             <li>{{ review_count }} (<a href="/admin/auth/user/{{ user }}">#{{ user }}</a>)</li>

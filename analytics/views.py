@@ -6,8 +6,9 @@ from django.db.models import Count
 from web import models
 from collections import Counter
 import datetime
+import pytz
 
-LIMIT = 50
+LIMIT = 15
 
 
 @require_safe
@@ -23,10 +24,15 @@ def home(request):
         vote_count=Count('user')).order_by('-vote_count').values_list('user', 'vote_count')[:LIMIT]
     top_reviewers = models.Review.objects.exclude(user=course_picker).values_list('user').annotate(review_count=Count('user')).order_by('-review_count').values_list('user', 'review_count')[:LIMIT]
 
-    now = datetime.datetime.now()
+    num_voters = models.Vote.objects.exclude(value=0).values_list('user').distinct().count()
+    num_good_voters = models.Vote.objects.exclude(value=0).filter(category=models.Vote.CATEGORIES.GOOD).values_list('user').distinct().count()
+    num_layup_voters = models.Vote.objects.exclude(value=0).filter(category=models.Vote.CATEGORIES.LAYUP).values_list('user').distinct().count()
+    num_reviewers = models.Review.objects.exclude(user=course_picker).values_list('user').distinct().count()
+
+    now = datetime.datetime.now(tz=pytz.timezone('US/Eastern'))
     month_ago = ('Month', now - datetime.timedelta(days=31))
     week_ago = ('Week', now - datetime.timedelta(weeks=1))
-    today = ('Today', datetime.date.today())
+    today = ('Today', now - datetime.timedelta(hours=24))
 
     overall_table = [(
         'Total',
@@ -79,6 +85,10 @@ def home(request):
         'high_good_voters': high_good_voters,
         'high_layup_voters': high_layup_voters,
         'top_reviewers': top_reviewers,
+        'num_voters': num_voters,
+        'num_good_voters': num_good_voters,
+        'num_layup_voters': num_layup_voters,
+        'num_reviewers': num_reviewers,
 
         'class_breakdown': class_breakdown,
     })
