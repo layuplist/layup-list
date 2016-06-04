@@ -1,12 +1,12 @@
 # <img src="https://raw.githubusercontent.com/layuplist/layup-list/master/layup_list/static/img/logo-sm.png" width=30> Contributing to Layup List
 
-Layup List has been built to be easy to contribute to, especially for learning developers. 
+Layup List has been built to be easy to contribute to, especially for learning developers.
 
 Please don't hesitate to reach out if you would like to contribute or need help doing so. Emailing <a href="mailto:support@layuplist.com">support@layuplist.com</a> is fine.
 
 This guide will go over:
 
-* What Layup List is built on 
+* What Layup List is built on
 * How to set up Layup List locally
 * How to contribute to Layup List
 * The benefits of contributing
@@ -51,6 +51,7 @@ There are other ways to set it up, for sure, and you may not end up needing all 
   DATABASE_URL=postgres://[YOUR_USERNAME]@localhost:5432/layuplist
   SECRET_KEY=[SOME_LONG_RANDOM_STRING]
   DEBUG=True
+  CURRENT_TERM=16S
   ```
 * Run `source ./scripts/dev/environment.sh` to set up the development environment
 * Install Python dependencies using `pip install -r requirements.txt`
@@ -70,7 +71,7 @@ python manage.py collectstatic        # create static files
 forego start                          # run the server
 ```
 
-You may need to run the second command multiple times while developing, mostly if you are working with the front-end. I run this whenever I start the server: 
+You may need to run the second command multiple times while developing, mostly if you are working with the front-end. I run this whenever I start the server:
 ```bash
 echo 'yes' | python manage.py collectstatic; forego start;
 ```
@@ -116,6 +117,6 @@ To contribute code, simply make a pull request, and we will take a look. Github 
 Benefits of Contributing
 ------------------------
 
-In addition to boosting your Github resume, upon contributing we will add you to the <a href="https://github.com/layuplist">layuplist organization</a>, so you can display your membership on your profile. 
+In addition to boosting your Github resume, upon contributing we will add you to the <a href="https://github.com/layuplist">layuplist organization</a>, so you can display your membership on your profile.
 
-If you continue to contribute, you may become a core contributor (e.g. able to push and create branches directly on the repo), get Heroku/SendGrid/admin/email access, etc. 
+If you continue to contribute, you may become a core contributor (e.g. able to push and create branches directly on the repo), get Heroku/SendGrid/admin/email access, etc.
