@@ -1,4 +1,4 @@
-# <img src="https://raw.githubusercontent.com/layuplist/layup-list/master/layup_list/static/img/logo-sm.png" width=30> Contributing to Layup List
+# <img src="layup_list/static/img/logo-sm.png" alt="logo" width=30> Contributing to Layup List
 
 Layup List has been built to be easy to contribute to, especially for learning developers.
 
