@@ -1,4 +1,4 @@
-# <img src="https://raw.githubusercontent.com/layuplist/layup-list/master/layup_list/static/img/logo-sm.png" width=30> Layup List
+# <img src="layup_list/static/img/logo-sm.png" alt="logo" width=30> Layup List
 
 <a href="https://www.layuplist.com/">Dartmouth's best course review site</a> -- a one stop shop for all course selection needs.
 
