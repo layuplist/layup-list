@@ -19,26 +19,40 @@ from django.contrib import admin
 import django.contrib.auth.views as authviews
 from web import views
 from analytics import views as aviews
+from recommendations import views as rviews
 
 urlpatterns = [
+
+    # administrative
     url(r'^admin/', admin.site.urls),
+    url(r'^analytics/$', aviews.home, name='analytics_home'),
+
+    # primary views
     url(r'^$', views.landing, name="landing"),
-    url(r'^accounts/signup$', views.signup, name="signup"),
-    url(r'^accounts/login/$', views.auth_login, name="auth_login"),
-    url(r'^accounts/logout$', views.auth_logout, name="auth_logout"),
-    url(r'^accounts/confirmation$', views.confirmation, name="confirmation"),
     url(r'^(?P<sort>best|layups)/?', views.current_term, name="current_term"),
     url(r'^search/?', views.course_search, name="course_search"),
     url(r'^course/(?P<course_id>[0-9]+)$',
         views.course_detail, name="course_detail"),
     url(r'^course/(?P<course_id>[0-9]+)/review_search/?',
         views.course_review_search, name="course_review_search"),
+
+    # recommendations
+    url(r'^recommendations/?', rviews.recommendations, name='recommendations'),
+
+    # api
     url(r'^api/course/(?P<course_id>[0-9].*)/medians',
         views.medians, name="medians"),
     url(r'^api/course/(?P<course_id>[0-9].*)/professors?/?',
         views.course_professors, name="course_professors"),
     url(r'^api/course/(?P<course_id>[0-9].*)/vote', views.vote, name="vote"),
-    url(r'^analytics/$', aviews.home, name='analytics_home'),
+
+    # authentication
+    url(r'^accounts/signup$', views.signup, name="signup"),
+    url(r'^accounts/login/$', views.auth_login, name="auth_login"),
+    url(r'^accounts/logout$', views.auth_logout, name="auth_logout"),
+    url(r'^accounts/confirmation$', views.confirmation, name="confirmation"),
+
+    # password resets
     url(r'^accounts/password/reset/$', authviews.password_reset,
         {
             'post_reset_redirect': '/accounts/password/reset/done/',

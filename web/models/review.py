@@ -8,6 +8,9 @@ class ReviewManager(models.Manager):
     def user_can_write_review(self, user, course):
         return not self.filter(user=user, course=course).exists()
 
+    def num_reviews_for_user(self, user):
+        return self.filter(user=user).count()
+
 
 class Review(models.Model):
     objects = ReviewManager()

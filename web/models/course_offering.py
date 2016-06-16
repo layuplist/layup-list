@@ -1,10 +1,10 @@
 from __future__ import unicode_literals
 from django.db import models
-
+from lib import constants
 
 class CourseOfferingManager(models.Manager):
 
-    def course_ids_for_term(self, term):
+    def course_ids_for_term(self, term=constants.CURRENT_TERM):
         return self.filter(term=term).values_list('course_id', flat=True).distinct()
 
 

@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'pipeline',
     'crispy_forms',
     'web',
-    'analytics'
+    'analytics',
+    'recommendations',
 ]
 
 MIDDLEWARE_CLASSES = [

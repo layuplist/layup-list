@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from web.models import Review, Vote
 from lib import constants
 
 
@@ -24,7 +25,8 @@ class StudentManager(models.Manager):
 
         dnd_parts = dnd_name.split('.')
 
-        return dnd_parts[-1] in self.VALID_YEARS or dnd_parts[-1].lower() == "ug"
+        return (
+            dnd_parts[-1] in self.VALID_YEARS or dnd_parts[-1].lower() == "ug")
 
 
 class Student(models.Model):
@@ -47,3 +49,7 @@ class Student(models.Model):
                 full_link, constants.SUPPORT_EMAIL,
                 [self.user.email], fail_silently=False
             )
+
+    def can_see_recommendations(self):
+        return (Vote.objects.num_good_upvotes_for_user(self.user) >=
+                constants.REC_UPVOTE_REQ)

@@ -75,6 +75,10 @@ class VoteManager(models.Manager):
 
         return layup_vote, quality_vote
 
+    def num_good_upvotes_for_user(self, user):
+        return self.filter(
+            user=user, category=Vote.CATEGORIES.GOOD, value=1).count()
+
 
 class Vote(models.Model):
     objects = VoteManager()
