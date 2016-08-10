@@ -5,11 +5,6 @@
 <div class="row">
     <div class="col-md-12">
         <h1> Analytics </h1>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
         <table class="table">
             <thead>
                 <th>Range</th>
@@ -30,6 +25,18 @@
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Recommendations</h3>
+        <p><a href="/eligible_for_recommendations/">View users eligible for recommendations.</a></p>
+        <ul>
+            {% for rec_type, updated in recommendations_last_updated %}
+            <li>{{ rec_type }} last updated {{ updated }}</li>
+            {% endfor %}
+        </ul>
     </div>
 </div>
 

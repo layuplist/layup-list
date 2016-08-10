@@ -81,7 +81,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 WSGI_APPLICATION = 'layup_list.wsgi.application'
 
 HIJACK_LOGIN_REDIRECT_URL = '/recommendations/'
-HIJACK_LOGOUT_REDIRECT_URL = '/admin/auth/user/'
+HIJACK_LOGOUT_REDIRECT_URL = '/eligible_for_recommendations/'
 HIJACK_ALLOW_GET_REQUESTS = True
 HIJACK_USE_BOOTSTRAP = True
 

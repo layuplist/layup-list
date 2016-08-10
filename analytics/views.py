@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from django.views.decorators.http import require_safe
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.db.models import Count
 from web import models
+from recommendations.models import Recommendation
+from lib import constants
 from collections import Counter
 import datetime
 import pytz
@@ -77,7 +80,16 @@ def home(request):
         [(year, count,) for year, count in c.items() if len(year) == 2]
     )
 
-    return render(request, 'home.html', {
+    recommendations_last_updated = []
+    for creator, description in Recommendation.CREATORS:
+        rec = Recommendation.objects.filter(
+            creator=creator).order_by('created_at')[:1]
+        if rec:
+            recommendations_last_updated.append((description, rec[0].created_at))
+        else:
+            recommendations_last_updated.append((description, "never"))
+
+    return render(request, 'dashboard.html', {
         'overall_table': overall_table,
         'vote_table': vote_table,
 
@@ -90,5 +102,24 @@ def home(request):
         'num_layup_voters': num_layup_voters,
         'num_reviewers': num_reviewers,
 
+        'recommendations_last_updated': recommendations_last_updated,
+
         'class_breakdown': class_breakdown,
+    })
+
+
+@require_safe
+@staff_member_required
+@user_passes_test(lambda u: u.is_superuser)
+def eligible_for_recommendations(request):
+    eligible_users_and_votes = (
+        models.Vote.objects
+        .filter(value=1, category=models.Vote.CATEGORIES.GOOD)
+        .values_list('user')
+        .annotate(vote_count=Count('user'))
+        .filter(vote_count__gte=constants.REC_UPVOTE_REQ)
+        .order_by('-vote_count')
+        .values_list('user__username', 'user', 'vote_count'))
+    return render(request, 'eligible_for_recommendations.html', {
+        'users_and_votes': eligible_users_and_votes
     })

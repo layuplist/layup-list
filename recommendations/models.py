@@ -79,6 +79,9 @@ class Recommendation(models.Model):
     creator = models.CharField(max_length=16, choices=CREATORS)
     weight = models.FloatField(null=True)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     def __unicode__(self):
         return "{} {} -> {}".format(
             self.weight, self.course.short_name(), self.recommendation)

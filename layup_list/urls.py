@@ -25,8 +25,11 @@ urlpatterns = [
 
     # administrative
     url(r'^admin/', admin.site.urls),
-    url(r'^analytics/$', aviews.home, name='analytics_home'),
     url(r'^hijack/', include('hijack.urls')),
+
+    # analytics
+    url(r'^analytics/$', aviews.home, name='analytics_home'),
+    url(r'^eligible_for_recommendations/$', aviews.eligible_for_recommendations, name='eligible_for_recommendations'),
 
     # primary views
     url(r'^$', views.landing, name="landing"),

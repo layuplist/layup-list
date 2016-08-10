@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Eligible For Recommendations | Layup List{% endblock %}
+{% block content %}
+{% load admin_urls %}
+<div class="row">
+    <div class="col-md-12">
+        <h1> Eligible For Recommendations ({{ users_and_votes | length }})</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table">
+            <thead>
+                <th>Good Upvotes</th>
+                <th>Email</th>
+                <th>Hijack</th>
+            </thead>
+            <tbody>
+                {% for user, user_id, vote_count in users_and_votes %}
+                <tr>
+                    <td>{{ vote_count }}</td>
+                    <td>{{ user }}</td>
+                    <td><a href="/hijack/{{ user_id }}">Hijack {{ user }}</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
