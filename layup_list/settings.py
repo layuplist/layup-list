@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'pipeline',
     'crispy_forms',
+    'hijack',
+    'compat',
+    'hijack_admin',
     'web',
     'analytics',
     'recommendations',
@@ -77,6 +80,10 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 WSGI_APPLICATION = 'layup_list.wsgi.application'
 
+HIJACK_LOGIN_REDIRECT_URL = '/recommendations/'
+HIJACK_LOGOUT_REDIRECT_URL = '/admin/auth/user/'
+HIJACK_ALLOW_GET_REQUESTS = True
+HIJACK_USE_BOOTSTRAP = True
 
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
