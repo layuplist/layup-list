@@ -1,6 +1,6 @@
 # <img src="layup_list/static/img/logo-sm.png" alt="logo" width=30> Layup List
 
-<a href="https://www.layuplist.com/">Dartmouth's best course review site</a> -- a one stop shop for all course selection needs.
+<a href="https://www.layuplist.com/">Dartmouth's course review site</a> -- a one stop shop for all course selection needs.
 
 Features
 --------
@@ -16,7 +16,7 @@ Features
 Contributing
 ------------
 
-Layup List has been built to be easy to contribute to, especially for learning developers. Please take a look at our <a href="https://github.com/layuplist/layup-list/issues">issues</a> to see some of the features that you can tackle. 
+Layup List has been built to be easy to contribute to, especially for learning developers. Please take a look at our <a href="https://github.com/layuplist/layup-list/issues">issues</a> to see some of the features that you can tackle.
 
 A simple guide to run the application locally and begin developing, along with an explanation of our stack and the benefits of contributing, is in <a href="https://raw.githubusercontent.com/layuplist/layup-list/master/CONTRIBUTING.md">CONTRIBUTING.md</a>.
 
