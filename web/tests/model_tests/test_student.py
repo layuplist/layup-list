@@ -53,14 +53,8 @@ class StudentTestCase(TestCase):
                     factories.VoteFactory(
                         user=s.user, category=category, value=value)
 
-        # cannot view if does not reach review count
-        for _ in xrange(constants.REC_UPVOTE_REQ):
-            factories.VoteFactory(
-                user=s.user, category=Vote.CATEGORIES.GOOD, value=1)
-            self.assertFalse(s.can_see_recommendations())
-        Vote.objects.all().delete()
-
         # cannot view if does not reach vote count
+        Vote.objects.all().delete()
         factories.ReviewFactory(user=s.user)
         for _ in xrange(constants.REC_UPVOTE_REQ - 1):
             factories.VoteFactory(
