@@ -18,9 +18,11 @@ class SignupForm(forms.Form):
     }
 
     email = forms.EmailField(label="Dartmouth Undergraduate Email")
-    password1 = forms.CharField(label="Password",
+    password1 = forms.CharField(
+        label="Password",
         widget=forms.PasswordInput)
-    password2 = forms.CharField(label="Password confirmation",
+    password2 = forms.CharField(
+        label="Password confirmation",
         widget=forms.PasswordInput,
         help_text="Enter the same password as before, for verification.")
 
@@ -46,7 +48,9 @@ class SignupForm(forms.Form):
         username = email.split("@")[0]
 
         if not Student.objects.is_valid_dartmouth_student_email(email):
-            raise ValidationError("Only Dartmouth student emails are permitted for registration at this time.")
+            raise ValidationError(
+                "Only Dartmouth student emails are permitted for registration"
+                " at this time.")
 
         if len(username) > 30:
             raise ValidationError("Please use a shorter email.")

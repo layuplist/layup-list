@@ -2,6 +2,7 @@ from django.test import TestCase
 from web.models import Course, CourseOffering
 from web.tests import factories
 
+
 class CourseTestCase(TestCase):
     TEST_TERM = "16W"
 
@@ -9,8 +10,10 @@ class CourseTestCase(TestCase):
         self.distrib = factories.DistributiveRequirementFactory()
         self.c1 = factories.CourseFactory()
         self.c2 = factories.CourseFactory()
-        self.c1o = factories.CourseOfferingFactory(term=self.TEST_TERM, course=self.c1)
-        self.c2o = factories.CourseOfferingFactory(term=self.TEST_TERM, course=self.c2)
+        self.c1o = factories.CourseOfferingFactory(
+            term=self.TEST_TERM, course=self.c1)
+        self.c2o = factories.CourseOfferingFactory(
+            term=self.TEST_TERM, course=self.c2)
 
     def test_for_term_retrieves_courses_for_term(self):
         self.assertEqual(len(Course.objects.for_term(self.TEST_TERM)), 2)
@@ -18,13 +21,16 @@ class CourseTestCase(TestCase):
         self.assertEqual(len(Course.objects.for_term(self.TEST_TERM)), 0)
 
     def test_for_term_filters_by_distrib_correctly(self):
-        self.assertEqual(len(Course.objects.for_term(self.TEST_TERM, self.distrib.name)), 0)
+        self.assertEqual(len(Course.objects.for_term(
+            self.TEST_TERM, self.distrib.name)), 0)
         self.c1.distribs.add(self.distrib)
         self.c1.save()
-        self.assertEqual(len(Course.objects.for_term(self.TEST_TERM, self.distrib.name)), 1)
+        self.assertEqual(len(Course.objects.for_term(
+            self.TEST_TERM, self.distrib.name)), 1)
 
     def test_review_search_retrieves_review_by_comments(self):
-        c1r = factories.ReviewFactory(course=self.c1, comments="this class was not very good")
+        c1r = factories.ReviewFactory(
+            course=self.c1, comments="this class was not very good")
         self.assertEqual(self.c1.search_reviews("CLASS")[0], c1r)
         self.assertEqual(len(self.c1.search_reviews("asdf")), 0)
 
@@ -33,8 +39,10 @@ class CourseTestCase(TestCase):
         self.assertEqual(self.c1.search_reviews("layup")[0], c1r)
         self.assertEqual(len(self.c1.search_reviews("easy")), 0)
 
-    def test_review_search_retrieves_review_by_both_comments_and_professor(self):
-        factories.ReviewFactory(course=self.c1, comments="this class is a LAYUP")
+    def test_review_search_retrieves_review_by_both_comments_and_professor(
+            self):
+        factories.ReviewFactory(
+            course=self.c1, comments="this class is a LAYUP")
         factories.ReviewFactory(course=self.c1, professor="Layup List")
         self.assertEqual(len(self.c1.search_reviews("lay")), 2)
 
@@ -83,10 +91,14 @@ class CourseSearchTestCase(TestCase):
     DEPARTMENT_3 = "REL"
 
     def setUp(self):
-        self.c1 = factories.CourseFactory(department=self.DEPARTMENT_4, number=1)
-        self.c2 = factories.CourseFactory(department=self.DEPARTMENT_4, number=2)
-        self.c3 = factories.CourseFactory(department=self.DEPARTMENT_3, number=3)
-        self.c4 = factories.CourseFactory(department=self.DEPARTMENT_3, number=4)
+        self.c1 = factories.CourseFactory(
+            department=self.DEPARTMENT_4, number=1)
+        self.c2 = factories.CourseFactory(
+            department=self.DEPARTMENT_4, number=2)
+        self.c3 = factories.CourseFactory(
+            department=self.DEPARTMENT_3, number=3)
+        self.c4 = factories.CourseFactory(
+            department=self.DEPARTMENT_3, number=4)
 
     def test_search_returns_nothing_if_no_query(self):
         self.assertEqual(len(Course.objects.search("")), 0)
@@ -120,20 +132,28 @@ class CourseSearchTestCase(TestCase):
 
     def test_searches_by_number_and_subnumber(self):
         # e.g. COSC 089.01, COSC089.01
-        self.assertEqual(len(Course.objects.search("{}1.5".format(self.DEPARTMENT_4))), 0)
-        self.assertEqual(len(Course.objects.search("{} 1.5".format(self.DEPARTMENT_4))), 0)
+        self.assertEqual(len(Course.objects.search(
+            "{}1.5".format(self.DEPARTMENT_4))), 0)
+        self.assertEqual(len(Course.objects.search(
+            "{} 1.5".format(self.DEPARTMENT_4))), 0)
         self.c1.subnumber = 5
         self.c1.save()
-        self.assertEqual(len(Course.objects.search("{}1.5".format(self.DEPARTMENT_4))), 1)
-        self.assertEqual(len(Course.objects.search("{} 1.5".format(self.DEPARTMENT_4))), 1)
+        self.assertEqual(len(Course.objects.search(
+            "{}1.5".format(self.DEPARTMENT_4))), 1)
+        self.assertEqual(len(Course.objects.search(
+            "{} 1.5".format(self.DEPARTMENT_4))), 1)
 
     def test_searches_by_number_and_no_subnumber(self):
         # e.g. COSC 1
-        self.assertEqual(len(Course.objects.search("{}1".format(self.DEPARTMENT_4))), 1)
-        self.assertEqual(len(Course.objects.search("{} 1".format(self.DEPARTMENT_4))), 1)
+        self.assertEqual(len(Course.objects.search(
+            "{}1".format(self.DEPARTMENT_4))), 1)
+        self.assertEqual(len(Course.objects.search(
+            "{} 1".format(self.DEPARTMENT_4))), 1)
         self.c1.delete()
-        self.assertEqual(len(Course.objects.search("{}1".format(self.DEPARTMENT_4))), 0)
-        self.assertEqual(len(Course.objects.search("{} 1".format(self.DEPARTMENT_4))), 0)
+        self.assertEqual(len(Course.objects.search(
+            "{}1".format(self.DEPARTMENT_4))), 0)
+        self.assertEqual(len(Course.objects.search(
+            "{} 1".format(self.DEPARTMENT_4))), 0)
 
     def test_search_is_case_insensitive(self):
         self.c1.title = "The Art of War"

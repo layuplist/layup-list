@@ -35,7 +35,8 @@ for f in os.listdir(MEDIAN_DIR):
                 medians = json.load(data_file)
                 for m in medians:
 
-                    department = clean_department_code(m["course"]["department"])
+                    department = clean_department_code(
+                        m["course"]["department"])
 
                     number = int(m["course"]["number"])
                     try:
@@ -54,9 +55,10 @@ for f in os.listdir(MEDIAN_DIR):
                             subnumber=subnumber
                         )
                     except Course.DoesNotExist:
-                        print "Could not find course for {}{}.{} term {}".format(
-                            department, number, subnumber, term
-                        )
+                        print (
+                            "Could not find course for {}{}.{} term {}".format(
+                                department, number, subnumber, term
+                            ))
                         missing_course += 1
                         continue
 
@@ -79,4 +81,4 @@ for f in os.listdir(MEDIAN_DIR):
                         )
                     processed += 1
 
-print "missing {}, processed {}".format( missing_course, processed )
+print "missing {}, processed {}".format(missing_course, processed)

@@ -17,11 +17,13 @@ from web.models import Course
 
 COURSE_PAGES_FILE = "data/course_pages.json"
 
+
 def import_course_pages():
     with open(COURSE_PAGES_FILE) as data_file:
         with transaction.atomic():
             for course_page in json.load(data_file):
                 import_course_page(course_page)
+
 
 def import_course_page(course_page):
     # currently only imports descriptions, although we could do more

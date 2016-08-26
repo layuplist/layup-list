@@ -3,14 +3,28 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.views.decorators.http import require_safe, require_POST
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import JsonResponse, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseRedirect, HttpResponseForbidden
+from django.http import (
+    HttpResponse,
+    HttpResponseBadRequest,
+    HttpResponseForbidden,
+    HttpResponseNotFound,
+    HttpResponseRedirect,
+    JsonResponse,
+)
 from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError, transaction
-from web.models import Course, CourseMedian, Student, Review, Vote, DistributiveRequirement
+from web.models import (
+    Course,
+    CourseMedian,
+    DistributiveRequirement,
+    Review,
+    Student,
+    Vote,
+)
 from web.models.forms import ReviewForm, SignupForm
 from lib.grades import numeric_value_for_grade
 from lib.terms import numeric_value_of_term
@@ -37,10 +51,10 @@ def signup(request):
             form.save_and_send_confirmation(request)
             return render(request, 'instructions.html')
         else:
-            return render(request, 'signup.html', { "form": form })
+            return render(request, 'signup.html', {"form": form})
 
     else:
-        return render(request, 'signup.html', { "form": SignupForm() })
+        return render(request, 'signup.html', {"form": SignupForm()})
 
 
 def auth_login(request):
@@ -55,13 +69,15 @@ def auth_login(request):
                 login(request, user)
                 return redirect(next_url)
             else:
-                return render(request, 'login.html', { "error": "Please activate your account via the activation link first."})
+                return render(request, 'login.html', {
+                    "error": (
+                        "Please activate your account via the activation link "
+                        "first.")
+                })
         else:
-            return render(request, 'login.html', { "error": "Invalid login."})
-
+            return render(request, 'login.html', {"error": "Invalid login."})
     elif request.method == 'GET':
         return render(request, 'login.html')
-
     else:
         return render(request, 'login.html', {
             "error": "Please authenticate."
@@ -87,28 +103,37 @@ def confirmation(request):
             })
 
         if student.user.is_active:
-            return render(request, 'confirmation.html', { 'already_confirmed': True})
+            return render(request, 'confirmation.html', {
+                'already_confirmed': True
+            })
 
         student.user.is_active = True
         student.user.save()
-        return render(request, 'confirmation.html', { 'already_confirmed': False})
+        return render(request, 'confirmation.html', {
+            'already_confirmed': False
+        })
 
 
 @require_safe
 def current_term(request, sort):
     if sort == "best":
-        course_type, primary_sort, secondary_sort = "Best Classes", "-quality_score", "-layup_score"
+        course_type, primary_sort, secondary_sort = (
+            "Best Classes", "-quality_score", "-layup_score")
         vote_category = Vote.CATEGORIES.GOOD
     else:
         if not request.user.is_authenticated():
-            return HttpResponseRedirect(reverse("signup")+"?restriction=see layups")
+            return HttpResponseRedirect(
+                reverse("signup") + "?restriction=see layups")
 
-        course_type, primary_sort, secondary_sort = "Layups", "-layup_score", "-quality_score"
+        course_type, primary_sort, secondary_sort = (
+            "Layups", "-layup_score", "-quality_score")
         vote_category = Vote.CATEGORIES.LAYUP
 
     dist = request.GET.get('dist')
     dist = dist.upper() if dist else dist
-    term_courses = Course.objects.for_term(constants.CURRENT_TERM, dist).prefetch_related(
+    term_courses = Course.objects.for_term(
+        constants.CURRENT_TERM, dist
+    ).prefetch_related(
         'distribs', 'review_set', 'courseoffering_set'
     ).order_by(primary_sort, secondary_sort)
 
@@ -121,7 +146,8 @@ def current_term(request, sort):
         courses = paginator.page(paginator.num_pages)
 
     if courses.number > 1 and not request.user.is_authenticated():
-        return HttpResponseRedirect(reverse("signup")+"?restriction=see more")
+        return HttpResponseRedirect(
+            reverse("signup") + "?restriction=see more")
 
     for_layups_js_boolean = str(sort != "best").lower()
 
@@ -136,7 +162,8 @@ def current_term(request, sort):
         'courses': courses,
         'courses_and_votes': courses_and_votes,
         'distribs': DistributiveRequirement.objects.all(),
-        'page_javascript': 'LayupList.Web.CurrentTerm({})'.format(for_layups_js_boolean)
+        'page_javascript': 'LayupList.Web.CurrentTerm({})'.format(
+            for_layups_js_boolean)
     })
 
 
@@ -148,7 +175,8 @@ def course_detail(request, course_id):
         return HttpResponseNotFound('<h1>Page not found</h1>')
 
     form = None
-    if request.user.is_authenticated() and Review.objects.user_can_write_review(request.user.id, course_id):
+    if (request.user.is_authenticated() and
+            Review.objects.user_can_write_review(request.user.id, course_id)):
         if request.method == 'POST':
             form = ReviewForm(request.POST)
             if form.is_valid():
@@ -156,11 +184,12 @@ def course_detail(request, course_id):
                 review.course = course
                 review.user = request.user
                 review.save()
-                form = None # don't show form again after successful submission
+                form = None  # don't show form again after successful submit
         else:
             form = ReviewForm()
 
-    paginator = Paginator(course.review_set.all().order_by("-term"), LIMITS["reviews"])
+    paginator = Paginator(course.review_set.all(
+    ).order_by("-term"), LIMITS["reviews"])
     try:
         reviews = paginator.page(request.GET.get('page'))
     except PageNotAnInteger:
@@ -169,10 +198,12 @@ def course_detail(request, course_id):
         reviews = paginator.page(paginator.num_pages)
 
     if reviews.number > 1 and not request.user.is_authenticated():
-        return HttpResponseRedirect(reverse("signup")+"?restriction=read more reviews")
+        return HttpResponseRedirect(
+            reverse("signup") + "?restriction=read more reviews")
 
     if request.user.is_authenticated():
-        layup_vote, quality_vote = Vote.objects.for_course_and_user(course, request.user)
+        layup_vote, quality_vote = Vote.objects.for_course_and_user(
+            course, request.user)
     else:
         layup_vote, quality_vote = None, None
 
@@ -202,7 +233,8 @@ def course_search(request):
         return redirect(courses[0])
 
     if len(query) not in Course.objects.DEPARTMENT_LENGTHS:
-        courses = sorted(courses, key=lambda c: c.review_set.count(), reverse=True)
+        courses = sorted(
+            courses, key=lambda c: c.review_set.count(), reverse=True)
 
     return render(request, 'course_search.html', {
         'query': query,
@@ -246,12 +278,15 @@ def medians(request, course_id):
             'numeric_value': numeric_value_for_grade(course_median.median)
         })
 
-    return JsonResponse({ 'medians': sorted(
+    return JsonResponse({'medians': sorted(
         [
             {
-            'term': term,
-            'avg_numeric_value': sum([m['numeric_value'] for m in term_medians]) / len(term_medians),
-            'courses': term_medians,
+                'term': term,
+                'avg_numeric_value': sum([
+                    m['numeric_value']
+                    for m in term_medians
+                ]) / len(term_medians),
+                'courses': term_medians,
             } for term, term_medians in medians_by_term.iteritems()
         ],
         key=lambda x: numeric_value_of_term(x['term']),
@@ -280,7 +315,8 @@ def vote(request, course_id):
         return HttpResponseBadRequest()
 
     category = Vote.CATEGORIES.LAYUP if forLayup else Vote.CATEGORIES.GOOD
-    new_score, is_unvote = Vote.objects.vote(int(value), course_id, category, request.user)
+    new_score, is_unvote = Vote.objects.vote(
+        int(value), course_id, category, request.user)
 
     return JsonResponse({
         'new_score': new_score,

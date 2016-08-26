@@ -6,6 +6,7 @@ from lib.terms import is_valid_term
 
 REVIEW_MINIMUM_LENGTH = 150
 
+
 class ReviewForm(forms.ModelForm):
 
     def clean_term(self):
@@ -14,7 +15,8 @@ class ReviewForm(forms.ModelForm):
             return term
         else:
             raise ValidationError(
-                "Please use a valid term, e.g. {}".format(constants.CURRENT_TERM)
+                "Please use a valid term, e.g. {}".format(
+                    constants.CURRENT_TERM)
             )
 
     def clean_professor(self):
@@ -39,7 +41,6 @@ class ReviewForm(forms.ModelForm):
             )
 
         return review
-
 
     class Meta:
         model = Review

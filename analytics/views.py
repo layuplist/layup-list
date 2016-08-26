@@ -19,18 +19,32 @@ LIMIT = 15
 def home(request):
     course_picker = User.objects.get(username='CoursePicker')
 
-    high_voters = models.Vote.objects.exclude(value=0).values_list('user').annotate(
-        vote_count=Count('user')).order_by('-vote_count').values_list('user', 'vote_count')[:LIMIT]
-    high_good_voters = models.Vote.objects.exclude(value=0).filter(category=models.Vote.CATEGORIES.GOOD).values_list('user').annotate(
-        vote_count=Count('user')).order_by('-vote_count').values_list('user', 'vote_count')[:LIMIT]
-    high_layup_voters = models.Vote.objects.exclude(value=0).filter(category=models.Vote.CATEGORIES.LAYUP).values_list('user').annotate(
-        vote_count=Count('user')).order_by('-vote_count').values_list('user', 'vote_count')[:LIMIT]
-    top_reviewers = models.Review.objects.exclude(user=course_picker).values_list('user').annotate(review_count=Count('user')).order_by('-review_count').values_list('user', 'review_count')[:LIMIT]
+    non_zero_votes = models.Vote.objects.exclude(value=0)
+    high_voters = non_zero_votes.values_list('user').annotate(
+        vote_count=Count('user')).order_by('-vote_count').values_list(
+        'user', 'vote_count')[:LIMIT]
+    high_good_voters = non_zero_votes.filter(
+        category=models.Vote.CATEGORIES.GOOD).values_list('user').annotate(
+        vote_count=Count('user')).order_by('-vote_count').values_list(
+        'user', 'vote_count')[:LIMIT]
+    high_layup_voters = non_zero_votes.filter(
+        category=models.Vote.CATEGORIES.LAYUP).values_list('user').annotate(
+        vote_count=Count('user')).order_by('-vote_count').values_list(
+        'user', 'vote_count')[:LIMIT]
+    top_reviewers = models.Review.objects.exclude(
+        user=course_picker).values_list('user').annotate(
+        review_count=Count('user')).order_by('-review_count').values_list(
+        'user', 'review_count')[:LIMIT]
 
-    num_voters = models.Vote.objects.exclude(value=0).values_list('user').distinct().count()
-    num_good_voters = models.Vote.objects.exclude(value=0).filter(category=models.Vote.CATEGORIES.GOOD).values_list('user').distinct().count()
-    num_layup_voters = models.Vote.objects.exclude(value=0).filter(category=models.Vote.CATEGORIES.LAYUP).values_list('user').distinct().count()
-    num_reviewers = models.Review.objects.exclude(user=course_picker).values_list('user').distinct().count()
+    num_voters = non_zero_votes.values_list('user').distinct().count()
+    num_good_voters = non_zero_votes.filter(
+        category=models.Vote.CATEGORIES.GOOD).values_list(
+        'user').distinct().count()
+    num_layup_voters = non_zero_votes.filter(
+        category=models.Vote.CATEGORIES.LAYUP).values_list(
+        'user').distinct().count()
+    num_reviewers = models.Review.objects.exclude(
+        user=course_picker).values_list('user').distinct().count()
 
     now = datetime.datetime.now(tz=pytz.timezone('US/Eastern'))
     month_ago = ('Month', now - datetime.timedelta(days=31))
@@ -40,38 +54,66 @@ def home(request):
     overall_table = [(
         'Total',
         User.objects.count(),
-        models.Vote.objects.exclude(value=0).filter(category=models.Vote.CATEGORIES.GOOD).count(),
-        models.Vote.objects.exclude(value=0).filter(category=models.Vote.CATEGORIES.LAYUP).count(),
-        "{} ({} exclusive)".format(models.Review.objects.count(), models.Review.objects.exclude(user=course_picker).count()),
+        models.Vote.objects.exclude(value=0).filter(
+            category=models.Vote.CATEGORIES.GOOD).count(),
+        models.Vote.objects.exclude(value=0).filter(
+            category=models.Vote.CATEGORIES.LAYUP).count(),
+        "{} ({} exclusive)".format(
+            models.Review.objects.count(),
+            models.Review.objects.exclude(user=course_picker).count()),
     )]
     for name, earliest_date in [month_ago, week_ago, today]:
+        non_zero_votes_since = non_zero_votes.filter(
+            created_at__gte=earliest_date)
         overall_table.append((
             name,
             User.objects.filter(date_joined__gte=earliest_date).count(),
-            models.Vote.objects.exclude(value=0).filter(created_at__gte=earliest_date, category=models.Vote.CATEGORIES.GOOD).count(),
-            models.Vote.objects.exclude(value=0).filter(created_at__gte=earliest_date, category=models.Vote.CATEGORIES.LAYUP).count(),
-            models.Review.objects.filter(created_at__gte=earliest_date).count(),
+            non_zero_votes_since.filter(
+                category=models.Vote.CATEGORIES.GOOD).count(),
+            non_zero_votes_since.filter(
+                category=models.Vote.CATEGORIES.LAYUP).count(),
+            models.Review.objects.filter(
+                created_at__gte=earliest_date).count(),
         ))
 
     vote_table = [(
         'Total',
-        models.Vote.objects.filter(value__gt=0, category=models.Vote.CATEGORIES.GOOD).count(),
-        models.Vote.objects.filter(value__lt=0, category=models.Vote.CATEGORIES.GOOD).count(),
-        models.Vote.objects.filter(value__gt=0, category=models.Vote.CATEGORIES.LAYUP).count(),
-        models.Vote.objects.filter(value__lt=0, category=models.Vote.CATEGORIES.LAYUP).count(),
+        models.Vote.objects.filter(
+            value__gt=0, category=models.Vote.CATEGORIES.GOOD).count(),
+        models.Vote.objects.filter(
+            value__lt=0, category=models.Vote.CATEGORIES.GOOD).count(),
+        models.Vote.objects.filter(
+            value__gt=0, category=models.Vote.CATEGORIES.LAYUP).count(),
+        models.Vote.objects.filter(
+            value__lt=0, category=models.Vote.CATEGORIES.LAYUP).count(),
         models.Vote.objects.filter(value=0).count(),
     )]
     for name, earliest_date in [month_ago, week_ago, today]:
         vote_table.append((
             name,
-            models.Vote.objects.filter(value__gt=0, category=models.Vote.CATEGORIES.GOOD, created_at__gte=earliest_date).count(),
-            models.Vote.objects.filter(value__lt=0, category=models.Vote.CATEGORIES.GOOD, created_at__gte=earliest_date).count(),
-            models.Vote.objects.filter(value__gt=0, category=models.Vote.CATEGORIES.LAYUP, created_at__gte=earliest_date).count(),
-            models.Vote.objects.filter(value__lt=0, category=models.Vote.CATEGORIES.LAYUP, created_at__gte=earliest_date).count(),
-            models.Vote.objects.filter(value=0, created_at__gte=earliest_date).count(),
+            models.Vote.objects.filter(
+                value__gt=0,
+                category=models.Vote.CATEGORIES.GOOD,
+                created_at__gte=earliest_date).count(),
+            models.Vote.objects.filter(
+                value__lt=0,
+                category=models.Vote.CATEGORIES.GOOD,
+                created_at__gte=earliest_date).count(),
+            models.Vote.objects.filter(
+                value__gt=0,
+                category=models.Vote.CATEGORIES.LAYUP,
+                created_at__gte=earliest_date).count(),
+            models.Vote.objects.filter(
+                value__lt=0,
+                category=models.Vote.CATEGORIES.LAYUP,
+                created_at__gte=earliest_date).count(),
+            models.Vote.objects.filter(
+                value=0,
+                created_at__gte=earliest_date).count(),
         ))
 
-    usernames = User.objects.exclude(id=course_picker.id).values_list('username', flat=True)
+    usernames = User.objects.exclude(
+        id=course_picker.id).values_list('username', flat=True)
     c = Counter()
     for username in usernames:
         year_string = username.split('.')[-1]
@@ -85,9 +127,11 @@ def home(request):
         rec = Recommendation.objects.filter(
             creator=creator).order_by('created_at')[:1]
         if rec:
-            recommendations_last_updated.append((description, rec[0].created_at))
+            recommendations_last_updated.append((
+                description, rec[0].created_at))
         else:
-            recommendations_last_updated.append((description, "never"))
+            recommendations_last_updated.append((
+                description, "never"))
 
     return render(request, 'dashboard.html', {
         'overall_table': overall_table,

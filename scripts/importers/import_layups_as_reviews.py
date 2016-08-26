@@ -44,7 +44,8 @@ with transaction.atomic():
                 comments = layup["comments"]
                 term = ""
 
-            except KeyError: # just a safeguard against typos from manual spreadsheet cleaning
+            # just a safeguard against typos from manual spreadsheet cleaning
+            except KeyError:
                 print "Dumping Layup Review (improper spreadsheet data)"
                 missing_course += 1
                 continue
@@ -67,24 +68,33 @@ with transaction.atomic():
                 )
 
             except Course.DoesNotExist:
-                print "Could not find course for {}{} course_name {} professor {}".format(
-                    department, number, course_name, professor
-                )
+                print (
+                    "Could not find course for "
+                    "{}{} course_name {} professor {}".format(
+                        department, number, course_name, professor
+                    ))
                 missing_course += 1
                 continue
 
             except Course.MultipleObjectsReturned:
-                print "Ambiguous course for {}{} course_name {} professor {}".format(
-                    department, number, course_name, professor
-                )
+                print (
+                    "Ambiguous course for "
+                    "{}{} course_name {} professor {}".format(
+                        department, number, course_name, professor
+                    ))
                 ambiguous_course += 1
                 continue
 
             except User.DoesNotExist:
                 print "Could not find user: ", layup["source"], " creating now"
-                user = User.objects.create_user(username=layup["source"], password=User.objects.make_random_password())
-                user.groups.add(Group.objects.get_or_create(name="DummyUsers")[0])
-                user.groups.add(Group.objects.get_or_create(name="OldLayupListDummyUser")[0])
+                user = User.objects.create_user(
+                    username=layup["source"],
+                    password=User.objects.make_random_password()
+                )
+                user.groups.add(
+                    Group.objects.get_or_create(name="DummyUsers")[0])
+                user.groups.add(Group.objects.get_or_create(
+                    name="OldLayupListDummyUser")[0])
                 users_created += 1
 
             review = Review.objects.create(
@@ -96,6 +106,9 @@ with transaction.atomic():
             )
             processed += 1
 
-print "missing {}, ambiguous {}, processed {}, users_created {}, empty review {}".format(
-    missing_course, ambiguous_course, processed, users_created, empty_review
-)
+print (
+    "missing "
+    "{}, ambiguous {}, processed {}, users_created {}, empty review {}".format(
+        missing_course, ambiguous_course, processed, users_created,
+        empty_review
+    ))

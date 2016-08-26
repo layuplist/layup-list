@@ -26,4 +26,5 @@ class Review(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return "{} {} {}: {}".format(self.course.short_name(), self.professor, self.term, self.comments)
+        return "{} {} {}: {}".format(
+            self.course.short_name(), self.professor, self.term, self.comments)

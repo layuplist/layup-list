@@ -76,7 +76,8 @@ for f in (OLD_REVIEWS, NEW_REVIEWS):
                     missing_course += 1
                     continue
 
-                if department == "COSC" and int(number) in CS_NUMBER_REMAPPINGS:
+                if (department == "COSC" and int(number) in
+                        CS_NUMBER_REMAPPINGS):
                     number = CS_NUMBER_REMAPPINGS[int(number)]
 
                 # useful, but not essential
@@ -87,8 +88,13 @@ for f in (OLD_REVIEWS, NEW_REVIEWS):
                     if f == OLD_REVIEWS:
                         comments = review["comments"]["oldReview"]
                     elif f == NEW_REVIEWS:
-                        comments = "Course: " + review["comments"]["course"] + "\n\n" + "Professor: " + review[
-                            "comments"]["professor"] + "\n\n" + "Workload: " + review["comments"]["workload"] + "\n\n"
+                        comments = (
+                            "Course: " + review["comments"]["course"] +
+                            "\n\n" + "Professor: " +
+                            review["comments"]["professor"] + "\n\n" +
+                            "Workload: " + review["comments"]["workload"] +
+                            "\n\n"
+                        )
                 except KeyError:
                     # person writing review left it blank
                     empty_review += 1
@@ -130,7 +136,8 @@ for f in (OLD_REVIEWS, NEW_REVIEWS):
                         username="CoursePicker",
                         password=User.objects.make_random_password()
                     )
-                    user.groups.add(Group.objects.get_or_create(name="DummyUsers")[0])
+                    user.groups.add(
+                        Group.objects.get_or_create(name="DummyUsers")[0])
 
                 review = Review.objects.create(
                     course=course,

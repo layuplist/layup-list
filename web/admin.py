@@ -1,5 +1,14 @@
 from django.contrib import admin
-from models import Course, CourseOffering, DistributiveRequirement, Instructor, CourseMedian, Review, Vote, Student
+from models import (
+    Course,
+    CourseMedian,
+    CourseOffering,
+    DistributiveRequirement,
+    Instructor,
+    Student,
+    Review,
+    Vote,
+)
 
 admin.site.register(Course)
 admin.site.register(CourseOffering)

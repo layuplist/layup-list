@@ -11,10 +11,12 @@ GRADE_MAPPINGS = {
     'E': 0.0
 }
 
+
 def numeric_value_for_grade(grade):
     """
     Based on excerpt from GPA calculation:
-    an A counts as 12 points, A- as 11, B+ as 10, B as 9, B- as 8, C+ as 7, C as 6, C- as 5, D as 3, and E as 0.
+    an A counts as 12 points, A- as 11, B+ as 10, B as 9, B- as 8, C+ as 7,
+    C as 6, C- as 5, D as 3, and E as 0.
     Sometimes grades can come like this: A /A-
     """
     letter_grades = [g.strip() for g in grade.split("/")]

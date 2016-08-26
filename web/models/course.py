@@ -9,7 +9,8 @@ import re
 
 class CourseManager(models.Manager):
     course_search_regex = re.compile(
-        "^(?P<department_or_query>\D*)(?P<number>\d*)\.?(?P<subnumber>\d*)(?P<other>.*)")
+        "^(?P<department_or_query>\D*)(?P<number>\d*)\.?(?P<subnumber>\d*)"
+        "(?P<other>.*)")
     DEPARTMENT_LENGTHS = [3, 4]
 
     def for_term(self, term, dist=None):
@@ -22,7 +23,8 @@ class CourseManager(models.Manager):
     def search(self, query):
         query_data = {
             k: v.strip()
-            for k, v in self.course_search_regex.match(query).groupdict().iteritems()
+            for k, v in self.course_search_regex.match(
+                query).groupdict().iteritems()
         }
 
         department_or_query = query_data["department_or_query"]
@@ -33,8 +35,8 @@ class CourseManager(models.Manager):
         if not department_or_query:
             return self.none()
         elif len(department_or_query) not in self.DEPARTMENT_LENGTHS:
-            # must be query, too long to be department. ignore numbers we may have.
-            # e.g. "Introduction"
+            # must be query, too long to be department. ignore numbers we may
+            # have. e.g. "Introduction"
             return Course.objects.filter(title__icontains=department_or_query)
         elif number and subnumber:
             # course with number and subnumber
@@ -58,7 +60,8 @@ class CourseManager(models.Manager):
                 department__iexact=department_or_query,
             ).order_by("number", "subnumber")
             if len(courses) == 0:
-                return Course.objects.filter(title__icontains=department_or_query)
+                return Course.objects.filter(
+                    title__icontains=department_or_query)
             return courses
 
 
@@ -101,7 +104,8 @@ class Course(models.Model):
 
     def short_name(self):
         if self.subnumber:
-            return "{0}{1:03d}.{2:02d}".format(self.department, self.number, self.subnumber)
+            return "{0}{1:03d}.{2:02d}".format(
+                self.department, self.number, self.subnumber)
         else:
             return "{0}{1:03d}".format(self.department, self.number)
 

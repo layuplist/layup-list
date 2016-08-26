@@ -25,8 +25,10 @@ class VoteTestCase(TestCase):
         self.assertEqual(c.quality_score, 0)
 
         # can upvote and downvote
-        self.assertEqual((1, False,), Vote.objects.vote(1, c.id, Vote.CATEGORIES.GOOD, u.id))
-        self.assertEqual((-1, False,), Vote.objects.vote(-1, c.id, Vote.CATEGORIES.LAYUP, u.id))
+        self.assertEqual((1, False,), Vote.objects.vote(
+            1, c.id, Vote.CATEGORIES.GOOD, u.id))
+        self.assertEqual((-1, False,), Vote.objects.vote(
+            -1, c.id, Vote.CATEGORIES.LAYUP, u.id))
 
         gv.refresh_from_db()
         lv.refresh_from_db()
@@ -37,8 +39,10 @@ class VoteTestCase(TestCase):
         self.assertEqual(c.layup_score, -1)
 
         # can unvote
-        self.assertEqual((0, True,), Vote.objects.vote(1, c.id, Vote.CATEGORIES.GOOD, u.id))
-        self.assertEqual((0, True,), Vote.objects.vote(-1, c.id, Vote.CATEGORIES.LAYUP, u.id))
+        self.assertEqual((0, True,), Vote.objects.vote(
+            1, c.id, Vote.CATEGORIES.GOOD, u.id))
+        self.assertEqual((0, True,), Vote.objects.vote(
+            -1, c.id, Vote.CATEGORIES.LAYUP, u.id))
 
         gv.refresh_from_db()
         lv.refresh_from_db()

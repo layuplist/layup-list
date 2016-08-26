@@ -22,7 +22,9 @@ from web.models import Course, CourseOffering
 
 TEST_TERM = "16W"
 LEGACY_LAYUPS_FILE = "./data/layups/layups.json"
-QUALITY_WORDS = ["enjoy", "love", "awesome", "enthusiastic", "passionate", "personal"]
+QUALITY_WORDS = ["enjoy", "love", "awesome",
+                 "enthusiastic", "passionate", "personal"]
+
 
 def compute_and_import_initial_scores():
     with transaction.atomic():
@@ -35,7 +37,8 @@ def compute_and_import_initial_scores():
             print c, c.layup_score
 
         print "---- {} LAYUP ----".format(TEST_TERM)
-        for c in CourseOffering.objects.select_related("course").filter(term=TEST_TERM).order_by("-course__layup_score")[:50]:
+        for c in CourseOffering.objects.select_related("course").filter(
+                term=TEST_TERM).order_by("-course__layup_score")[:50]:
             print c.course, c.course.layup_score
 
         print "---- OVERALL GOOD ----"
@@ -43,21 +46,29 @@ def compute_and_import_initial_scores():
             print c, c.quality_score
 
         print "---- {} GOOD ----".format(TEST_TERM)
-        for c in CourseOffering.objects.select_related("course").filter(term=TEST_TERM).order_by("-course__quality_score")[:50]:
+        for c in CourseOffering.objects.select_related("course").filter(
+                term=TEST_TERM).order_by("-course__quality_score")[:50]:
             print c.course, c.course.quality_score
 
+
 def compute_and_import_initial_layup_scores():
-    legacy_layup_references, llr_with_comments = initialize_legacy_layup_references()
+    legacy_layup_references, llr_with_comments = (
+        initialize_legacy_layup_references())
     for course in Course.objects.all():
-        initialize_layup_score(course, legacy_layup_references, llr_with_comments)
+        initialize_layup_score(
+            course, legacy_layup_references, llr_with_comments)
+
 
 def compute_and_import_initial_quality_scores():
     for course in Course.objects.all():
         initialize_quality_score(course)
 
+
 def initialize_layup_score(course, legacy_layup_references, llr_with_comments):
-    course.layup_score = calculate_initial_layup_score(course, legacy_layup_references, llr_with_comments)
+    course.layup_score = calculate_initial_layup_score(
+        course, legacy_layup_references, llr_with_comments)
     course.save()
+
 
 def initialize_quality_score(course):
     course.quality_score = calculate_initial_quality_score(course)
@@ -69,10 +80,13 @@ def initialize_quality_score(course):
 
     course.save()
 
+
 def initialize_legacy_layup_references():
     """
-    Creates dictionaries which represent legacy layup lists (circulated spreadsheets)
-    The first with number of mentions, the second with number of mentions w/ comments
+    Creates dictionaries which represent legacy layup lists (circulated
+    spreadsheets)
+    The first with number of mentions, the second with number of mentions w/
+    comments
 
     Returns nested dictionaries:
     department dict -> number dict -> frequency in layup lists
@@ -86,7 +100,7 @@ def initialize_legacy_layup_references():
             department = layup["department"]
             number = int(layup["number"])
 
-            if not department in legacy_layup_references:
+            if department not in legacy_layup_references:
                 legacy_layup_references[department] = Counter()
                 llr_with_comments[department] = Counter()
 
@@ -97,35 +111,40 @@ def initialize_legacy_layup_references():
     return legacy_layup_references, llr_with_comments
 
 
-def calculate_initial_layup_score(course, legacy_layup_references, llr_with_comments):
+def calculate_initial_layup_score(
+        course, legacy_layup_references, llr_with_comments):
     """
     Raw score is calculated by the number of appearances of the course in
     layup lists circulated in spreadsheets through blitz in the past added with
     the number of those appearances that had an accompanying comment.
 
-    The ultimate score calculated is this raw score multiplied by 2.5, rounded up.
+    The ultimate score calculated is this raw score multiplied by 2.5,
+    rounded up.
     """
     if course.subnumber is not None or course.department == "ECON":
         return 0
 
     try:
-        legacy_mentions = legacy_layup_references[course.department][course.number]
-        legacy_mentions_with_comment = llr_with_comments[course.department][course.number]
+        legacy_mentions = legacy_layup_references[
+            course.department][course.number]
+        legacy_mentions_with_comment = llr_with_comments[
+            course.department][course.number]
     except KeyError:
         return 0
 
     raw_score = legacy_mentions + legacy_mentions_with_comment
     return int(raw_score * 2.5 + 1)
 
+
 def calculate_initial_quality_score(course):
     """
-    Raw score is calculated using the number of reviews which contain one or more
-    of the QUALITY_WORDS.
+    Raw score is calculated using the number of reviews which contain one or
+    more of the QUALITY_WORDS.
 
     QUALITY_WORDS is a collection of words that were chosen based on their
-    ability to meaningfully indicate whether a course is good and their relative
-    infrequency compared to words like "good" (frequency of words in reviews
-    was actually calculated to determine this)
+    ability to meaningfully indicate whether a course is good and their
+    relative infrequency compared to words like "good" (frequency of words in
+    reviews was actually calculated to determine this)
 
     The final score is weighted by the number of reviews.
     This is achieved through multiplying the raw score by 1 minus 70 percent
