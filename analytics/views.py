@@ -4,12 +4,15 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.db.models import Count
+from django.http import HttpResponseBadRequest
 from web import models
+from analytics.forms import ManualSentimentForm
 from recommendations.models import Recommendation
 from lib import constants
 from collections import Counter
 import datetime
 import pytz
+from random import randint
 
 LIMIT = 15
 
@@ -168,4 +171,33 @@ def eligible_for_recommendations(request):
         .values_list('user__username', 'user', 'vote_count'))
     return render(request, 'eligible_for_recommendations.html', {
         'users_and_votes': eligible_users_and_votes
+    })
+
+
+@staff_member_required
+@user_passes_test(lambda u: u.is_superuser)
+def sentiment_labeler(request):
+    if request.method == 'POST':
+        form = ManualSentimentForm(request.POST)
+        if form.is_valid():
+            form.save_sentiment()
+        else:
+            return render(request, 'sentiment_labeler.html', {
+                'review': models.Review.objects.get(id=form.review_id),
+                'form': form,
+            })
+    unlabeled_reviews = models.Review.objects.filter(
+        sentiment_labeler=None,
+        user=User.objects.get(username="CoursePicker"),
+    )
+    count = unlabeled_reviews.aggregate(count=Count('id'))['count']
+    random_index = randint(0, count - 1)
+    review = unlabeled_reviews[random_index]
+    form = ManualSentimentForm(initial={
+        'review_id': review.id,
+    })
+    return render(request, 'sentiment_labeler.html', {
+        'count': count,
+        'form': form,
+        'review': review,
     })

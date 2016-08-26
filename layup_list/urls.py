@@ -32,6 +32,10 @@ urlpatterns = [
     url(r'^eligible_for_recommendations/$',
         aviews.eligible_for_recommendations,
         name='eligible_for_recommendations'),
+    url(r'^sentiment_labeler/$',
+        aviews.sentiment_labeler,
+        name='sentiment_labeler'),
+
 
     # primary views
     url(r'^$', views.landing, name="landing"),

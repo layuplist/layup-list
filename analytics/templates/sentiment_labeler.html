@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Sentiment Labeler | Layup List{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1> Sentiment Labeler ({{ count }} remaining)</h1>
+        <h3>{{ review.course }} ({{ review.id }})</h3>
+        <p>
+        {% if review.term %}
+            <b>{{ review.term }}</b>
+            {% if review.professor %}<b> with {{ review.professor }}</b>{% endif %}:
+        {% endif %}
+        {{ review.comments }}
+        </p>
+        <form method="post">
+            {% load crispy_forms_tags %}
+            {% csrf_token %}
+            {{ form | crispy }}
+            <input type="submit" class="btn btn-primary" value="Submit">
+        </form>
+    </div>
+</div>
+{% endblock %}

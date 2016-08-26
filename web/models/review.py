@@ -15,12 +15,25 @@ class ReviewManager(models.Manager):
 class Review(models.Model):
     objects = ReviewManager()
 
+    MANUAL_SENTIMENT_LABELER = "Manual"
+    AUTOMATED_SENTIMENT_LABELER = "Classifier"
+    SENTIMENT_LABELERS = (
+        (MANUAL_SENTIMENT_LABELER, "Sentiment manually recorded"),
+        (AUTOMATED_SENTIMENT_LABELER, "Sentiment based on classifier"),
+    )
+
     course = models.ForeignKey("Course")
     user = models.ForeignKey(User)
 
     professor = models.CharField(max_length=255, db_index=True, blank=False)
     term = models.CharField(max_length=3, db_index=True, blank=False)
     comments = models.TextField(blank=False)
+
+    sentiment_labeler = models.CharField(
+        max_length=64, choices=SENTIMENT_LABELERS, default=None,
+        db_index=True, null=True, blank=True)
+    layup_sentiment = models.FloatField(default=None, null=True, blank=True)
+    quality_sentiment = models.FloatField(default=None, null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
