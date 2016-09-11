@@ -17,7 +17,7 @@ html, body {
 }
 
 .footer {
-    height: 120px;
+    height: 100px;
     background-color: #F6F6F6;
     font-size: 0.9em;
     position:absolute;
@@ -29,7 +29,7 @@ html, body {
     max-width: 550px;
     margin: 0 auto;
     position: relative;
-    top: 50%;
+    top: 40%;
     transform: translateY(-50%);
 }
 
