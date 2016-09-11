@@ -10,7 +10,8 @@ Features
 * *Descriptions*: crawled from ORC
 * *Medians*: crawled from College
 * *Rankings*: lists for best and layup classes, ranked by votes
-* *Search*: Flexible search for both courses and reviews
+* *Search*: flexible search for both courses and reviews
+* *Recommendations*: based off course description similarity
 
 
 Contributing
