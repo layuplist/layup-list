@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load humanize %}
 {% block content %}
 <div class="row">
     <div class="col-md-12 text-center">
         <img class="landing-page-icon" src="{% static "img/logo.svg" %}">
         <h1>Layup List</h1>
         <h5>Dartmouth Course Reviews, Rankings, and Recommendations</h5>
+        <p class="text-muted">
+            {{ review_count | intcomma }} reviews and counting
+        </p>
     </div>
 </div>
 <div class="row">

@@ -40,7 +40,8 @@ LIMITS = {
 @require_safe
 def landing(request):
     return render(request, 'landing.html', {
-        'page_javascript': 'LayupList.Web.Landing()'
+        'page_javascript': 'LayupList.Web.Landing()',
+        'review_count': Review.objects.count(),
     })
 
 
