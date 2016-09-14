@@ -53,6 +53,33 @@
     </div>
 </div>
 <p></p>
+{% if professors_and_review_count %}
+<div class="row">
+    <div class="col-md-12">
+        <h3>Professors</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Reviews</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for professor, review_count in professors_and_review_count %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'course_review_search' course.id %}?q={{ professor }}">
+                                {{ professor }}
+                            </a>
+                        </td>
+                        <td>{{ review_count }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
 <div id="reviews" class="row">
     <div class="col-md-12">
         <div class="row">
@@ -133,7 +160,7 @@
 </div>
 
 {% if recommendations %}
-<div>
+<div class="row">
     <div class="col-md-12">
         <h3>Similar Classes</h3>
         <table class="table table-striped">

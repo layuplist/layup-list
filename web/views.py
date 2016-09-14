@@ -17,6 +17,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError, transaction
+from django.db.models import Count
 from recommendations.models import Recommendation
 from web.models import (
     Course,
@@ -213,11 +214,18 @@ def course_detail(request, course_id):
         creator=Recommendation.DOCUMENT_SIMILARITY,
     ).order_by('-weight').prefetch_related('recommendation')
 
+    professors_and_review_count = (
+        course.review_set.values("professor")
+                         .annotate(Count("professor"))
+                         .order_by("-professor__count")
+                         .values_list("professor", "professor__count"))
+
     return render(request, 'course_detail.html', {
         'term': constants.CURRENT_TERM,
         'course': course,
         'last_offered': course.last_offered(),
         'recommendations': similarity_recommendations,
+        'professors_and_review_count': professors_and_review_count,
         'layup_vote': layup_vote,
         'quality_vote': quality_vote,
         'reviews': reviews,
