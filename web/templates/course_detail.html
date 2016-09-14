@@ -23,12 +23,6 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-12">
-        <h3>Medians</h3>
-        <div class="median-chart"></div>
-    </div>
-</div>
-<div class="row">
     <div class="col-md-2 col-md-offset-2 text-center score-box">
         <span class="vote-arrow glyphicon glyphicon-chevron-up {% if quality_vote and quality_vote.is_upvote %}selected{% else %}unselected{% endif %}"
         onclick="LayupList.Web.CourseDetail.upvote({{ course.id }}, this, false);"></span>
@@ -50,6 +44,12 @@
         <span class="vote-arrow glyphicon glyphicon-chevron-down {% if layup_vote and layup_vote.is_downvote %}selected{% else %}unselected{% endif %}"
               onclick="LayupList.Web.CourseDetail.downvote({{ course.id }}, this, true);"></span>
         <p>called it a layup</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h3>Medians</h3>
+        <div class="median-chart"></div>
     </div>
 </div>
 <p></p>
@@ -135,30 +135,6 @@
         {% endif %}
     </div>
 </div>
-<div id="write-review" class="row">
-    <div class="col-md-12">
-        <h3>Write a Review for {{ course.short_name }}</h3>
-        {% if review_form %}
-            <form method="post" action="#write-review">
-                {% load crispy_forms_tags %}
-                {% csrf_token %}
-                {{ review_form|crispy }}
-                <div class="text-right">
-                    <input type="submit" class="btn btn-default" value="Submit" />
-                </div>
-            </form>
-        {% else %}
-            <p>
-                {% if request.user.is_authenticated %}
-                    You have already written a review!
-                {% else %}
-                    <a href="{% url 'auth_login' %}">Login</a> to write a review.
-                {% endif %}
-            </p>
-        {% endif %}
-    </div>
-</div>
-
 {% if recommendations %}
 <div class="row">
     <div class="col-md-12">
@@ -177,5 +153,27 @@
     </div>
 </div>
 {% endif  %}
-
+<div id="write-review" class="row">
+    <div class="col-md-12">
+        <h3>Write a Review for {{ course.short_name }}</h3>
+        {% if review_form %}
+            <form method="post" action="#write-review">
+                {% load crispy_forms_tags %}
+                {% csrf_token %}
+                {{ review_form|crispy }}
+                <div class="text-right">
+                    <input type="submit" class="btn btn-default" value="Submit" />
+                </div>
+            </form>
+        {% else %}
+            <p>
+                {% if request.user.is_authenticated %}
+                    Thanks for writing a review of this course!
+                {% else %}
+                    <a href="{% url 'auth_login' %}">Login</a> to write a review.
+                {% endif %}
+            </p>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
