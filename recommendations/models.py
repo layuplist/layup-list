@@ -63,11 +63,6 @@ class RecommendationManager(models.Manager):
 
         return sorted_grouped_recs[:30]
 
-    def ordered_document_similarity_recommendations(self):
-        return self.filter(
-            creator=Recommendation.DOCUMENT_SIMILARITY,
-        ).order_by("-weight")
-
 
 class Recommendation(models.Model):
     objects = RecommendationManager()

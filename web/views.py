@@ -17,6 +17,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError, transaction
+from recommendations.models import Recommendation
 from web.models import (
     Course,
     CourseMedian,
@@ -208,9 +209,14 @@ def course_detail(request, course_id):
     else:
         layup_vote, quality_vote = None, None
 
+    similarity_recommendations = course.recommendations.filter(
+        creator=Recommendation.DOCUMENT_SIMILARITY,
+    ).order_by('-weight').prefetch_related('recommendation')
+
     return render(request, 'course_detail.html', {
         'term': constants.CURRENT_TERM,
         'course': course,
+        'recommendations': similarity_recommendations,
         'layup_vote': layup_vote,
         'quality_vote': quality_vote,
         'reviews': reviews,
