@@ -128,4 +128,23 @@
     </div>
 </div>
 
+{% if course.recommendations %}
+<div>
+    <div class="col-md-12">
+        <h3>Similar Classes</h3>
+        <table class="table table-striped">
+            <tbody>
+                {% for recommendation in course.recommendations.ordered_document_similarity_recommendations %}
+                    <tr><td>
+                        <a href="{% url 'course_detail' recommendation.recommendation.id %}">
+                            {{ recommendation.recommendation }}
+                        </a>
+                    </td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif  %}
+
 {% endblock %}
