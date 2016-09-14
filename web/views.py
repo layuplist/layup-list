@@ -216,6 +216,7 @@ def course_detail(request, course_id):
     return render(request, 'course_detail.html', {
         'term': constants.CURRENT_TERM,
         'course': course,
+        'last_offered': course.last_offered(),
         'recommendations': similarity_recommendations,
         'layup_vote': layup_vote,
         'quality_vote': quality_vote,
@@ -289,15 +290,14 @@ def medians(request, course_id):
         [
             {
                 'term': term,
-                'avg_numeric_value': sum([
-                    m['numeric_value']
-                    for m in term_medians
-                ]) / len(term_medians),
+                'avg_numeric_value': sum(
+                    m['numeric_value'] for m in term_medians
+                ) / len(term_medians),
                 'courses': term_medians,
             } for term, term_medians in medians_by_term.iteritems()
         ],
         key=lambda x: numeric_value_of_term(x['term']),
-        reverse=True
+        reverse=True,
     )})
 
 

@@ -4,7 +4,11 @@
 <div class="row">
     <div class="col-md-12">
         <h1> {{ course }} </h1>
-        {% if course.is_offered %} <h4>Offered {{ term }} ({{ course.offered_times_string }})</h4> {% endif %}
+        {% if course.is_offered %}
+            <h4>Offered {{ term }} ({{ course.offered_times_string }})</h4>
+        {% elif last_offered %}
+            <h4>Last offered {{ last_offered }}</h4>
+        {% endif %}
         {% if course.description %} <p> {{ course.description }} </p> {% endif %}
         {% if xlist %}
             <p>

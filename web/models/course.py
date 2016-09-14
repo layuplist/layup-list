@@ -4,6 +4,7 @@ from django.db.models import Q
 from course_offering import CourseOffering
 from django.core.urlresolvers import reverse
 from lib.constants import CURRENT_TERM
+from lib.terms import numeric_value_of_term
 import re
 
 
@@ -139,6 +140,21 @@ class Course(models.Model):
 
     def is_offered(self, term=CURRENT_TERM):
         return self.courseoffering_set.filter(term=term).count() > 0
+
+    def last_offered(self):
+        last_offering = self.courseoffering_set.last()
+        if last_offering:
+            return last_offering.term
+        else:
+            max_value_term = None
+            max_value = 0
+            for term in self.coursemedian_set.values_list("term", flat=True):
+                value = numeric_value_of_term(term)
+                if value > max_value:
+                    max_value_term = term
+                    max_value = value
+            return max_value_term
+
 
     def short_description(self):
         if self.description:
