@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Departments | Layup List{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1> Departments </h1>
+        <table class="table table-hover">
+            <thead>
+                <th>Code</th>
+                <th>Department Name</th>
+                <th>Undergrad Courses</th>
+            </thead>
+            <tbody>
+                {% for code, name, count in departments %}
+                <tr onclick="window.document.location='{% url 'course_search' %}?q={{ code }}';" role="button">
+                    <td><a>{{ code }}</a></td>
+                    <td>{% if name %}<a>{{ name }}</a>{% endif %}</td>
+                    <td>{{ count }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

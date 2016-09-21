@@ -30,6 +30,7 @@ from web.models import (
 from web.models.forms import ReviewForm, SignupForm
 from lib.grades import numeric_value_for_grade
 from lib.terms import numeric_value_of_term
+from lib.departments import get_department_name
 from lib import constants
 
 LIMITS = {
@@ -237,6 +238,23 @@ def course_detail(request, course_id):
 
 
 @require_safe
+def departments(request):
+    department_codes_and_counts = (
+        Course.objects.filter(number__lt=100)  # Undergraduate courses
+                      .exclude(department='RAD')
+                      .values('department')
+                      .annotate(Count('department'))
+                      .order_by('department')
+                      .values_list('department', 'department__count'))
+    return render(request, 'departments.html', {
+        'departments': [
+            (code, get_department_name(code), count)
+            for code, count in department_codes_and_counts
+        ],
+    })
+
+
+@require_safe
 def course_search(request):
     query = request.GET.get("q", "").strip()
     if len(query) < 3:
@@ -244,7 +262,8 @@ def course_search(request):
             'query': query,
             'courses': []
         })
-    courses = Course.objects.search(query).prefetch_related('review_set')
+    courses = Course.objects.search(query).prefetch_related(
+        'review_set', 'courseoffering_set', 'distribs')
     if len(courses) == 1:
         return redirect(courses[0])
 
@@ -253,8 +272,10 @@ def course_search(request):
             courses, key=lambda c: c.review_set.count(), reverse=True)
 
     return render(request, 'course_search.html', {
+        'term': constants.CURRENT_TERM,
         'query': query,
-        'courses': courses
+        'department': get_department_name(query),
+        'courses': courses,
     })
 
 

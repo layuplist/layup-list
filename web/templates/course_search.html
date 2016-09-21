@@ -1,7 +1,19 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% block title %}
+{% if department %}
+    {{ department }}
+{% else %}
+    "{{ query }}"
+{% endif %}
+| Layup List{% endblock %}
+{% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h1> Search Results For "{{ query }}" </h1>
+        {% if department %}
+            <h1> {{ department }}</h1>
+        {% else %}
+            <h1> Search Results For "{{ query }}" </h1>
+        {% endif %}
     </div>
 </div>
 
@@ -14,17 +26,21 @@
 {% elif not courses %}
     <h3>Could not find any results. Please double-check your search query, and make sure the department and course number are correct.</h3>
 {% else %}
-    <table class="table">
+    <table class="table table-hover">
         <thead>
             <th>Course</th>
-            <th>Number of Reviews</th>
-            <th>Quality Score</th>
-            <th>Layup Score</th>
+            <th>Offered {{ term }}?</th>
+            <th>Distribs</th>
+            <th>Reviews</th>
+            <th>Quality</th>
+            <th>Layup</th>
         </thead>
         <tbody>
             {% for course in courses %}
-            <tr>
-                <td> <a href="{% url 'course_detail' course.id %}">{{ course }}</a> </td>
+            <tr onclick="window.document.location='{% url 'course_detail' course.id %}';" role="button">
+                <td> <a>{{ course }}</a> </td>
+                <td> {% if course.prefetched_is_offered %} Offered {{term}} {% endif %} </td>
+                <td> {{ course.distribs_string }} </td>
                 <td> {{ course.review_set.count }} </td>
                 <td> {{ course.quality_score }} </td>
                 <td>

@@ -84,7 +84,7 @@ class Course(models.Model):
     department = models.CharField(max_length=4, db_index=True)
     number = models.IntegerField(db_index=True)
     subnumber = models.IntegerField(null=True, db_index=True, blank=True)
-    url = models.URLField(null=True, blank=True)
+    url = models.URLField(null=True, blank=True, max_length=400)
     source = models.CharField(max_length=16, choices=SOURCES.CHOICES)
     description = models.TextField(null=True, blank=True)
 
@@ -140,6 +140,12 @@ class Course(models.Model):
 
     def is_offered(self, term=CURRENT_TERM):
         return self.courseoffering_set.filter(term=term).count() > 0
+
+    def prefetched_is_offered(self, term=CURRENT_TERM):
+        for offering in self.courseoffering_set.all():
+            if offering.term == term:
+                return True
+        return False
 
     def last_offered(self):
         last_offering = self.courseoffering_set.last()

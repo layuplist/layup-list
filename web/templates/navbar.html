@@ -19,7 +19,8 @@
       <ul class="nav navbar-nav">
         <li><a href="{% url 'current_term'  'best' %}">Best Classes</a></li>
         <li><a href="{% url 'current_term' 'layups' %}">Layups</a></li>
-        <li><a href="{% url 'recommendations' %}">Recommended For You</a></li>
+        <li><a href="{% url 'recommendations' %}">Recommendedations</a></li>
+        <li><a href="{% url 'departments' %}">Browse</a></li>
         {% if request.user.is_staff %}
             <li><a href="{% url 'analytics_home' %}">Analytics</a></li>
         {% endif %}

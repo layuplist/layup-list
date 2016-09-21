@@ -41,6 +41,7 @@ urlpatterns = [
         views.course_detail, name="course_detail"),
     url(r'^course/(?P<course_id>[0-9]+)/review_search/?',
         views.course_review_search, name="course_review_search"),
+    url(r'^departments/?', views.departments, name="departments"),
 
     # recommendations
     url(r'^recommendations/?', rviews.recommendations, name='recommendations'),
