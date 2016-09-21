@@ -66,9 +66,9 @@
             </thead>
             <tbody>
                 {% for professor, review_count in professors_and_review_count %}
-                    <tr>
+                    <tr onclick="window.document.location='{% url 'course_review_search' course.id %}?q={{ professor }}';" role="button">
                         <td>
-                            <a href="{% url 'course_review_search' course.id %}?q={{ professor }}">
+                            <a>
                                 {{ professor }}
                             </a>
                         </td>
@@ -140,11 +140,13 @@
         <table class="table table-striped">
             <tbody>
                 {% for recommendation in recommendations %}
-                    <tr><td>
-                        <a href="{% url 'course_detail' recommendation.recommendation.id %}">
-                            {{ recommendation.recommendation }}
-                        </a>
-                    </td></tr>
+                    <tr onclick="window.document.location='{% url 'course_detail' recommendation.recommendation.id %}';" role="button">
+                        <td>
+                            <a>
+                                {{ recommendation.recommendation }}
+                            </a>
+                        </td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>
