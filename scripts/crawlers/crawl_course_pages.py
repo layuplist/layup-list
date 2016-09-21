@@ -12,21 +12,16 @@ instructor_term_regex = re.compile("^(?P<name>\w*)\s?(\((?P<term>\w*)\))?")
 def crawl_course_pages():
     with open(ORC_COURSES_FILE) as data_file:
         courses_to_crawl = json.load(data_file)
-        crawled_courses = [crawl_course(course) for course in courses_to_crawl]
-        export_data([c for c in crawled_courses if c])
+        export_data([crawl_course(course) for course in courses_to_crawl])
 
 
 def crawl_course(course):
     print "crawling {}".format(course["url"])
-    try:
-        page_text = urllib2.urlopen(course["url"]).read()
-        soup = BeautifulSoup(page_text, "html.parser")
-        course["description"] = parse_description(soup)
-        course["instructors"] = parse_instructors(soup)
-        course["offered"] = parse_terms_offered(soup)
-    except HTTPError:
-        print "COULD NOT CRAWL"
-        return None
+    page_text = urllib2.urlopen(course["url"]).read()
+    soup = BeautifulSoup(page_text, "html.parser")
+    course["description"] = parse_description(soup)
+    course["instructors"] = parse_instructors(soup)
+    course["offered"] = parse_terms_offered(soup)
 
     # COULD BE ADDED:
     # - distributives

@@ -30,9 +30,14 @@ var additionalPrograms = [
     url: undergradDepartmentsURL + "The-Nelson-A-Rockefeller-Center-for-Public-Policy/Public-Policy-Minor/PBPL-Public-Policy/"
   },
   {
+    code: "AMEL",
+    programName: "Asian and Middle Eastern Languages and Literatures",
+    url: undergradDepartmentsURL + "Asian-and-Middle-Eastern-Languages-and-Literatures-Arabic-Chinese-Hebrew-Japanese/AMEL-Asian-and-Middle-Eastern-Languages-and-LiteraturesAMELL"
+  },
+  {
     code: "SUPP",
-    programName: "2015 Supplement",
-    url: "http://dartmouth.smartcatalogiq.com/en/2015s/Supplement/Courses"
+    programName: "2016 Supplement",
+    url: "http://dartmouth.smartcatalogiq.com/en/2016s/Supplement/Courses"
   },
 ];
 
@@ -65,9 +70,18 @@ Navigation.departmentDirectories = function() {
 
 Navigation.departments = function(remainingDepartments, programs) {
   if (remainingDepartments.length === 0) {
+    programs = programs.concat(additionalPrograms)
+    programs.sort(function(a, b) {
+        if (a.code < b.code) { return -1; }
+        if (a.code > b.code) { return 1; }
+        return 0;
+    });
+    llcommon.exportDataToJSON(programs, "programs.json", function() {
+        console.log("exported programs")
+    });
     console.log("...retrieving courses");
     setTimeout(function () {
-      Navigation.programs(programs.concat(additionalPrograms), []);
+      Navigation.programs(programs, []);
     }, llcommon.timeout);
   } else {
     var department = remainingDepartments.pop();

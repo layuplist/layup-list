@@ -32,6 +32,7 @@ def import_course_page(course_page):
         number=int(re.sub("[^0-9]", "", course_page["number"])),
         subnumber=course_page.get("subnumber")
     )
+    course.title = course_page.get("course_name")
     course.description = course_page.get("description")
     course.save()
 
