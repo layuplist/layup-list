@@ -24,11 +24,9 @@ for f in os.listdir(MEDIAN_DIR):
     curr_file = os.path.join(MEDIAN_DIR, f)
 
     if not os.path.isfile(curr_file):
-        logfile.write("The following is not a file: " + curr_file + "\n")
-
+        print "The following is not a file: " + curr_file + "\n"
     elif not curr_file.lower().endswith(".json"):
-        logfile.write("Not a JSON file: " + curr_file + "\n")
-
+        print "Not a JSON file: " + curr_file + "\n"
     else:
         with transaction.atomic():
             with open(curr_file) as data_file:
