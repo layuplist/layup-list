@@ -9,7 +9,6 @@
         <h5>Dartmouth Course Reviews, Rankings, and Recommendations</h5>
         <p class="text-muted">
             {{ review_count | intcomma }} reviews and counting<br/>
-            <a href="https://github.com/layuplist">open source</a>
         </p>
     </div>
 </div>
@@ -32,6 +31,8 @@
             <a href="{% url 'current_term' 'layups' %}"><button type="button" class="btn btn-default">See Layups (requires login)</button></a>
         {% endif %}
         <a href="{% url 'departments' %}"><button type="button" class="btn btn-default">Browse</button></a>
+        <br><br>
+        <p> Know how to code? <a href="https://github.com/layuplist">Try contributing to Layup List!</a> </p>
     </div>
 </div>
 {% endblock %}

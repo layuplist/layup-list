@@ -161,7 +161,6 @@ class Course(models.Model):
                     max_value = value
             return max_value_term
 
-
     def short_description(self):
         if self.description:
             return '. '.join(self.description.split('. ')[:2]) + '...'
@@ -170,3 +169,6 @@ class Course(models.Model):
         return self.review_set.order_by("-term").filter(
             Q(comments__icontains=query) | Q(professor__icontains=query)
         )
+
+    def should_ask_viewers_to_contribute(self):
+        return self.department in {"COSC", "ENGS"}
