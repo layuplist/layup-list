@@ -11,7 +11,7 @@ department_code_to_name = {
     "CHIN": "Chinese",
     "CLST": "Classical Studies",
     "COCO": "College Courses",
-    "COGS": "Cognitive Science&nbsp;Courses",
+    "COGS": "Cognitive Science",
     "COLT": "Comparative Literature",
     "COSC": "Computer Science",
     "EARS": "Earth Sciences",
