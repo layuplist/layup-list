@@ -148,6 +148,8 @@ def home(request):
 
         'recommendations_last_updated': recommendations_last_updated,
 
+        'activated_accounts': User.objects.filter(is_active=True).count(),
+
         'class_breakdown': class_breakdown,
     })
 
