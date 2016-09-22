@@ -1,5 +1,4 @@
 ### Project ignores
-data/
 venv/
 staticfiles
 .env

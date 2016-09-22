@@ -55,7 +55,6 @@ There are other ways to set it up, for sure, and you may not end up needing all 
   ```
 * Run `source ./scripts/dev/environment.sh` to set up the development environment
 * Install Python dependencies using `pip install -r requirements.txt`
-* Run `bash ./scripts/dev/setup_data.sh` to initialize the data subfolder
 * Run `bash ./scripts/dev/import_initial_data.sh` to populate the database
 
 Contact support@layuplist.com if you need help. The only configuration missing from these instructions is for SendGrid, which involves adding more variables to the `.env` file. Most features won't require this, however.
