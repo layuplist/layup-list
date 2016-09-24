@@ -1,44 +1,20 @@
 # <img src="layup_list/static/img/logo-sm.png" alt="logo" width=30> Contributing to Layup List
 
-Layup List has been built to be easy to contribute to, especially for learning developers.
+Our <a href="https://github.com/layuplist/layup-list/issues">issues</a> page has some ideas for buxfixes and feature improvements (though you aren't limited to this list).
 
-Please don't hesitate to reach out if you would like to contribute or need help doing so. Emailing <a href="mailto:support@layuplist.com">support@layuplist.com</a> is fine.
+To contribute code, simply make a pull request. Github has a great <a href="https://guides.github.com/activities/contributing-to-open-source/">guide</a> for how you can go about doing this.
 
-This guide will go over:
+Contributors will be added to the <a href="https://github.com/layuplist">layuplist organization</a>, so you can display your membership on your profile.
 
-* What Layup List is built on
-* How to set up Layup List locally
-* How to contribute to Layup List
-* The benefits of contributing
+Feel free to email <a href="mailto:support@layuplist.com">support@layuplist.com</a> if you need any help.
 
-Stack
------
-
-You DO NOT have to know all of these to contribute to Layup List. Many of them are used in only a small portion of the codebase, and most features will only require working with one or two of the technologies.
-
-Languages used: Python, Javascript (JSX enabled), HTML, CSS
-
-Frameworks and Services:
-* *Django*: Python MVC web application framework used for the backend
-* *Postgres*: Relational database -- interactions are handled through Django's ORM
-* *Heroku*: Platform for deployment, everything in the `bin` folder is related, Procfile too
-* *SendGrid*: Email delivery service
-* *jQuery*: Javascript framework used for asynchronous requests (such as retrieving the median chart data)
-* *Bootstrap*: Front-end framework for styling
-* *d3.js*: Javascript library used for charting
-* *PhantomJS*: Used for the web crawlers (including ORC, medians, and timetable)
-* *Node.js*: Used for Course Picker parsers (with cheerio), yuglify
-* *React*: Javascript library used experimentally and dropped. LL is set up to use it though, so you may use it if you'd like
-
-Local Setup
------------
-
-There are other ways to set it up, for sure, and you may not end up needing all of the dependencies and steps. However, if you set it up this way you shouldn't run into any configuration issues. Specific commands may be OSX dependendent, however the general idea is the same for other systems.
+Local Setup (OSX)
+-----------------
 
 * [Clone](https://help.github.com/articles/cloning-a-repository/) the repository
 * Install [Homebrew](http://brew.sh/)
 * Install Postgres. We recommend [Postgres.app](http://postgresapp.com/). If you do this, be sure to set up the [CLI Tools](http://postgresapp.com/documentation/cli-tools.html). Open the application
-* Install the [Heroku Toolbelt](https://toolbelt.heroku.com/). You don't need a Heroku account, they just offer good tools for configuration
+* Install the [Heroku CLI](https://cli.heroku.com). You don't need a Heroku account, they just offer good tools for configuration
 * We use yuglify to compress the static files. Install using `sudo npm install -g yuglify`. If this doesn't work, you may need to install [node.js](https://nodejs.org/en/).
 * Install forego using `brew install forego`
 * Run `sudo easy_install pip` if you do not have pip
@@ -57,7 +33,7 @@ There are other ways to set it up, for sure, and you may not end up needing all 
 * Install Python dependencies using `pip install -r requirements.txt`
 * Run `bash ./scripts/dev/import_initial_data.sh` to populate the database
 
-Contact support@layuplist.com if you need help. The only configuration missing from these instructions is for SendGrid, which involves adding more variables to the `.env` file. Most features won't require this, however.
+Contact support@layuplist.com if you need help.
 
 Running Web Server
 ------------------
@@ -106,16 +82,9 @@ python ./manage.py test
 
 Create new tests in the `web/tests` folder.
 
-Contributing
-------------
+Stack
+-----
 
-Please take a look at our <a href="https://github.com/layuplist/layup-list/issues">issues</a> page for some ideas for features that you can tackle.
+Languages: Python, Javascript (JSX enabled), HTML, CSS
 
-To contribute code, simply make a pull request, and we will take a look. Github has a great <a href="https://guides.github.com/activities/contributing-to-open-source/">guide</a> for how you can go about doing this.
-
-Benefits of Contributing
-------------------------
-
-In addition to boosting your Github resume, upon contributing we will add you to the <a href="https://github.com/layuplist">layuplist organization</a>, so you can display your membership on your profile.
-
-If you continue to contribute, you may become a core contributor (e.g. able to push and create branches directly on the repo), get Heroku/SendGrid/admin/email access, etc.
+Frameworks and Services: Django, Postgres, Heroku, SendGrid, jQuery, Bootstrap, d3.js, PhantomJS, Node.js, React
