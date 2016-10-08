@@ -8,12 +8,21 @@ Contributors will be added to the <a href="https://github.com/layuplist">layupli
 
 Feel free to email <a href="mailto:support@layuplist.com">support@layuplist.com</a> if you need any help.
 
-Local Setup (OSX)
+Local Setup (macOS or OS X)
 -----------------
+#### Brief Remarks for Beginners
+* If you're used to IDEs (PyCharm, Eclipse), you'll want to run the commands below (`text with grey background`) in the **Terminal**.
+* To open the Terminal, press Command+Space, type Terminal, then press Enter. To run a command, type the text then press Enter.
+* You'll also need to download a code editor. We recommend [Sublime](https://www.sublimetext.com/) or [Atom](https://atom.io/).
 
-* [Clone](https://help.github.com/articles/cloning-a-repository/) the repository
+#### Installation
+* [Clone](https://help.github.com/articles/cloning-a-repository/) the main repository. `git clone https://github.com/layuplist/crawled-data.git`
+* Navigate to the directory where you cloned. Terminal by default will put you in your home directory `~`, so unless you changed directories you can skip this step.
+* Run `cd layup-list`.
+* Run `rmdir data`.
+* [Clone](https://help.github.com/articles/cloning-a-repository/) the data repository. `git clone https://github.com/layuplist/crawled-data data`. Note the word 'data' appears twice intentionally; it is not a typo.
 * Install [Homebrew](http://brew.sh/)
-* Install Postgres. We recommend [Postgres.app](http://postgresapp.com/). If you do this, be sure to set up the [CLI Tools](http://postgresapp.com/documentation/cli-tools.html). Open the application
+* Install Postgres. We recommend [Postgres.app](http://postgresapp.com/). If you do this, be sure to set up the [CLI Tools](http://postgresapp.com/documentation/cli-tools.html). Open the application via Launchpad (blue elephant icon).
 * Install the [Heroku CLI](https://cli.heroku.com). You don't need a Heroku account, they just offer good tools for configuration
 * We use yuglify to compress the static files. Install using `sudo npm install -g yuglify`. If this doesn't work, you may need to install [node.js](https://nodejs.org/en/).
 * Install forego using `brew install forego`
@@ -29,19 +38,28 @@ Local Setup (OSX)
   DEBUG=True
   CURRENT_TERM=16S
   ```
-* Run `source ./scripts/dev/environment.sh` to set up the development environment
+
+* Run `source ./scripts/dev/environment.sh` to set up the heroku development environment
+* Run `source ./scripts/dev/virtualize.sh` to activate the virtual environment
 * Install Python dependencies using `pip install -r requirements.txt`
 * Run `bash ./scripts/dev/import_initial_data.sh` to populate the database
 
 Contact support@layuplist.com if you need help.
 
+
 Running Web Server
 ------------------
+
+**Important Note:** Every time you start up a new Terminal window or tab, you need to run both of the below commands. You already ran them above, but if you close your terminal and want to work on this project again later, you must run them again.
+
+```bash
+source ./scripts/dev/environment.sh
+source ./scripts/dev/virtualize.sh
+```
 
 After you have completed all the steps in **Local Setup**, you can start the development server by running:
 
 ```bash
-source ./scripts/dev/environment.sh   # set up the development environment, if you haven't already
 python manage.py collectstatic        # create static files
 forego start                          # run the server
 ```
