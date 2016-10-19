@@ -108,6 +108,7 @@
                 </form>
             </div>
         </div>
+        {% if request.user.is_authenticated %}
         <table class="table table-striped">
             <tbody>
                 {% for review in reviews %}
@@ -138,6 +139,11 @@
                 {% endif %}
             </ul>
         </nav>
+        {% else %}
+        <p id="signupError">
+            <u><a id="signupError" href="{% url 'signup'%}">Signup</a></u> or <u><a id="signupError" href="{% url 'auth_login'%}">Login</a></u> to view all of the {{ reviews.paginator.count }} reviews for this class.
+        </p>
+        {% endif %}
     </div>
 </div>
 {% endif %}

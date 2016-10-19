@@ -172,7 +172,6 @@ def current_term(request, sort):
 
 
 def course_detail(request, course_id):
-
     try:
         course = Course.objects.get(pk=course_id)
     except Course.DoesNotExist:
@@ -192,18 +191,14 @@ def course_detail(request, course_id):
         else:
             form = ReviewForm()
 
-    paginator = Paginator(course.review_set.all(
-    ).order_by("-term"), LIMITS["reviews"])
+    paginator = Paginator(
+        course.review_set.all().order_by("-term"), LIMITS["reviews"])
     try:
         reviews = paginator.page(request.GET.get('page'))
     except PageNotAnInteger:
         reviews = paginator.page(1)
     except EmptyPage:
         reviews = paginator.page(paginator.num_pages)
-
-    if reviews.number > 1 and not request.user.is_authenticated():
-        return HttpResponseRedirect(
-            reverse("signup") + "?restriction=read more reviews")
 
     if request.user.is_authenticated():
         layup_vote, quality_vote = Vote.objects.for_course_and_user(
@@ -281,6 +276,10 @@ def course_search(request):
 
 @require_safe
 def course_review_search(request, course_id):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect(
+            reverse("signup") + "?restriction=see reviews")
+
     query = request.GET.get("q", "").strip()
     course = Course.objects.get(id=course_id)
     reviews = course.search_reviews(query)
