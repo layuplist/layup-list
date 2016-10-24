@@ -17,8 +17,8 @@ LayupList.Web.CourseDetail = function(courseId) {
         data = data.medians;
         $medianChart = $(".median-chart");
         if (data.length === 0) {
-            $medianChart.css('height', 'auto');
-            $medianChart.append("<p>No medians found.</p>");
+            $medianChart.remove()
+            $(".median-header").remove()
             return;
         }
 
