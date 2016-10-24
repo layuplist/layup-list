@@ -214,3 +214,8 @@ AUTH_PASSWORD_VALIDATORS = [
 if not DEBUG:
     SERVER_EMAIL = 'support@layuplist.com'
     ADMINS = [('Support', 'support@layuplist.com')]
+
+
+# Sessions
+SESSION_COOKIE_AGE = 3153600000  # 100 years
+SESSION_COOKIE_SECURE = True
