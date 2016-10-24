@@ -13,8 +13,7 @@ class GroupedRecommendation(object):
         self.recs = []
 
     def reason(self):
-        return "Similar to: {}".format(
-            " ".join([r.course.short_name() for r in self.recs]))
+        return " ".join([r.course.short_name() for r in self.recs])
 
 
 class RecommendationManager(models.Manager):

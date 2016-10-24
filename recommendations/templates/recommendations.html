@@ -17,17 +17,17 @@
                 </p>
                 <table class="table">
                     <thead>
-                        <th class="text-center">Reason</th>
                         <th>Course</th>
+                        <th class="text-center">Similar To</th>
                     </thead>
                     <tbody>
                         {% for rec in recommendations %}
                         <tr>
-                            <td class="text-center" style="vertical-align:middle">
-                                <p>{{ rec.reason }}</p>
-                            </td>
                             <td>
                                 {% include "components/course_summary.html" with course=rec.course only %}
+                            </td>
+                            <td class="text-center" style="vertical-align:middle">
+                                <p>{{ rec.reason }}</p>
                             </td>
                         </tr>
                         {% endfor %}
