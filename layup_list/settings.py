@@ -208,3 +208,9 @@ AUTH_PASSWORD_VALIDATORS = [
                 'NumericPasswordValidator',
     },
 ]
+
+
+# Error reporting
+if not DEBUG:
+    SERVER_EMAIL = 'support@layuplist.com'
+    ADMINS = [('Support', 'support@layuplist.com')]
