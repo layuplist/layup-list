@@ -16,11 +16,9 @@ Local Setup (macOS or OS X)
 * You'll also need to download a code editor. We recommend [Sublime](https://www.sublimetext.com/) or [Atom](https://atom.io/).
 
 #### Installation
-* [Clone](https://help.github.com/articles/cloning-a-repository/) the main repository. `git clone https://github.com/layuplist/crawled-data.git`
+* [Clone](https://help.github.com/articles/cloning-a-repository/) the main repository. `git clone --recursive https://github.com/layuplist/crawled-data.git`. The --recursive option includes the [submodule](https://github.com/layuplist/crawled-data/) that contains our course data.
 * Navigate to the directory where you cloned. Terminal by default will put you in your home directory `~`, so unless you changed directories you can skip this step.
 * Run `cd layup-list`.
-* Run `rmdir data`.
-* [Clone](https://help.github.com/articles/cloning-a-repository/) the data repository. `git clone https://github.com/layuplist/crawled-data data`. Note the word 'data' appears twice intentionally; it is not a typo.
 * Install [Homebrew](http://brew.sh/)
 * Install Postgres. We recommend [Postgres.app](http://postgresapp.com/). If you do this, be sure to set up the [CLI Tools](http://postgresapp.com/documentation/cli-tools.html). Open the application via Launchpad (blue elephant icon).
 * Install the [Heroku CLI](https://cli.heroku.com). You don't need a Heroku account, they just offer good tools for configuration
