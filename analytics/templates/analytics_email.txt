@@ -1,0 +1,20 @@
+{{ users.all.count }} users ({{ users.new.count }} new).
+
+{{ users.unique_recent_logins.count }} unique users logged in this past week.
+
+{{ votes.all_good_upvotes.count }} good upvotes ({{ votes.new_good_upvotes.count }} new).
+
+{{ votes.all_good_downvotes.count }} good downvotes ({{ votes.new_good_downvotes.count }} new).
+
+{{ votes.all_layup_upvotes.count }} layup upvotes ({{ votes.new_layup_upvotes.count }} new).
+
+{{ votes.all_layup_downvotes.count }} layup downvotes ({{ votes.new_layup_downvotes.count }} new).
+
+{{ reviews.all.count }} reviews ({{ reviews.new.count }} new).
+
+{% for review in reviews.new %}
+{{ review.term }} {{ review.course }} {{ review.professor }} {{ review.user }}
+
+{{ review.comments }}
+
+{% endfor %}
