@@ -21,6 +21,7 @@ Local Setup (macOS or OS X)
 * Run `cd layup-list`.
 * Install [Homebrew](http://brew.sh/)
 * Install Postgres. We recommend [Postgres.app](http://postgresapp.com/). If you do this, be sure to set up the [CLI Tools](http://postgresapp.com/documentation/cli-tools.html). Open the application via Launchpad (blue elephant icon).
+* Install Redis using `brew install redis`.
 * Install the [Heroku CLI](https://cli.heroku.com). You don't need a Heroku account, they just offer good tools for configuration
 * We use yuglify to compress the static files. Install using `sudo npm install -g yuglify`. If this doesn't work, you may need to install [node.js](https://nodejs.org/en/).
 * Install forego using `brew install forego`
@@ -32,6 +33,7 @@ Local Setup (macOS or OS X)
 
   ```bash
   DATABASE_URL=postgres://[YOUR_USERNAME]@localhost:5432/layuplist
+  REDIS_URL=redis://[YOUR_USERNAME]@localhost:6379
   SECRET_KEY=[SOME_LONG_RANDOM_STRING]
   DEBUG=True
   CURRENT_TERM=16S
