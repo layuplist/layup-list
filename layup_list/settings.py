@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'hijack',
     'compat',
     'hijack_admin',
+    'django_celery_beat',
     'web',
     'analytics',
     'recommendations',
