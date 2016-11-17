@@ -4,7 +4,7 @@ from web.models import Review, Course
 from lib import constants
 from lib.terms import is_valid_term
 
-REVIEW_MINIMUM_LENGTH = 150
+REVIEW_MINIMUM_LENGTH = 100
 
 
 class ReviewForm(forms.ModelForm):
