@@ -9,10 +9,11 @@ from django.template.loader import get_template
 from django.template import Context
 
 from web.models import Review, Vote
-from lib import constants
+from lib import constants, task_utils
 
 
 @shared_task
+@task_utils.email_if_fails
 def send_analytics_email_update(lookback=timedelta(days=7)):
     context = _get_analytics_email_context(lookback)
     content = get_template('analytics_email.txt').render(Context(context))
