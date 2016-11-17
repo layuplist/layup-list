@@ -11,6 +11,6 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'weekly_analytics_update': {
         'task': 'analytics.tasks.send_analytics_email_update',
-        'schedule': crontab(hour=0),  # Midnight
+        'schedule': crontab(minute=0, hour=0),  # Midnight
     },
 }
