@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'compat',
     'hijack_admin',
     'django_celery_beat',
+    'django_celery_results',
     'web',
     'analytics',
     'recommendations',
@@ -224,5 +225,5 @@ SESSION_COOKIE_SECURE = not DEBUG
 
 # Celery
 CELERY_BROKER_URL = os.environ["REDIS_URL"]
-CELERY_RESULT_BACKEND = os.environ["REDIS_URL"]
+CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TIMEZONE = "US/Pacific"
