@@ -14,4 +14,10 @@ app.conf.beat_schedule = {
         'task': 'analytics.tasks.send_analytics_email_update',
         'schedule': crontab(minute=0, hour=0),  # Midnight
     },
+    'course_description_similarity': {
+        'task': (
+            'recommendations.tasks.'
+            'generate_course_description_similarity_recommendations'),
+        'schedule': crontab(hour=0, minute=0, day_of_week=2),  # Tues, 12AM
+    },
 }
