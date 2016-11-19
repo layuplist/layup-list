@@ -10,7 +10,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
-    'weekly_analytics_update': {
+    'analytics_update': {
         'task': 'analytics.tasks.send_analytics_email_update',
         'schedule': crontab(minute=0, hour=0),  # Midnight
     },
