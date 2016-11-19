@@ -23,22 +23,6 @@ def home(request):
     course_picker = User.objects.get(username='CoursePicker')
 
     non_zero_votes = models.Vote.objects.exclude(value=0)
-    high_voters = non_zero_votes.values_list('user').annotate(
-        vote_count=Count('user')).order_by('-vote_count').values_list(
-        'user', 'vote_count')[:LIMIT]
-    high_good_voters = non_zero_votes.filter(
-        category=models.Vote.CATEGORIES.GOOD).values_list('user').annotate(
-        vote_count=Count('user')).order_by('-vote_count').values_list(
-        'user', 'vote_count')[:LIMIT]
-    high_layup_voters = non_zero_votes.filter(
-        category=models.Vote.CATEGORIES.LAYUP).values_list('user').annotate(
-        vote_count=Count('user')).order_by('-vote_count').values_list(
-        'user', 'vote_count')[:LIMIT]
-    top_reviewers = models.Review.objects.exclude(
-        user=course_picker).values_list('user').annotate(
-        review_count=Count('user')).order_by('-review_count').values_list(
-        'user', 'review_count')[:LIMIT]
-
     num_voters = non_zero_votes.values_list('user').distinct().count()
     num_good_voters = non_zero_votes.filter(
         category=models.Vote.CATEGORIES.GOOD).values_list(
@@ -140,10 +124,6 @@ def home(request):
         'overall_table': overall_table,
         'vote_table': vote_table,
 
-        'high_voters': high_voters,
-        'high_good_voters': high_good_voters,
-        'high_layup_voters': high_layup_voters,
-        'top_reviewers': top_reviewers,
         'num_voters': num_voters,
         'num_good_voters': num_good_voters,
         'num_layup_voters': num_layup_voters,
