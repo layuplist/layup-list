@@ -187,17 +187,18 @@ def sentiment_labeler(request):
                 'form': form,
             })
     unlabeled_reviews = models.Review.objects.filter(
-        sentiment_labeler=None,
         user=User.objects.get(username="CoursePicker"),
+    ).exclude(
+        sentiment_labeler=models.Review.MANUAL_SENTIMENT_LABELER,
     )
-    count = unlabeled_reviews.aggregate(count=Count('id'))['count']
+    count = unlabeled_reviews.count()
     random_index = randint(0, count - 1)
     review = unlabeled_reviews[random_index]
-    form = ManualSentimentForm(initial={
-        'review_id': review.id,
-    })
+    form = ManualSentimentForm(initial={'review_id': review.id})
     return render(request, 'sentiment_labeler.html', {
         'count': count,
+        'labeled_count': models.Review.objects.filter(
+            sentiment_labeler=models.Review.MANUAL_SENTIMENT_LABELER).count(),
         'form': form,
         'review': review,
     })

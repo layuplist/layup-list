@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h1> Sentiment Labeler ({{ count }} remaining)</h1>
+        <h1> Sentiment Labeler ({{ count }} remaining, {{ labeled_count }} labeled)</h1>
         <h3>{{ review.course }} ({{ review.id }})</h3>
         <p>
         {% if review.term %}
