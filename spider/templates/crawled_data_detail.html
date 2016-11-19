@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ crawled_data }}| Layup List{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>{{ crawled_data }}</h1>
+        {% if crawled_data.has_change %}
+            <form method="post">
+                {% csrf_token %}
+                <input type="submit" value="Approve Change">
+            </form>
+        {% endif %}
+        <pre>{{ crawled_data.diff }}</pre>
+    </div>
+</div>
+{% endblock %}

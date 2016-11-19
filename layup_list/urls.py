@@ -20,6 +20,7 @@ import django.contrib.auth.views as authviews
 from web import views
 from analytics import views as aviews
 from recommendations import views as rviews
+from spider import views as spider_views
 
 urlpatterns = [
 
@@ -36,6 +37,13 @@ urlpatterns = [
         aviews.sentiment_labeler,
         name='sentiment_labeler'),
 
+    # spider
+    url(r'^spider/data/$',
+        spider_views.crawled_data_list,
+        name="crawled_datas"),
+    url(r'^spider/data/(?P<crawled_data_pk>[0-9]+)$',
+        spider_views.crawled_data_detail,
+        name="crawled_data"),
 
     # primary views
     url(r'^$', views.landing, name="landing"),

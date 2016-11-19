@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'web',
     'analytics',
     'recommendations',
+    'spider',
 ]
 
 MIDDLEWARE_CLASSES = [
