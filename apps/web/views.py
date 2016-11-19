@@ -122,16 +122,16 @@ def confirmation(request):
 def current_term(request, sort):
     if sort == "best":
         course_type, primary_sort, secondary_sort = (
-            "Best Classes", "-quality_score", "-layup_score")
-        vote_category = Vote.CATEGORIES.GOOD
+            "Best Classes", "-quality_score", "-difficulty_score")
+        vote_category = Vote.CATEGORIES.QUALITY
     else:
         if not request.user.is_authenticated():
             return HttpResponseRedirect(
                 reverse("signup") + "?restriction=see layups")
 
         course_type, primary_sort, secondary_sort = (
-            "Layups", "-layup_score", "-quality_score")
-        vote_category = Vote.CATEGORIES.LAYUP
+            "Layups", "-difficulty_score", "-quality_score")
+        vote_category = Vote.CATEGORIES.DIFFICULTY
 
     dist = request.GET.get('dist')
     dist = dist.upper() if dist else dist
@@ -201,10 +201,10 @@ def course_detail(request, course_id):
         reviews = paginator.page(paginator.num_pages)
 
     if request.user.is_authenticated():
-        layup_vote, quality_vote = Vote.objects.for_course_and_user(
+        difficulty_vote, quality_vote = Vote.objects.for_course_and_user(
             course, request.user)
     else:
-        layup_vote, quality_vote = None, None
+        difficulty_vote, quality_vote = None, None
 
     similarity_recommendations = course.recommendations.filter(
         creator=Recommendation.DOCUMENT_SIMILARITY,
@@ -222,7 +222,7 @@ def course_detail(request, course_id):
         'last_offered': course.last_offered(),
         'recommendations': similarity_recommendations,
         'professors_and_review_count': professors_and_review_count,
-        'layup_vote': layup_vote,
+        'difficulty_vote': difficulty_vote,
         'quality_vote': quality_vote,
         'reviews': reviews,
         'distribs': course.distribs_string(),
@@ -349,7 +349,7 @@ def vote(request, course_id):
     except KeyError:
         return HttpResponseBadRequest()
 
-    category = Vote.CATEGORIES.LAYUP if forLayup else Vote.CATEGORIES.GOOD
+    category = Vote.CATEGORIES.DIFFICULTY if forLayup else Vote.CATEGORIES.QUALITY
     new_score, is_unvote = Vote.objects.vote(
         int(value), course_id, category, request.user)
 

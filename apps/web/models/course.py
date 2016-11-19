@@ -88,7 +88,7 @@ class Course(models.Model):
     source = models.CharField(max_length=16, choices=SOURCES.CHOICES)
     description = models.TextField(null=True, blank=True)
 
-    layup_score = models.IntegerField(default=0)
+    difficulty_score = models.IntegerField(default=0)
     quality_score = models.IntegerField(default=0)
 
     created_at = models.DateTimeField(auto_now_add=True)

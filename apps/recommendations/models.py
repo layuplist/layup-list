@@ -27,7 +27,7 @@ class RecommendationManager(models.Manager):
             crosslisted_courses__in=interacted_course_ids).values_list(
             'id', flat=True)
         upvoted_course_ids = interacted_courses.filter(
-            value=1, category=Vote.CATEGORIES.GOOD).values_list(
+            value=1, category=Vote.CATEGORIES.QUALITY).values_list(
             'course_id', flat=True)
 
         recommendations = (

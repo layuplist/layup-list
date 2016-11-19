@@ -45,7 +45,7 @@
                 <td> {{ course.quality_score }} </td>
                 <td>
                     {% if request.user.is_authenticated %}
-                        {{ course.layup_score }}
+                        {{ course.difficulty_score }}
                     {% else %}
                         <a href="{% url 'signup'%}">Signup to reveal</a>
                     {% endif %}

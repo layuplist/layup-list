@@ -93,4 +93,4 @@ class VoteFactory(factory.django.DjangoModelFactory):
     value = 0
     course = factory.SubFactory(CourseFactory)
     user = factory.SubFactory(UserFactory)
-    category = models.Vote.CATEGORIES.GOOD
+    category = models.Vote.CATEGORIES.QUALITY

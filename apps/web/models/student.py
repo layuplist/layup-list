@@ -46,7 +46,7 @@ class Student(models.Model):
             )
 
     def can_see_recommendations(self):
-        return (Vote.objects.num_good_upvotes_for_user(self.user) >=
+        return (Vote.objects.num_quality_upvotes_for_user(self.user) >=
                 constants.REC_UPVOTE_REQ)
 
     def __unicode__(self):

@@ -30,12 +30,12 @@ def _get_analytics_email_context(lookback):
     changes_since = datetime.now() - lookback
     new_query = Q(created_at__gte=changes_since)
     users = User.objects.all()
-    good_votes = Vote.objects.filter(category=Vote.CATEGORIES.GOOD)
-    good_upvotes = good_votes.filter(value=1)
-    good_downvotes = good_votes.filter(value=-1)
-    layup_votes = Vote.objects.filter(category=Vote.CATEGORIES.LAYUP)
-    layup_upvotes = layup_votes.filter(value=1)
-    layup_downvotes = layup_votes.filter(value=-1)
+    quality_votes = Vote.objects.filter(category=Vote.CATEGORIES.QUALITY)
+    quality_upvotes = quality_votes.filter(value=1)
+    quality_downvotes = quality_votes.filter(value=-1)
+    difficulty_votes = Vote.objects.filter(category=Vote.CATEGORIES.DIFFICULTY)
+    difficulty_upvotes = difficulty_votes.filter(value=1)
+    difficulty_downvotes = difficulty_votes.filter(value=-1)
     return {
         'users': {
             'all': users,
@@ -44,14 +44,14 @@ def _get_analytics_email_context(lookback):
                 last_login__gte=changes_since),
         },
         'votes': {
-            'all_good_upvotes': good_upvotes,
-            'all_good_downvotes': good_downvotes,
-            'all_layup_upvotes': layup_upvotes,
-            'all_layup_downvotes': layup_downvotes,
-            'new_good_upvotes': good_upvotes.filter(new_query),
-            'new_good_downvotes': good_downvotes.filter(new_query),
-            'new_layup_upvotes': layup_upvotes.filter(new_query),
-            'new_layup_downvotes': layup_downvotes.filter(new_query),
+            'all_quality_upvotes': quality_upvotes,
+            'all_quality_downvotes': quality_downvotes,
+            'all_difficulty_upvotes': difficulty_upvotes,
+            'all_difficulty_downvotes': difficulty_downvotes,
+            'new_quality_upvotes': quality_upvotes.filter(new_query),
+            'new_quality_downvotes': quality_downvotes.filter(new_query),
+            'new_difficulty_upvotes': difficulty_upvotes.filter(new_query),
+            'new_difficulty_downvotes': difficulty_downvotes.filter(new_query),
         },
         'reviews': {
             'all': Review.objects.all(),

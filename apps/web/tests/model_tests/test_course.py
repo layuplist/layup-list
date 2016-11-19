@@ -42,7 +42,7 @@ class CourseTestCase(TestCase):
     def test_review_search_retrieves_review_by_both_comments_and_professor(
             self):
         factories.ReviewFactory(
-            course=self.c1, comments="this class is a LAYUP")
+            course=self.c1, comments="this class is a layup")
         factories.ReviewFactory(course=self.c1, professor="Layup List")
         self.assertEqual(len(self.c1.search_reviews("lay")), 2)
 

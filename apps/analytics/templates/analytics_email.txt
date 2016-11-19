@@ -2,9 +2,9 @@
 
 {{ users.unique_recent_logins.count }} unique users logged in this past week.
 
-{{ votes.all_good_upvotes.count }} good upvotes ({{ votes.new_good_upvotes.count }} new).
+{{ votes.all_quality_upvotes.count }} quality upvotes ({{ votes.new_quality_upvotes.count }} new).
 
-{{ votes.all_good_downvotes.count }} good downvotes ({{ votes.new_good_downvotes.count }} new).
+{{ votes.all_quality_downvotes.count }} quality downvotes ({{ votes.new_quality_downvotes.count }} new).
 
 {{ votes.all_layup_upvotes.count }} layup upvotes ({{ votes.new_layup_upvotes.count }} new).
 

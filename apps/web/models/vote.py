@@ -22,22 +22,22 @@ class VoteManager(models.Manager):
 
         # if previously voted, reverse the old value of the vote
         if not created:
-            if category == Vote.CATEGORIES.GOOD:
+            if category == Vote.CATEGORIES.QUALITY:
                 course.quality_score -= vote.value
-            elif category == Vote.CATEGORIES.LAYUP:
-                course.layup_score -= vote.value
+            elif category == Vote.CATEGORIES.DIFFICULTY:
+                course.difficulty_score -= vote.value
 
         vote.value = value if vote.value != value else 0
         is_unvote = vote.value == 0
 
         # add the new value of the vote
         new_score = None
-        if category == Vote.CATEGORIES.GOOD:
+        if category == Vote.CATEGORIES.QUALITY:
             course.quality_score += vote.value
             new_score = course.quality_score
-        elif category == Vote.CATEGORIES.LAYUP:
-            course.layup_score += vote.value
-            new_score = course.layup_score
+        elif category == Vote.CATEGORIES.DIFFICULTY:
+            course.difficulty_score += vote.value
+            new_score = course.difficulty_score
 
         course.save()
         vote.save()
@@ -65,37 +65,37 @@ class VoteManager(models.Manager):
     def for_course_and_user(self, course, user):
         votes = self.filter(course=course, user=user)
 
-        layup_vote, quality_vote = None, None
+        difficulty_vote, quality_vote = None, None
 
         for vote in votes:
-            if vote.category == Vote.CATEGORIES.LAYUP:
-                layup_vote = vote
-            if vote.category == Vote.CATEGORIES.GOOD:
+            if vote.category == Vote.CATEGORIES.DIFFICULTY:
+                difficulty_vote = vote
+            if vote.category == Vote.CATEGORIES.QUALITY:
                 quality_vote = vote
 
-        return layup_vote, quality_vote
+        return difficulty_vote, quality_vote
 
-    def num_good_upvotes_for_user(self, user):
+    def num_quality_upvotes_for_user(self, user):
         return self.filter(
-            user=user, category=Vote.CATEGORIES.GOOD, value=1).count()
+            user=user, category=Vote.CATEGORIES.QUALITY, value=1).count()
 
 
 class Vote(models.Model):
     objects = VoteManager()
 
     class CATEGORIES:
-        GOOD = "GOOD"
-        LAYUP = "LAYUP"
+        QUALITY = "quality"
+        DIFFICULTY = "difficulty"
         CHOICES = (
-            (GOOD, "Good"),
-            (LAYUP, "Layup"),
+            (QUALITY, "Quality"),
+            (DIFFICULTY, "Difficulty"),
         )
 
     value = models.IntegerField(default=0)
     course = models.ForeignKey("Course", on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.CharField(
-        max_length=8, choices=CATEGORIES.CHOICES, db_index=True)
+        max_length=16, choices=CATEGORIES.CHOICES, db_index=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

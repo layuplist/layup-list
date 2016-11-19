@@ -24,11 +24,11 @@ def home(request):
 
     non_zero_votes = models.Vote.objects.exclude(value=0)
     num_voters = non_zero_votes.values_list('user').distinct().count()
-    num_good_voters = non_zero_votes.filter(
-        category=models.Vote.CATEGORIES.GOOD).values_list(
+    num_quality_voters = non_zero_votes.filter(
+        category=models.Vote.CATEGORIES.QUALITY).values_list(
         'user').distinct().count()
     num_layup_voters = non_zero_votes.filter(
-        category=models.Vote.CATEGORIES.LAYUP).values_list(
+        category=models.Vote.CATEGORIES.DIFFICULTY).values_list(
         'user').distinct().count()
     num_reviewers = models.Review.objects.exclude(
         user=course_picker).values_list('user').distinct().count()
@@ -42,9 +42,9 @@ def home(request):
         'Total',
         User.objects.count(),
         models.Vote.objects.exclude(value=0).filter(
-            category=models.Vote.CATEGORIES.GOOD).count(),
+            category=models.Vote.CATEGORIES.QUALITY).count(),
         models.Vote.objects.exclude(value=0).filter(
-            category=models.Vote.CATEGORIES.LAYUP).count(),
+            category=models.Vote.CATEGORIES.DIFFICULTY).count(),
         "{} ({} exclusive)".format(
             models.Review.objects.count(),
             models.Review.objects.exclude(user=course_picker).count()),
@@ -56,9 +56,9 @@ def home(request):
             name,
             User.objects.filter(date_joined__gte=earliest_date).count(),
             non_zero_votes_since.filter(
-                category=models.Vote.CATEGORIES.GOOD).count(),
+                category=models.Vote.CATEGORIES.QUALITY).count(),
             non_zero_votes_since.filter(
-                category=models.Vote.CATEGORIES.LAYUP).count(),
+                category=models.Vote.CATEGORIES.DIFFICULTY).count(),
             models.Review.objects.filter(
                 created_at__gte=earliest_date).count(),
         ))
@@ -66,13 +66,13 @@ def home(request):
     vote_table = [(
         'Total',
         models.Vote.objects.filter(
-            value__gt=0, category=models.Vote.CATEGORIES.GOOD).count(),
+            value__gt=0, category=models.Vote.CATEGORIES.QUALITY).count(),
         models.Vote.objects.filter(
-            value__lt=0, category=models.Vote.CATEGORIES.GOOD).count(),
+            value__lt=0, category=models.Vote.CATEGORIES.QUALITY).count(),
         models.Vote.objects.filter(
-            value__gt=0, category=models.Vote.CATEGORIES.LAYUP).count(),
+            value__gt=0, category=models.Vote.CATEGORIES.DIFFICULTY).count(),
         models.Vote.objects.filter(
-            value__lt=0, category=models.Vote.CATEGORIES.LAYUP).count(),
+            value__lt=0, category=models.Vote.CATEGORIES.DIFFICULTY).count(),
         models.Vote.objects.filter(value=0).count(),
     )]
     for name, earliest_date in [month_ago, week_ago, today]:
@@ -80,19 +80,19 @@ def home(request):
             name,
             models.Vote.objects.filter(
                 value__gt=0,
-                category=models.Vote.CATEGORIES.GOOD,
+                category=models.Vote.CATEGORIES.QUALITY,
                 created_at__gte=earliest_date).count(),
             models.Vote.objects.filter(
                 value__lt=0,
-                category=models.Vote.CATEGORIES.GOOD,
+                category=models.Vote.CATEGORIES.QUALITY,
                 created_at__gte=earliest_date).count(),
             models.Vote.objects.filter(
                 value__gt=0,
-                category=models.Vote.CATEGORIES.LAYUP,
+                category=models.Vote.CATEGORIES.DIFFICULTY,
                 created_at__gte=earliest_date).count(),
             models.Vote.objects.filter(
                 value__lt=0,
-                category=models.Vote.CATEGORIES.LAYUP,
+                category=models.Vote.CATEGORIES.DIFFICULTY,
                 created_at__gte=earliest_date).count(),
             models.Vote.objects.filter(
                 value=0,
@@ -125,7 +125,7 @@ def home(request):
         'vote_table': vote_table,
 
         'num_voters': num_voters,
-        'num_good_voters': num_good_voters,
+        'num_quality_voters': num_quality_voters,
         'num_layup_voters': num_layup_voters,
         'num_reviewers': num_reviewers,
 
@@ -143,7 +143,7 @@ def home(request):
 def eligible_for_recommendations(request):
     eligible_users_and_votes = (
         models.Vote.objects
-        .filter(value=1, category=models.Vote.CATEGORIES.GOOD)
+        .filter(value=1, category=models.Vote.CATEGORIES.QUALITY)
         .values_list('user')
         .annotate(vote_count=Count('user'))
         .filter(vote_count__gte=constants.REC_UPVOTE_REQ)

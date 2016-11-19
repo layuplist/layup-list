@@ -32,7 +32,8 @@ class Review(models.Model):
     sentiment_labeler = models.CharField(
         max_length=64, choices=SENTIMENT_LABELERS, default=None,
         db_index=True, null=True, blank=True)
-    layup_sentiment = models.FloatField(default=None, null=True, blank=True)
+    difficulty_sentiment = models.FloatField(
+        default=None, null=True, blank=True)
     quality_sentiment = models.FloatField(default=None, null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
