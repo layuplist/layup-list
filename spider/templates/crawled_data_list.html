@@ -4,6 +4,10 @@
 <div class="row">
     <div class="col-md-12">
         <h1> Spider </h1>
+        <form method="post">
+            {% csrf_token %}
+            <input type="submit" value="Approve All Pending">
+        </form>
         <table class="table">
             <thead>
                 <tr>

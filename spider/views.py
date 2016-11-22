@@ -2,15 +2,17 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import F
 from django.shortcuts import redirect, render
-from django.views.decorators.http import require_safe
 
 from spider.models import CrawledData
 
 
-@require_safe
 @staff_member_required
 @user_passes_test(lambda u: u.is_superuser)
 def crawled_data_list(request):
+    if request.method == 'POST':
+        for crawled_data in CrawledData.objects.all():
+            if crawled_data.has_change():
+                crawled_data.approve_change()
     return render(request, "crawled_data_list.html", {
         "crawled_datas": CrawledData.objects.all(),
     })
