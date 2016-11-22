@@ -20,6 +20,10 @@ app.conf.beat_schedule = {
             'generate_course_description_similarity_recommendations'),
         'schedule': crontab(hour=0, minute=0, day_of_week=2),  # Tues, 12AM
     },
+    'crawl_orc': {
+        'task': 'spider.tasks.crawl_orc',
+        'schedule': crontab(minute=0, hour=1),  # 1AM
+    },
     'crawl_medians': {
         'task': 'spider.tasks.crawl_medians',
         'schedule': crontab(minute=0, hour=2),  # 2AM

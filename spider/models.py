@@ -12,11 +12,28 @@ from spider import utils
 from lib import constants
 
 
+class CrawledDataManager(models.Manager):
+
+    def handle_new_crawled_data(self, new_data, resource_name, data_type):
+        db_data, created = self.update_or_create(
+            resource=resource_name,
+            data_type=data_type,
+            defaults={"pending_data": new_data},
+        )
+        if created or db_data.has_change():
+            db_data.request_change()
+            return True
+        return False
+
+
 class CrawledData(models.Model):
     MEDIANS = "medians"
+    ORC_DEPARTMENT_COURSES = "orc_department_courses"
     DATA_TYPE_CHOICES = (
         (MEDIANS, "Medians"),
+        (ORC_DEPARTMENT_COURSES, "ORC Department Courses"),
     )
+    objects = CrawledDataManager()
 
     resource = models.CharField(max_length=128, db_index=True, unique=True)
     data_type = models.CharField(max_length=32, choices=DATA_TYPE_CHOICES)

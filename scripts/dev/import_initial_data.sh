@@ -3,12 +3,6 @@
 
 python manage.py migrate
 
-# import from ORC
-python scripts/importers/import_orc_courses.py
-
-# import course pages
-python scripts/importers/import_course_pages.py
-
 # import term data
 python scripts/importers/import_term.py 16W data/terms/201601_courses.json
 python scripts/importers/import_term.py 16S data/terms/201603_courses.json
