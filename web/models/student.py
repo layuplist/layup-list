@@ -10,23 +10,18 @@ from lib import constants
 
 
 class StudentManager(models.Manager):
-    VALID_YEARS = set([str(year) for year in range(15, 25)])
 
     def is_valid_dartmouth_student_email(self, email):
-        e = email.split("@")
-
-        if len(e) < 2:
+        email_components = email.split("@")
+        if len(email_components) != 2:
             return False
-
-        dnd_name = e[0]
-        domain = e[1]  # will be 'alumni' for alumni emails
-        if domain != "dartmouth.edu":
-            return False
-
-        dnd_parts = dnd_name.split('.')
-
+        username, domain = email_components
+        year = username.split(".")[-1]
         return (
-            dnd_parts[-1] in self.VALID_YEARS or dnd_parts[-1].lower() == "ug")
+            domain == "dartmouth.edu" and
+            len(year) == 2 and
+            (year.isdigit() or year.lower() == "ug")
+        )
 
 
 class Student(models.Model):
