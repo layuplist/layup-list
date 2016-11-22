@@ -41,8 +41,8 @@ class CrawledData(models.Model):
             return utils.pretty_json(self.pending_data)
         if self.has_change:
             return "\n".join(difflib.unified_diff(
-                utils.pretty_json(self.pending_data).splitlines(),
                 utils.pretty_json(self.current_data).splitlines(),
+                utils.pretty_json(self.pending_data).splitlines(),
             ))
 
     def request_change(self):
