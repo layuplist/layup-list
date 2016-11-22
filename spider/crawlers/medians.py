@@ -34,7 +34,7 @@ def _is_term_page_url(url):
 
 def crawl_term_medians_for_url(url):
     soup = retrieve_soup(url)
-    table_rows = soup.find("table").find("tbody").findAll("tr")
+    table_rows = soup.find("table").find("tbody").find_all("tr")
     medians = [
         _convert_table_row_to_dict(table_row) for table_row in table_rows]
     medians.sort(cmp=_median_dict_sorter)
@@ -64,23 +64,30 @@ def _median_dict_sorter(a, b):
 
 
 def _convert_table_row_to_dict(table_row):
-    median_data = table_row.findAll("td")
+    median_data = table_row.find_all("td")
     term = median_data[0].get_text(strip=True)
     course = median_data[1].get_text(strip=True)
-    enrl = median_data[2].get_text(strip=True)
+    department = clean_department_code(course.split("-")[0])
+    enrollment = int(median_data[2].get_text(strip=True))
+    section = int(course.split("-")[2])
     median = median_data[3].get_text(strip=True)
+    numbers = course.split("-")[1].split(".")
+    if len(numbers) == 2:
+        number, subnumber = (int(n) for n in numbers)
+    else:
+        assert len(numbers) == 1
+        number, subnumber = int(numbers[0]), None
     median_dict = {
-        "term": term,
         "course": {
-            "department": course.split("-")[0],
-            "number": course.split("-")[1].split(".")[0],
+            "department": department,
+            "number": number,
+            "subnumber": subnumber,
         },
-        "section": course.split("-")[2],
-        "enrollment": enrl,
+        "enrollment": enrollment,
         "median": median,
+        "section": section,
+        "term": term,
     }
-    if len(course.split("-")[1].split(".")) > 1:
-        median_dict["course"]["subnumber"] = course.split("-")[1].split(".")[1]
     return median_dict
 
 
@@ -90,33 +97,22 @@ def import_medians(data):
 
 
 def import_median(median_data):
-    department = clean_department_code(median_data["course"]["department"])
-    number = int(median_data["course"]["number"])
-    subnumber = median_data["course"].get("subnumber")
-    if subnumber:
-        subnumber = int(subnumber)
-
     try:
         course = Course.objects.get(
-            department=department, number=number, subnumber=subnumber)
+            department=median_data["course"]["department"],
+            number=median_data["course"]["number"],
+            subnumber=median_data["course"]["subnumber"],
+        )
     except Course.DoesNotExist:
-        print "Could not find course for {}{}.{}".format(
-            department, number, subnumber)
+        print "Could not find course for {}".format(median_data["course"])
         return
-
-    section = int(median_data["section"])
-    enrollment = int(median_data["enrollment"])
-    median = median_data["median"].strip()
-    term = median_data["term"].strip()
-
     median, _ = CourseMedian.objects.update_or_create(
         course=course,
-        section=section,
-        term=term,
+        section=median_data["section"],
+        term=median_data["term"],
         defaults={
-            "enrollment": enrollment,
-            "median": median,
-            "term": term,
+            "enrollment": median_data["enrollment"],
+            "median": median_data["median"],
         },
     )
     return median
