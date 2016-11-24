@@ -2,10 +2,12 @@ from celery import shared_task
 
 from django.db import transaction
 
-from spider.crawlers import medians, orc
+from spider.crawlers import medians, orc, timetable
 from spider.models import CrawledData
 
 from lib import task_utils
+from lib.constants import CURRENT_TERM
+from lib.terms import get_next_term
 
 
 @shared_task
@@ -16,9 +18,11 @@ def import_pending_crawled_data(crawled_data_pk):
         pk=crawled_data_pk)
     if crawled_data.data_type == CrawledData.MEDIANS:
         medians.import_medians(crawled_data.pending_data)
-    else:
-        assert crawled_data.data_type == CrawledData.ORC_DEPARTMENT_COURSES
+    elif crawled_data.data_type == CrawledData.ORC_DEPARTMENT_COURSES:
         orc.import_department(crawled_data.pending_data)
+    else:
+        assert crawled_data.data_type == CrawledData.COURSE_TIMETABLE
+        timetable.import_timetable(crawled_data.pending_data)
     crawled_data.current_data = crawled_data.pending_data
     crawled_data.save()
 
@@ -68,3 +72,30 @@ def crawl_program_url(url, program_code=None):
     new_data = orc.crawl_courses_from_program_page_url(url, program_code)
     return CrawledData.objects.handle_new_crawled_data(
         new_data, resource_name, CrawledData.ORC_DEPARTMENT_COURSES)
+
+
+@shared_task
+@task_utils.email_if_fails
+def crawl_timetable():
+    resource_name_fmt = "{term}_timetable"
+
+    # Crawl CURRENT_TERM
+    new_data = timetable.crawl_timetable(CURRENT_TERM)
+    CrawledData.objects.handle_new_crawled_data(
+        new_data,
+        resource_name_fmt.format(term=CURRENT_TERM.upper()),
+        CrawledData.COURSE_TIMETABLE,
+    )
+
+    # Crawl next term
+    # Since we are crawling the next term, we may get a couple course
+    # listings before the course offerings are actually posted, so we only
+    # act if there are more than 10 entries.
+    next_term = get_next_term(CURRENT_TERM)
+    new_data = timetable.crawl_timetable(next_term)
+    if new_data and len(new_data) > 10:
+        CrawledData.objects.handle_new_crawled_data(
+            new_data,
+            resource_name_fmt.format(next_term=next_term.upper()),
+            CrawledData.COURSE_TIMETABLE,
+        )

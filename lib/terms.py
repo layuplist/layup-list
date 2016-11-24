@@ -17,3 +17,26 @@ def is_valid_term(term):
     term_data = term_regex.match(term)
     current_year = int(term_regex.match(constants.CURRENT_TERM).group("year"))
     return term_data and int(term_data.group("year")) <= current_year
+
+
+def split_term(term):
+    term_data = term_regex.match(term)
+    if term_data and term_data.group("year") and term_data.group("term"):
+        year = int(term_data.group("year"))
+        term = term_data.group("term").lower()
+        return year, term
+    else:
+        raise ValueError
+
+
+def get_next_term(term):
+    year, season = split_term(term)
+    if season == "f":
+        year += 1
+    season = {
+        "w": "s",
+        "s": "x",
+        "x": "f",
+        "f": "w",
+    }[season]
+    return "{}{}".format(year, season)

@@ -24,6 +24,10 @@ app.conf.beat_schedule = {
         'task': 'spider.tasks.crawl_orc',
         'schedule': crontab(minute=0, hour=1),  # 1AM
     },
+    'crawl_timetable': {
+        'task': 'spider.tasks.crawl_timetable',
+        'schedule': crontab(minute=30, hour=1),  # 1:30AM
+    },
     'crawl_medians': {
         'task': 'spider.tasks.crawl_medians',
         'schedule': crontab(minute=0, hour=2),  # 2AM

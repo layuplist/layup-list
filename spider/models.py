@@ -29,9 +29,11 @@ class CrawledDataManager(models.Manager):
 class CrawledData(models.Model):
     MEDIANS = "medians"
     ORC_DEPARTMENT_COURSES = "orc_department_courses"
+    COURSE_TIMETABLE = "course_timetable"
     DATA_TYPE_CHOICES = (
         (MEDIANS, "Medians"),
         (ORC_DEPARTMENT_COURSES, "ORC Department Courses"),
+        (COURSE_TIMETABLE, "Course Timetable"),
     )
     objects = CrawledDataManager()
 
