@@ -61,7 +61,10 @@ def crawl_program_url(url, program_code=None):
     if not program_code:
         program_code = url.split("/")[-1].split("-")[0]
         assert program_code.isupper() and len(program_code) in (3, 4)
-    resource_name = "{program_code}_courses".format(program_code=program_code)
+    resource_name = "{program_code}_{education_level_code}_courses".format(
+        program_code=program_code.lower(),
+        education_level_code=orc.get_education_level_code(url),
+    )
     new_data = orc.crawl_courses_from_program_page_url(url, program_code)
     return CrawledData.objects.handle_new_crawled_data(
         new_data, resource_name, CrawledData.ORC_DEPARTMENT_COURSES)

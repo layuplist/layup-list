@@ -141,6 +141,14 @@ def _crawl_course_data(course_url, program_code):
     }
 
 
+def get_education_level_code(url):
+    if url.startswith(UNDERGRAD_URL) or url == SUPPLEMENT_URL:
+        return "ug"
+    else:
+        assert url.startswith(GRADUATE_URL)
+        return "gr"
+
+
 def import_department(department_data):
     for course_data in department_data:
         Course.objects.update_or_create(
