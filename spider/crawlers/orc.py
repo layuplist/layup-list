@@ -3,7 +3,11 @@ import re
 from urllib2 import urlparse
 
 from web.models import Course
-from spider.utils import clean_department_code, retrieve_soup
+from spider.utils import (
+    clean_department_code,
+    parse_number_and_subnumber,
+    retrieve_soup,
+)
 
 
 BASE_URL = "http://dartmouth.smartcatalogiq.com/"
@@ -123,19 +127,14 @@ def _crawl_course_data(course_url, program_code):
         course_heading, course_heading)
     split_course_heading = course_heading.split()
     department = split_course_heading[0]
-    numbers = split_course_heading[1].split(".")
-    if len(numbers) == 2:
-        course_number, course_subnumber = (int(n) for n in numbers)
-    else:
-        assert len(numbers) == 1, course_url
-        course_number, course_subnumber = int(numbers[0]), None
+    number, subnumber = parse_number_and_subnumber(split_course_heading[1])
     course_title = " ".join(split_course_heading[2:])
     description = soup.find(class_="desc").get_text(strip=True)
     return {
         "department": department,
         "description": description,
-        "number": course_number,
-        "subnumber": course_subnumber,
+        "number": number,
+        "subnumber": subnumber,
         "title": course_title,
         "url": course_url,
     }

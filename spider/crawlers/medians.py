@@ -3,7 +3,11 @@ import urllib2
 from bs4 import BeautifulSoup
 
 from web.models import Course, CourseMedian
-from spider.utils import clean_department_code, retrieve_soup
+from spider.utils import (
+    clean_department_code,
+    parse_number_and_subnumber,
+    retrieve_soup
+)
 
 MEDIAN_PAGE_INDEX_URL = "http://www.dartmouth.edu/~reg/transcript/medians/"
 MEDIANS_URL_FMT = (
@@ -71,12 +75,7 @@ def _convert_table_row_to_dict(table_row):
     enrollment = int(median_data[2].get_text(strip=True))
     section = int(course.split("-")[2])
     median = median_data[3].get_text(strip=True)
-    numbers = course.split("-")[1].split(".")
-    if len(numbers) == 2:
-        number, subnumber = (int(n) for n in numbers)
-    else:
-        assert len(numbers) == 1
-        number, subnumber = int(numbers[0]), None
+    number, subnumber = parse_number_and_subnumber(course.split("-")[1])
     median_dict = {
         "course": {
             "department": department,
