@@ -152,10 +152,10 @@ def import_department(department_data):
     for course_data in department_data:
         Course.objects.update_or_create(
             department=course_data["department"],
-            description=course_data["description"],
             number=course_data["number"],
             subnumber=course_data["subnumber"],
             defaults={
+                "description": course_data["description"],
                 "title": course_data["title"],
                 "url": course_data["url"],
                 "source": Course.SOURCES.ORC,
