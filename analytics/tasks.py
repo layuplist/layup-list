@@ -8,8 +8,8 @@ from django.db.models import Q
 from django.template.loader import get_template
 from django.template import Context
 
-from web.models import Review, Vote
-from lib import constants, task_utils
+from web.models import CourseOffering, Review, Vote
+from lib import constants, task_utils, terms
 
 
 @shared_task
@@ -58,3 +58,20 @@ def _get_analytics_email_context(lookback):
             'new': Review.objects.filter(new_query),
         },
     }
+
+
+@shared_task
+@task_utils.email_if_fails
+def possibly_request_term_update():
+    next_term = terms.get_next_term(constants.CURRENT_TERM)
+    next_term_count = CourseOffering.objects.filter(term=next_term).count()
+    if next_term_count:
+        send_mail(
+            'Term may be out of date ({} offerings with term {})'.format(
+                next_term_count, next_term),
+            'Consider modifying the environment variable.',
+            constants.SUPPORT_EMAIL,
+            [email for _, email in settings.ADMINS],
+            fail_silently=False,
+        )
+    return next_term_count

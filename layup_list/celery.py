@@ -32,4 +32,8 @@ app.conf.beat_schedule = {
         'task': 'spider.tasks.crawl_medians',
         'schedule': crontab(minute=0, hour=2),  # 2AM
     },
+    'request_term_change': {
+        'task': 'analytics.tasks.possibly_request_term_update',
+        'schedule': crontab(minute=0, hour=3),  # 3AM
+    },
 }

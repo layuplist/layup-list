@@ -23,7 +23,7 @@ def split_term(term):
     term_data = term_regex.match(term)
     if term_data and term_data.group("year") and term_data.group("term"):
         year = int(term_data.group("year"))
-        term = term_data.group("term").lower()
+        term = term_data.group("term").upper()
         return year, term
     else:
         raise ValueError
@@ -31,12 +31,12 @@ def split_term(term):
 
 def get_next_term(term):
     year, season = split_term(term)
-    if season == "f":
+    if season == "F":
         year += 1
     season = {
-        "w": "s",
-        "s": "x",
-        "x": "f",
-        "f": "w",
+        "W": "S",
+        "S": "X",
+        "X": "F",
+        "F": "W",
     }[season]
     return "{}{}".format(year, season)
