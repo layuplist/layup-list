@@ -5,12 +5,17 @@
     <div class="col-md-12">
         <h1>{{ crawled_data }}</h1>
         {% if crawled_data.has_change %}
+            <h3>Pending</h3>
             <form method="post">
                 {% csrf_token %}
                 <input type="submit" value="Approve Change">
             </form>
+            <pre>{{ crawled_data.diff }}</pre>
+        {% else %}
+            <h3>Up to date</h3>
+            <pre>{{ crawled_data.pretty_current_data }}</pre>
         {% endif %}
-        <pre>{{ crawled_data.diff }}</pre>
+
     </div>
 </div>
 {% endblock %}

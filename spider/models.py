@@ -64,6 +64,10 @@ class CrawledData(models.Model):
                 utils.pretty_json(self.pending_data).splitlines(),
             ))
 
+    @property
+    def pretty_current_data(self):
+        return utils.pretty_json(self.current_data)
+
     def request_change(self):
         assert self.has_change()
         send_mail(
