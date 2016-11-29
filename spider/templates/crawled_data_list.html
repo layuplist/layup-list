@@ -11,16 +11,16 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Type</th>
                     <th>Resource</th>
+                    <th>Type</th>
                     <th>Pending Changes</th>
                 </tr>
             </thead>
             <tbody>
                 {% for crawled_data in crawled_datas %}
                 <tr onclick="window.document.location='{% url 'crawled_data' crawled_data.pk %}';" role="button">
-                    <td>{{ crawled_data.data_type }}</td>
                     <td>{{ crawled_data.resource }}</td>
+                    <td>{{ crawled_data.data_type }}</td>
                     <td>
                         {% if crawled_data.has_change %}PENDING{% endif %}
                     </td>
