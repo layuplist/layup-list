@@ -25,6 +25,12 @@ class CrawledDataManager(models.Manager):
             return True
         return False
 
+    def pending_first(self):
+        return (
+            [d for d in self.all() if d.has_change()] +
+            [d for d in self.all() if not d.has_change()]
+        )
+
 
 class CrawledData(models.Model):
     MEDIANS = "medians"

@@ -14,7 +14,7 @@ def crawled_data_list(request):
             if crawled_data.has_change():
                 crawled_data.approve_change()
     return render(request, "crawled_data_list.html", {
-        "crawled_datas": CrawledData.objects.all(),
+        "crawled_datas": CrawledData.objects.pending_first(),
     })
 
 
