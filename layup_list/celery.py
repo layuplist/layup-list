@@ -11,29 +11,29 @@ app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
     'analytics_update': {
-        'task': 'analytics.tasks.send_analytics_email_update',
+        'task': 'apps.analytics.tasks.send_analytics_email_update',
         'schedule': crontab(minute=0, hour=0, day_of_week=1),  # Mon, 12AM
     },
     'course_description_similarity': {
         'task': (
-            'recommendations.tasks.'
+            'apps.recommendations.tasks.'
             'generate_course_description_similarity_recommendations'),
         'schedule': crontab(hour=0, minute=0, day_of_week=2),  # Tues, 12AM
     },
     'crawl_orc': {
-        'task': 'spider.tasks.crawl_orc',
+        'task': 'apps.spider.tasks.crawl_orc',
         'schedule': crontab(minute=0, hour=1),  # 1AM
     },
     'crawl_timetable': {
-        'task': 'spider.tasks.crawl_timetable',
+        'task': 'apps.spider.tasks.crawl_timetable',
         'schedule': crontab(minute=30, hour=1),  # 1:30AM
     },
     'crawl_medians': {
-        'task': 'spider.tasks.crawl_medians',
+        'task': 'apps.spider.tasks.crawl_medians',
         'schedule': crontab(minute=0, hour=2),  # 2AM
     },
     'request_term_change': {
-        'task': 'analytics.tasks.possibly_request_term_update',
+        'task': 'apps.analytics.tasks.possibly_request_term_update',
         'schedule': crontab(minute=0, hour=3),  # 3AM
     },
 }
