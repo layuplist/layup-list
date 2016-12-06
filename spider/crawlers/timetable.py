@@ -82,7 +82,7 @@ def crawl_timetable(term):
             "world_culture": tds[12].get_text(strip=True),
             "distribs": _parse_distribs(tds[13].get_text(strip=True)),
             "limit": int_or_none(tds[14].get_text(strip=True)),
-            "enrollment": int_or_none(tds[15].get_text(strip=True)),
+            # "enrollment": int_or_none(tds[15].get_text(strip=True)),
             "status": tds[16].get_text(strip=True),
         })
     return course_data
