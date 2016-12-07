@@ -23,6 +23,7 @@ from apps.web.models import (
     Course,
     CourseMedian,
     DistributiveRequirement,
+    Instructor,
     Review,
     Student,
     Vote,
@@ -210,11 +211,24 @@ def course_detail(request, course_id):
         creator=Recommendation.DOCUMENT_SIMILARITY,
     ).order_by('-weight').prefetch_related('recommendation')
 
-    professors_and_review_count = (
+    # Get instructor names based on review
+    professors_and_review_count = list(
         course.review_set.values("professor")
                          .annotate(Count("professor"))
                          .order_by("-professor__count")
                          .values_list("professor", "professor__count"))
+
+    # Get instructor names based on instrutors parsed from course offerings
+    professors_and_review_count += [
+        (instructor_name, 0)
+        for instructor_name in Instructor.objects.filter(
+            courseoffering__course=course,
+        ).exclude(
+            name__in=[
+                professor for professor, _ in professors_and_review_count
+            ],
+        ).values_list("name", flat=True).distinct()
+    ]
 
     return render(request, 'course_detail.html', {
         'term': constants.CURRENT_TERM,
@@ -332,9 +346,13 @@ def medians(request, course_id):
 @require_safe
 def course_professors(request, course_id):
     return JsonResponse({
-        'professors': list(Review.objects.filter(
-            course=course_id
-        ).values_list('professor', flat=True).distinct().order_by('professor'))
+        'professors': sorted(
+            set(Review.objects.filter(course=course_id).values_list(
+                'professor', flat=True).distinct()) |
+            set(Instructor.objects.filter(
+                courseoffering__course=course_id,
+            ).values_list("name", flat=True).distinct())
+        )
     })
 
 
@@ -349,7 +367,8 @@ def vote(request, course_id):
     except KeyError:
         return HttpResponseBadRequest()
 
-    category = Vote.CATEGORIES.DIFFICULTY if forLayup else Vote.CATEGORIES.QUALITY
+    category = (
+        Vote.CATEGORIES.DIFFICULTY if forLayup else Vote.CATEGORIES.QUALITY)
     new_score, is_unvote = Vote.objects.vote(
         int(value), course_id, category, request.user)
 
