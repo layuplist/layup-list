@@ -6,9 +6,9 @@
 
 {{ votes.all_quality_downvotes.count }} quality downvotes ({{ votes.new_quality_downvotes.count }} new).
 
-{{ votes.all_layup_upvotes.count }} layup upvotes ({{ votes.new_layup_upvotes.count }} new).
+{{ votes.all_difficulty_upvotes.count }} difficulty upvotes ({{ votes.new_difficulty_upvotes.count }} new).
 
-{{ votes.all_layup_downvotes.count }} layup downvotes ({{ votes.new_layup_downvotes.count }} new).
+{{ votes.all_difficulty_downvotes.count }} difficulty downvotes ({{ votes.new_difficulty_downvotes.count }} new).
 
 {{ reviews.all.count }} reviews ({{ reviews.new.count }} new).
 
