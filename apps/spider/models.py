@@ -21,7 +21,8 @@ class CrawledDataManager(models.Manager):
             defaults={"pending_data": new_data},
         )
         if created or db_data.has_change():
-            db_data.request_change()
+            db_data.email_change()
+            db_data.approve_change()
             return True
         return False
 
@@ -74,10 +75,10 @@ class CrawledData(models.Model):
     def pretty_current_data(self):
         return utils.pretty_json(self.current_data)
 
-    def request_change(self):
+    def email_change(self):
         assert self.has_change()
         send_mail(
-            "[{type}][{resource}][{pk}] New Pending Import".format(
+            "[{type}][{resource}][{pk}] New Import".format(
                 type=self.data_type,
                 resource=self.resource,
                 pk=self.pk,
