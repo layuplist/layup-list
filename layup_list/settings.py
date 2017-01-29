@@ -6,7 +6,7 @@ import sys
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = os.environ['DEBUG'] == "True"
-ALLOWED_HOSTS = ['.layuplist.com']
+ALLOWED_HOSTS = ['.layuplist.com'] if not DEBUG else []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
