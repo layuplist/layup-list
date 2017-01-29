@@ -96,6 +96,6 @@ def crawl_timetable():
     if new_data and len(new_data) > 10:
         CrawledData.objects.handle_new_crawled_data(
             new_data,
-            resource_name_fmt.format(next_term=next_term.upper()),
+            resource_name_fmt.format(term=next_term.upper()),
             CrawledData.COURSE_TIMETABLE,
         )
