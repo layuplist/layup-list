@@ -27,10 +27,11 @@ class CrawledDataManager(models.Manager):
             return True
         return False
 
-    def pending_first(self):
+    def sorted(self):
+        qs = self.order_by("-updated_at").all()
         return (
-            [d for d in self.all() if d.has_change()] +
-            [d for d in self.all() if not d.has_change()]
+            [d for d in qs if d.has_change()] +
+            [d for d in qs if not d.has_change()]
         )
 
 
