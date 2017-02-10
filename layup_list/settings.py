@@ -7,6 +7,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = os.environ['DEBUG'] == "True"
 ALLOWED_HOSTS = ['.layuplist.com'] if not DEBUG else []
+AUTO_IMPORT_CRAWLED_DATA = os.environ.get('AUTO_IMPORT_CRAWLED_DATA') == "True"
 
 INSTALLED_APPS = [
     'django.contrib.admin',

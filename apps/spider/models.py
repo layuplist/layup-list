@@ -22,7 +22,8 @@ class CrawledDataManager(models.Manager):
         )
         if created or db_data.has_change():
             db_data.email_change()
-            db_data.approve_change()
+            if settings.AUTO_IMPORT_CRAWLED_DATA:
+                db_data.approve_change()
             return True
         return False
 
