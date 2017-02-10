@@ -31,6 +31,7 @@ COURSE_HEADING_CORRECTIONS = {
         "MALS MALS 368 Seeing and Feeling in Early Modern Europe": (
             "MALS 368 Seeing and Feeling in Early Modern Europe"),
     },
+    "PSYC": {"$name": None},
 }
 
 
@@ -101,10 +102,10 @@ def crawl_courses_from_program_page_url(url, program_code):
     ]
     course_urls = sorted(
         set(url for url in linked_urls if _is_course_url(url)))
-    return [
+    return filter(None, [
         _crawl_course_data(course_url, program_code)
         for course_url in course_urls
-    ]
+    ])
 
 
 def _is_course_url(candidate_url):
@@ -125,19 +126,20 @@ def _crawl_course_data(course_url, program_code):
     course_heading = " ".join(soup.find("h1").get_text().split())
     course_heading = COURSE_HEADING_CORRECTIONS.get(program_code, {}).get(
         course_heading, course_heading)
-    split_course_heading = course_heading.split()
-    department = split_course_heading[0]
-    number, subnumber = parse_number_and_subnumber(split_course_heading[1])
-    course_title = " ".join(split_course_heading[2:])
-    description = soup.find(class_="desc").get_text(strip=True)
-    return {
-        "department": department,
-        "description": description,
-        "number": number,
-        "subnumber": subnumber,
-        "title": course_title,
-        "url": course_url,
-    }
+    if course_heading:
+        split_course_heading = course_heading.split()
+        department = split_course_heading[0]
+        number, subnumber = parse_number_and_subnumber(split_course_heading[1])
+        course_title = " ".join(split_course_heading[2:])
+        description = soup.find(class_="desc").get_text(strip=True)
+        return {
+            "department": department,
+            "description": description,
+            "number": number,
+            "subnumber": subnumber,
+            "title": course_title,
+            "url": course_url,
+        }
 
 
 def get_education_level_code(url):
