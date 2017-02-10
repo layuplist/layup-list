@@ -49,7 +49,6 @@ class CourseOfferingFactory(factory.django.DjangoModelFactory):
     course = factory.SubFactory(CourseFactory)
 
     term = constants.CURRENT_TERM
-    course_registration_number = factory.Faker("random_number")
     section = factory.Faker("random_number")
     period = "2A"
 

@@ -18,12 +18,14 @@ class CourseOffering(models.Model):
     instructors = models.ManyToManyField("Instructor")
 
     term = models.CharField(max_length=4, db_index=True)
-    course_registration_number = models.IntegerField()
     section = models.IntegerField()
     period = models.CharField(max_length=64, db_index=True)
     limit = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    # Legacy
+    course_registration_number = models.IntegerField(null=True)
 
     class Meta:
         unique_together = ("term", "course", "section")
