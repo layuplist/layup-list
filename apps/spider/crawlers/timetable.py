@@ -51,7 +51,7 @@ def crawl_timetable(term):
         preprocess=lambda x: re.sub("</tr>", "", x),
     )
     num_columns = len(soup.find(class_="data-table").find_all("th"))
-    assert num_columns == 19
+    assert num_columns == 18
 
     tds = soup.find(class_="data-table").find_all("td")
     assert len(tds) % num_columns == 0
@@ -62,7 +62,7 @@ def crawl_timetable(term):
 
         number, subnumber = parse_number_and_subnumber(tds[3].get_text())
         crosslisted_courses = _parse_crosslisted_courses(
-            tds[8].get_text(strip=True))
+            tds[7].get_text(strip=True))
 
         course_data.append({
             "term": _convert_timetable_term_to_term(
@@ -72,18 +72,18 @@ def crawl_timetable(term):
             "number": number,
             "subnumber": subnumber,
             "section": int(tds[4].get_text(strip=True)),
-            "title": tds[6].get_text(strip=True).encode(
+            "title": tds[5].get_text(strip=True).encode(
                 'ascii', 'ignore').decode('ascii'),
             "crosslisted": crosslisted_courses,
-            "period": tds[9].get_text(strip=True),
-            "room": tds[10].get_text(strip=True),
-            "building": tds[11].get_text(strip=True),
-            "instructor": _parse_instructors(tds[12].get_text(strip=True)),
-            "world_culture": tds[13].get_text(strip=True),
-            "distribs": _parse_distribs(tds[14].get_text(strip=True)),
-            "limit": int_or_none(tds[15].get_text(strip=True)),
-            # "enrollment": int_or_none(tds[16].get_text(strip=True)),
-            "status": tds[17].get_text(strip=True),
+            "period": tds[8].get_text(strip=True),
+            "room": tds[9].get_text(strip=True),
+            "building": tds[10].get_text(strip=True),
+            "instructor": _parse_instructors(tds[11].get_text(strip=True)),
+            "world_culture": tds[12].get_text(strip=True),
+            "distribs": _parse_distribs(tds[13].get_text(strip=True)),
+            "limit": int_or_none(tds[14].get_text(strip=True)),
+            # "enrollment": int_or_none(tds[15].get_text(strip=True)),
+            "status": tds[16].get_text(strip=True),
         })
     return course_data
 
