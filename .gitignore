@@ -2,7 +2,8 @@
 venv/
 staticfiles
 .env
-.pyversion
+.exportenv
+.python-version
 data
 
 ### Python ignores (https://github.com/github/gitignore/blob/master/Python.gitignore)

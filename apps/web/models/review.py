@@ -26,6 +26,7 @@ class Review(models.Model):
     user = models.ForeignKey(User)
 
     professor = models.CharField(max_length=255, db_index=True, blank=False)
+    course_offering = models.ForeignKey("CourseOffering", null=True)
     term = models.CharField(max_length=3, db_index=True, blank=False)
     comments = models.TextField(blank=False)
 
