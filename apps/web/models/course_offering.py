@@ -19,7 +19,7 @@ class CourseOffering(models.Model):
 
     term = models.CharField(max_length=4, db_index=True)
     section = models.IntegerField()
-    period = models.CharField(max_length=64, db_index=True)
+    period = models.CharField(max_length=128, db_index=True)
     limit = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
