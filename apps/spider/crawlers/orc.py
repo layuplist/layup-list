@@ -32,6 +32,10 @@ COURSE_HEADING_CORRECTIONS = {
             "MALS 368 Seeing and Feeling in Early Modern Europe"),
     },
     "PSYC": {"$name": None},
+    "QBS": {
+        "Quantitative Biomedical Sciences 132-2 Molecular Markers in Human "
+        "Health Studies Lab": (
+            "QBS 132.02 Molecular Markers in Human Health Studies Lab"),}
 }
 
 
