@@ -1,4 +1,6 @@
 import os
-CURRENT_TERM = os.environ['CURRENT_TERM']  # e.g. 16S
+CURRENT_TERM = os.environ["CURRENT_TERM"]  # e.g. 16S
 SUPPORT_EMAIL = "support@layuplist.com"
 REC_UPVOTE_REQ = 2
+OFFERINGS_THRESHOLD_FOR_TERM_UPDATE = int(
+    os.environ["OFFERINGS_THRESHOLD_FOR_TERM_UPDATE"])

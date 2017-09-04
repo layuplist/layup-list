@@ -65,7 +65,7 @@ def _get_analytics_email_context(lookback):
 def possibly_request_term_update():
     next_term = terms.get_next_term(constants.CURRENT_TERM)
     next_term_count = CourseOffering.objects.filter(term=next_term).count()
-    if next_term_count:
+    if next_term_count >= constants.OFFERINGS_THRESHOLD_FOR_TERM_UPDATE:
         send_mail(
             'Term may be out of date ({} offerings with term {})'.format(
                 next_term_count, next_term),
