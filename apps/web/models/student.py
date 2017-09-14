@@ -20,7 +20,7 @@ class StudentManager(models.Manager):
         return (
             domain == "dartmouth.edu" and
             len(year) == 2 and
-            (year.isdigit() or year.lower() == "ug")
+            (year.isdigit() or year.lower() == "ug" or year.lower() == "gr")
         )
 
 

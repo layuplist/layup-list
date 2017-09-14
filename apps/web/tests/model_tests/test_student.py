@@ -34,6 +34,12 @@ class StudentTestCase(TestCase):
                 'layuplist.UG@dartmouth.edu')
         )
 
+    def test_is_valid_dartmouth_student_email_allows_grad(self):
+        self.assertTrue(Student.objects.is_valid_dartmouth_student_email(
+            'layuplist.GR@dartmouth.edu'))
+        self.assertTrue(Student.objects.is_valid_dartmouth_student_email(
+            'layuplist.gr@dartmouth.edu'))
+
     def test_is_valid_dartmouth_student_email_forbids_alum(self):
         self.assertFalse(
             Student.objects.is_valid_dartmouth_student_email(
