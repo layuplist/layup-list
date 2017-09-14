@@ -117,6 +117,10 @@ def confirmation(request):
         return render(request, 'confirmation.html', {
             'already_confirmed': False
         })
+    else:
+        return render(request, 'confirmation.html', {
+            'error': 'Please provide confirmation code.'
+        })
 
 
 @require_safe
