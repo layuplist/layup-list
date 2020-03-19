@@ -5,10 +5,22 @@ from lib import constants
 from lib.terms import is_valid_term
 
 REVIEW_MINIMUM_LENGTH = 100
-
+REVIEW_MAXIMUM_WORDS = 200
 
 class ReviewForm(forms.ModelForm):
 
+    def get_word_count(string): # Finds word count of given string.
+        words = 1    
+        for i in range(len(string)):
+            if string[i] == " ":
+                if string[i-1] != " " and string[i-1] != ")":
+                    words += 1
+
+            elif string[i] == "-":
+                if string[i-1] != "-":
+                    words += 1
+        return words
+    
     def clean_term(self):
         term = self.cleaned_data['term'].upper()
         if is_valid_term(term):
@@ -39,7 +51,14 @@ class ReviewForm(forms.ModelForm):
                     REVIEW_MINIMUM_LENGTH
                 )
             )
-
+        
+        if get_word_count(review) > REVIEW_MAXIMUM_WORDS: # Check if review has > 200 words
+            raise ValidationError(
+                "Please limit your review to at most {} 250".format(
+                    REVIEW_MAXIMUM_WORDS
+                )
+            )
+        
         return review
 
     class Meta:
