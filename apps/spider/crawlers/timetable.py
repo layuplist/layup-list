@@ -51,7 +51,7 @@ def crawl_timetable(term):
         preprocess=lambda x: re.sub("</tr>", "", x),
     )
     num_columns = len(soup.find(class_="data-table").find_all("th"))
-    assert num_columns == 18
+    assert num_columns == 19
 
     tds = soup.find(class_="data-table").find_all("td")
     assert len(tds) % num_columns == 0
