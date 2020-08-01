@@ -22,10 +22,10 @@ TIMETABLE_URL = (
 
 DATA_TO_SEND = (
     "distribradio=alldistribs&depts=no_value&periods=no_value&"
-    "distribs=no_value&distribs_i=no_value&distribs_wc=no_value&pmode=public&"
+    "distribs=no_value&distribs_i=no_value&distribs_wc=no_value&deliverymodes=no_value&pmode=public&"
     "term=&levl=&fys=n&wrt=n&pe=n&review=n&crnl=no_value&classyear=2008&"
     "searchtype=Subject+Area%28s%29&termradio=selectterms&terms=no_value&"
-    "subjectradio=selectsubjects&hoursradio=allhours&sortorder=dept"
+    "deliveryradio=selectdelivery&subjectradio=selectsubjects&hoursradio=allhours&sortorder=dept"
     "&terms={term}"
 )
 
