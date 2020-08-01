@@ -1,3 +1,3 @@
-. ~/.bashrc
-export PS1="(ll) $PS1"
+. ~/.zshrc
+export PS1="(layup-list) $PS1"
 source venv/bin/activate
