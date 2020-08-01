@@ -10,9 +10,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/manage.py",
       "args": [
-        "runserver",
-        "collectstatic",
-        "--noreload"
+        "collectstatic"
       ],
       "django": true
     }
