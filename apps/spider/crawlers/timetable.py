@@ -51,7 +51,7 @@ def crawl_timetable(term):
         preprocess=lambda x: re.sub("</tr>", "", x),
     )
     num_columns = len(soup.find(class_="data-table").find_all("th"))
-    assert num_columns == 19
+    assert num_columns == 20
 
     tds = soup.find(class_="data-table").find_all("td")
     assert len(tds) % num_columns == 0
@@ -76,14 +76,14 @@ def crawl_timetable(term):
                 'ascii', 'ignore').decode('ascii'),
             "crosslisted": crosslisted_courses,
             "period": tds[8].get_text(strip=True),
-            "room": tds[9].get_text(strip=True),
-            "building": tds[10].get_text(strip=True),
-            "instructor": _parse_instructors(tds[11].get_text(strip=True)),
-            "world_culture": tds[12].get_text(strip=True),
-            "distribs": _parse_distribs(tds[13].get_text(strip=True)),
-            "limit": int_or_none(tds[14].get_text(strip=True)),
-            # "enrollment": int_or_none(tds[15].get_text(strip=True)),
-            "status": tds[16].get_text(strip=True),
+            "room": tds[10].get_text(strip=True),
+            "building": tds[11].get_text(strip=True),
+            "instructor": _parse_instructors(tds[12].get_text(strip=True)),
+            "world_culture": tds[13].get_text(strip=True),
+            "distribs": _parse_distribs(tds[14].get_text(strip=True)),
+            "limit": int_or_none(tds[15].get_text(strip=True)),
+            # "enrollment": int_or_none(tds[16].get_text(strip=True)),
+            "status": tds[17].get_text(strip=True),
         })
     return course_data
 
