@@ -9,9 +9,9 @@ from apps.spider.utils import (
     retrieve_soup
 )
 
-MEDIAN_PAGE_INDEX_URL = "http://www.dartmouth.edu/~reg/transcript/medians/"
+MEDIAN_PAGE_INDEX_URL = "http://www.dartmouth.edu/reg/transcript/medians/"
 MEDIANS_URL_FMT = (
-    "http://www.dartmouth.edu/~reg/transcript/medians/{term}.html")
+    "http://www.dartmouth.edu/reg/transcript/medians/{term}.html")
 
 
 def get_term_from_median_page_url(url):
@@ -33,7 +33,7 @@ def _retrieve_term_medians_urls_from_soup(soup):
 
 def _is_term_page_url(url):
     term = get_term_from_median_page_url(url)
-    return url == "/~reg/transcript/medians/{term}.html".format(term=term)
+    return url == "/reg/transcript/medians/{term}.html".format(term=term)
 
 
 def crawl_term_medians_for_url(url):
