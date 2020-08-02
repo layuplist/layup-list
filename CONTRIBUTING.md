@@ -34,6 +34,7 @@ Local Setup (macOS or OS X)
 * Run `source ./scripts/dev/environment.sh` to set up the heroku development environment.
 * Run `source ./scripts/dev/virtualize.sh` to activate the virtual environment.
 * Install Python dependencies using `pip install -r requirements.txt`.
+* Initialize the database with `python manage.py migrate`.
 
 Developing
 ----------
