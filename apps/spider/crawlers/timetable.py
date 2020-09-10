@@ -17,6 +17,7 @@ from apps.spider.utils import (
 from lib.terms import split_term
 from lib.constants import CURRENT_TERM
 
+
 TIMETABLE_URL = (
     "http://oracle-www.dartmouth.edu/dart/groucho/timetable.display_courses")
 
@@ -28,6 +29,8 @@ DATA_TO_SEND = (
     "subjectradio=selectsubjects&hoursradio=allhours&sortorder=dept"
     "&terms={term}"
 )
+
+COURSE_TITLE_REGEX = re.compile("(.*?)(?:\s\(((?:Remote|On Campus|Individualized)[^\)]*)\))?(\(.*\))?$");
 
 
 def crawl_timetable(term):
@@ -64,6 +67,9 @@ def crawl_timetable(term):
         crosslisted_courses = _parse_crosslisted_courses(
             tds[7].get_text(strip=True))
 
+        title_match = COURSE_TITLE_REGEX.match(tds[5].get_text(strip=True)
+            .encode('ascii', 'ignore').decode('ascii'))
+
         course_data.append({
             "term": _convert_timetable_term_to_term(
                 tds[0].get_text(strip=True)),
@@ -72,8 +78,8 @@ def crawl_timetable(term):
             "number": number,
             "subnumber": subnumber,
             "section": int(tds[4].get_text(strip=True)),
-            "title": tds[5].get_text(strip=True).encode(
-                'ascii', 'ignore').decode('ascii'),
+            "title": title_match.group(1),
+            "delivery_mode": title_match.group(2),
             "crosslisted": crosslisted_courses,
             "period": tds[8].get_text(strip=True),
             "room": tds[9].get_text(strip=True),
