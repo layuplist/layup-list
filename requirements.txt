@@ -6,7 +6,7 @@ billiard==3.5.0.2
 celery==4.0.1
 decorator==4.0.10
 dj-database-url==0.4.1
-Django==1.10.4
+Django==1.11.29
 django-celery-beat==1.0.1
 django-celery-results==1.0.1
 django-compat==1.0.13
