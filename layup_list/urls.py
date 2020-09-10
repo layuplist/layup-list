@@ -17,6 +17,7 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 import django.contrib.auth.views as authviews
+
 from apps.web import views
 from apps.analytics import views as aviews
 from apps.recommendations import views as rviews

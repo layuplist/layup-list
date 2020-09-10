@@ -6,7 +6,7 @@ import sys
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = os.environ['DEBUG'] == "True"
-ALLOWED_HOSTS = ['.layuplist.com'] if not DEBUG else []
+ALLOWED_HOSTS = ['.layuplist.com'] if not DEBUG else ['0.0.0.0']
 AUTO_IMPORT_CRAWLED_DATA = os.environ.get('AUTO_IMPORT_CRAWLED_DATA') == "True"
 
 INSTALLED_APPS = [
@@ -161,7 +161,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.'
                 'NumericPasswordValidator',
     },
-]
+] if not DEBUG else []
 
 
 if not DEBUG:
