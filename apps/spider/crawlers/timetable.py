@@ -30,7 +30,8 @@ DATA_TO_SEND = (
     "&terms={term}"
 )
 
-COURSE_TITLE_REGEX = re.compile("(.*?)(?:\s\(((?:Remote|On Campus|Individualized)[^\)]*)\))?(\(.*\))?$");
+COURSE_TITLE_REGEX = re.compile(
+    "(.*?)(?:\s\(((?:Remote|On Campus|Individualized)[^\)]*)\))?(\(.*\))?$")
 
 
 def crawl_timetable(term):
@@ -70,6 +71,10 @@ def crawl_timetable(term):
         title_match = COURSE_TITLE_REGEX.match(tds[5].get_text(strip=True)
             .encode('ascii', 'ignore').decode('ascii'))
 
+        title = title_match.group(1)
+        if title_match.group(3):
+            title += " " + title_match.group(3)
+
         course_data.append({
             "term": _convert_timetable_term_to_term(
                 tds[0].get_text(strip=True)),
@@ -78,7 +83,7 @@ def crawl_timetable(term):
             "number": number,
             "subnumber": subnumber,
             "section": int(tds[4].get_text(strip=True)),
-            "title": title_match.group(1),
+            "title": title,
             "delivery_mode": title_match.group(2),
             "crosslisted": crosslisted_courses,
             "period": tds[8].get_text(strip=True),
