@@ -1,4 +1,5 @@
 import sys
+import datetime
 from django.shortcuts import render, redirect
 from django.conf import settings
 from django.views.decorators.http import require_safe, require_POST
@@ -36,15 +37,8 @@ from lib import constants
 
 import uuid
 from google.cloud import pubsub_v1
-from google.auth import jwt
 
-serviceAccount = json.load(open('course-activity-service-account.json'))
-audience = 'https://pubsub.googleapis.com/google.pubsub.v1.Publisher'
-credentials = jwt.Credentials.from_service_account_info(
-    serviceAccount,
-    audience = audience
-)
-pub_sub_publisher = pubsub_v1.PublisherClient(credentials = credentials)
+pub_sub_publisher = pubsub_v1.PublisherClient()
 topic_paths = {
     'course-views': publisher.topic_path(os.environ['GCLOUD_PROJECT_ID'], 'course-views').
 }
@@ -63,6 +57,15 @@ def get_session_id(request):
             request.session['userID'] = request.user.username
     return request.session['userID']
 
+
+def get_prior_course_id(request, current_course_id):
+    if 'priorCourseID' not in request.session:
+        request.session['priorCourseID'] = current_course_id
+        return 'null'
+    else:
+        prior_course_id = request.session['priorCourseID']
+        request.session['priorCourseID'] = current_course_id
+        return prior_course_id
 
 @require_safe
 def landing(request):
@@ -204,7 +207,11 @@ def current_term(request, sort):
 def course_detail(request, course_id):
     try:
         course = Course.objects.get(pk=course_id)
-        publisher.publish(topic_paths['course-views'], courseID=course_id, previousCourseID='', userID=get_session_id(request))
+        result = publisher.publish(topic_paths['course-views'], courseID=course_id, priorCourseID=get_prior_course_id(request), userID=get_session_id(request), timestamp=datetime.datetime.utcnow().isoformat())
+        try:
+            result.result()
+        except:
+            print('Error publishing view activity for ', course_id)
     except Course.DoesNotExist:
         return HttpResponseNotFound('<h1>Page not found</h1>')
 
