@@ -34,15 +34,21 @@ from lib.terms import numeric_value_of_term
 from lib.departments import get_department_name
 from lib import constants
 
-LIMITS = {
-    "courses": 20,
-    "reviews": 5,
-    "unauthenticated_review_search": 3,
+import uuid
+from google.cloud import pubsub_v1
+
+pub_sub_publisher = pubsub_v1.PublisherClient()
+topic_paths = {
+    'course-views': publisher.topic_path(os.environ['GCLOUD_PROJECT_ID'], 'course-views').
 }
 
-import uuid
+LIMITS = {
+    'courses': 20,
+    'reviews': 5,
+    'unauthenticated_review_search': 3,
+}
 
-def getSessionID(request):
+def get_session_id(request):
     if 'userID' not in request.session:
         if not request.user.is_authenticated():
             request.session['userID'] = uuid.uuid4().hex
@@ -50,14 +56,14 @@ def getSessionID(request):
             request.session['userID'] = request.user.username
     return request.session['userID']
 
+
 @require_safe
 def landing(request):
     return render(request, 'landing.html', {
         'page_javascript': 'LayupList.Web.Landing()',
-        'review_count': Review.objects.count(),
-        'request_user': str(request.user.username) if request.user.is_authenticated() else 'not auth',
-        'session': getSessionID(request)
+        'review_count': Review.objects.count()
     })
+
 
 def signup(request):
     if request.method == 'POST':
@@ -66,10 +72,10 @@ def signup(request):
             form.save_and_send_confirmation(request)
             return render(request, 'instructions.html')
         else:
-            return render(request, 'signup.html', {"form": form})
+            return render(request, 'signup.html', {'form': form})
 
     else:
-        return render(request, 'signup.html', {"form": SignupForm()})
+        return render(request, 'signup.html', {'form': SignupForm()})
 
 
 def auth_login(request):
@@ -191,6 +197,7 @@ def current_term(request, sort):
 def course_detail(request, course_id):
     try:
         course = Course.objects.get(pk=course_id)
+
     except Course.DoesNotExist:
         return HttpResponseNotFound('<h1>Page not found</h1>')
 
