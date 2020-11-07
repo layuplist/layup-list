@@ -40,14 +40,24 @@ LIMITS = {
     "unauthenticated_review_search": 3,
 }
 
+import uuid
+
+def getSessionID(request):
+    if 'userID' not in request.session:
+        if not request.user.is_authenticated():
+            request.session['userID'] = uuid.uuid4().hex
+        else:
+            request.session['userID'] = request.user.username
+    return request.session['userID']
 
 @require_safe
 def landing(request):
     return render(request, 'landing.html', {
         'page_javascript': 'LayupList.Web.Landing()',
         'review_count': Review.objects.count(),
+        'request_user': str(request.user.username) if request.user.is_authenticated() else 'not auth',
+        'session': getSessionID(request)
     })
-
 
 def signup(request):
     if request.method == 'POST':
@@ -72,6 +82,7 @@ def auth_login(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
+                request.session['userID'] = user.username
                 return redirect(next_url)
             else:
                 return render(request, 'login.html', {
@@ -92,6 +103,7 @@ def auth_login(request):
 @login_required
 def auth_logout(request):
     logout(request)
+    request.session['userID'] = uuid.uuid4().hex
     return render(request, 'logout.html')
 
 
