@@ -36,8 +36,15 @@ from lib import constants
 
 import uuid
 from google.cloud import pubsub_v1
+from google.auth import jwt
 
-pub_sub_publisher = pubsub_v1.PublisherClient()
+serviceAccount = json.load(open('course-activity-service-account.json'))
+audience = 'https://pubsub.googleapis.com/google.pubsub.v1.Publisher'
+credentials = jwt.Credentials.from_service_account_info(
+    serviceAccount,
+    audience = audience
+)
+pub_sub_publisher = pubsub_v1.PublisherClient(credentials = credentials)
 topic_paths = {
     'course-views': publisher.topic_path(os.environ['GCLOUD_PROJECT_ID'], 'course-views').
 }
@@ -197,7 +204,7 @@ def current_term(request, sort):
 def course_detail(request, course_id):
     try:
         course = Course.objects.get(pk=course_id)
-
+        publisher.publish(topic_paths['course-views'], courseID=course_id, previousCourseID='', userID=get_session_id(request))
     except Course.DoesNotExist:
         return HttpResponseNotFound('<h1>Page not found</h1>')
 
