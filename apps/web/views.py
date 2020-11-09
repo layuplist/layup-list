@@ -1,4 +1,7 @@
+import os
 import sys
+import datetime
+import dateutil.parser
 from django.shortcuts import render, redirect
 from django.conf import settings
 from django.views.decorators.http import require_safe, require_POST
@@ -34,18 +37,44 @@ from lib.terms import numeric_value_of_term
 from lib.departments import get_department_name
 from lib import constants
 
-LIMITS = {
-    "courses": 20,
-    "reviews": 5,
-    "unauthenticated_review_search": 3,
+import uuid
+from google.cloud import pubsub_v1
+
+pub_sub_publisher = pubsub_v1.PublisherClient()
+topic_paths = {
+    'course-views': pub_sub_publisher.topic_path(os.environ['GCLOUD_PROJECT_ID'], 'course-views')
 }
 
+LIMITS = {
+    'courses': 20,
+    'reviews': 5,
+    'unauthenticated_review_search': 3,
+}
+
+def get_session_id(request):
+    if 'user_id' not in request.session:
+        if not request.user.is_authenticated():
+            request.session['user_id'] = uuid.uuid4().hex
+        else:
+            request.session['user_id'] = request.user.username
+    return request.session['user_id']
+
+
+def get_prior_course_id(request, current_course_id):
+    prior_course_id = None
+    if 'prior_course_id' in request.session and 'prior_course_timestamp' in request.session:
+        prior_course_timestamp = request.session['prior_course_timestamp']
+        if dateutil.parser.parse(prior_course_timestamp) + datetime.timedelta(seconds=15) >= datetime.datetime.now():
+            prior_course_id = request.session['prior_course_id']
+    request.session['prior_course_id'] = current_course_id
+    request.session['prior_course_timestamp'] = datetime.datetime.now().isoformat()
+    return prior_course_id
 
 @require_safe
 def landing(request):
     return render(request, 'landing.html', {
         'page_javascript': 'LayupList.Web.Landing()',
-        'review_count': Review.objects.count(),
+        'review_count': Review.objects.count()
     })
 
 
@@ -56,10 +85,10 @@ def signup(request):
             form.save_and_send_confirmation(request)
             return render(request, 'instructions.html')
         else:
-            return render(request, 'signup.html', {"form": form})
+            return render(request, 'signup.html', {'form': form})
 
     else:
-        return render(request, 'signup.html', {"form": SignupForm()})
+        return render(request, 'signup.html', {'form': SignupForm()})
 
 
 def auth_login(request):
@@ -72,6 +101,12 @@ def auth_login(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
+                if 'user_id' in request.session:
+                    student = Student.objects.get(user=user)
+                    student.unauth_session_ids.append(request.session['user_id'])
+                    student.save()
+                request.session['user_id'] = user.username
+
                 return redirect(next_url)
             else:
                 return render(request, 'login.html', {
@@ -92,6 +127,7 @@ def auth_login(request):
 @login_required
 def auth_logout(request):
     logout(request)
+    request.session['userID'] = uuid.uuid4().hex
     return render(request, 'logout.html')
 
 
@@ -179,6 +215,15 @@ def current_term(request, sort):
 def course_detail(request, course_id):
     try:
         course = Course.objects.get(pk=course_id)
+        prior_course_id = get_prior_course_id(request, course_id)
+        if prior_course_id is not None:
+            result = pub_sub_publisher.publish(topic_paths['course-views'], b'', courseID=course_id, priorCourseID=prior_course_id, userID=get_session_id(request), timestamp=datetime.datetime.utcnow().isoformat())
+        else:
+            result = pub_sub_publisher.publish(topic_paths['course-views'], b'', courseID=course_id, userID=get_session_id(request), timestamp=datetime.datetime.utcnow().isoformat())
+        try:
+            result.result()
+        except:
+            print('Error publishing view activity for ', course_id)
     except Course.DoesNotExist:
         return HttpResponseNotFound('<h1>Page not found</h1>')
 
