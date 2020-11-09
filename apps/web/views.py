@@ -1,5 +1,7 @@
+import os
 import sys
 import datetime
+import dateutil.parser
 from django.shortcuts import render, redirect
 from django.conf import settings
 from django.views.decorators.http import require_safe, require_POST
@@ -40,7 +42,7 @@ from google.cloud import pubsub_v1
 
 pub_sub_publisher = pubsub_v1.PublisherClient()
 topic_paths = {
-    'course-views': publisher.topic_path(os.environ['GCLOUD_PROJECT_ID'], 'course-views').
+    'course-views': pub_sub_publisher.topic_path(os.environ['GCLOUD_PROJECT_ID'], 'course-views')
 }
 
 LIMITS = {
@@ -50,22 +52,23 @@ LIMITS = {
 }
 
 def get_session_id(request):
-    if 'userID' not in request.session:
+    if 'user_id' not in request.session:
         if not request.user.is_authenticated():
-            request.session['userID'] = uuid.uuid4().hex
+            request.session['user_id'] = uuid.uuid4().hex
         else:
-            request.session['userID'] = request.user.username
-    return request.session['userID']
+            request.session['user_id'] = request.user.username
+    return request.session['user_id']
 
 
 def get_prior_course_id(request, current_course_id):
-    if 'priorCourseID' not in request.session:
-        request.session['priorCourseID'] = current_course_id
-        return 'null'
-    else:
-        prior_course_id = request.session['priorCourseID']
-        request.session['priorCourseID'] = current_course_id
-        return prior_course_id
+    prior_course_id = None
+    if 'prior_course_id' in request.session and 'prior_course_timestamp' in request.session:
+        prior_course_timestamp = request.session['prior_course_timestamp']
+        if dateutil.parser.parse(prior_course_timestamp) + datetime.timedelta(seconds=15) >= datetime.datetime.now():
+            prior_course_id = request.session['prior_course_id']
+    request.session['prior_course_id'] = current_course_id
+    request.session['prior_course_timestamp'] = datetime.datetime.now().isoformat()
+    return prior_course_id
 
 @require_safe
 def landing(request):
@@ -207,7 +210,11 @@ def current_term(request, sort):
 def course_detail(request, course_id):
     try:
         course = Course.objects.get(pk=course_id)
-        result = publisher.publish(topic_paths['course-views'], courseID=course_id, priorCourseID=get_prior_course_id(request), userID=get_session_id(request), timestamp=datetime.datetime.utcnow().isoformat())
+        prior_course_id = get_prior_course_id(request, course_id)
+        if prior_course_id is not None:
+            result = pub_sub_publisher.publish(topic_paths['course-views'], b'', courseID=course_id, priorCourseID=prior_course_id, userID=get_session_id(request), timestamp=datetime.datetime.utcnow().isoformat())
+        else:
+            result = pub_sub_publisher.publish(topic_paths['course-views'], b'', courseID=course_id, userID=get_session_id(request), timestamp=datetime.datetime.utcnow().isoformat())
         try:
             result.result()
         except:
