@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.mail import send_mail
@@ -34,6 +35,8 @@ class Student(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    unauth_session_ids = ArrayField(base_field=models.CharField(max_length=32, unique=True), default=list())
 
     def send_confirmation_link(self, request):
         full_link = request.build_absolute_uri(

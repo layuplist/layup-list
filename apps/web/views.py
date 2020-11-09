@@ -101,7 +101,12 @@ def auth_login(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                request.session['userID'] = user.username
+                if 'user_id' in request.session:
+                    student = Student.objects.get(user=user)
+                    student.unauth_session_ids.append(request.session['user_id'])
+                    student.save()
+                request.session['user_id'] = user.username
+
                 return redirect(next_url)
             else:
                 return render(request, 'login.html', {
