@@ -1,1 +1,1 @@
-echo 'yes' | python manage.py collectstatic; forego start;
+forego start
