@@ -217,9 +217,9 @@ def course_detail(request, course_id):
         course = Course.objects.get(pk=course_id)
         prior_course_id = get_prior_course_id(request, course_id)
         if prior_course_id is not None:
-            result = pub_sub_publisher.publish(topic_paths['course-views'], b'', courseID=course_id, priorCourseID=prior_course_id, userID=get_session_id(request), timestamp=datetime.datetime.utcnow().isoformat())
+            result = pub_sub_publisher.publish(topic_paths['course-views'], b'', courseID=course_id, priorCourseID=prior_course_id, userID=get_session_id(request), timestamp=datetime.datetime.utcnow().isoformat(), source='ll', dataVersion='1')
         else:
-            result = pub_sub_publisher.publish(topic_paths['course-views'], b'', courseID=course_id, userID=get_session_id(request), timestamp=datetime.datetime.utcnow().isoformat())
+            result = pub_sub_publisher.publish(topic_paths['course-views'], b'', courseID=course_id, userID=get_session_id(request), timestamp=datetime.datetime.utcnow().isoformat(), source='ll', dataVersion='1')
         try:
             result.result()
         except:
