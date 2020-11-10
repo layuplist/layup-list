@@ -74,3 +74,4 @@ node_modules
 
 # node version compabilities
 .nvmrc
+master-service-account.json
