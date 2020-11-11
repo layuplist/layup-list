@@ -64,7 +64,7 @@ def get_prior_course_id(request, current_course_id):
     prior_course_id = None
     if 'prior_course_id' in request.session and 'prior_course_timestamp' in request.session:
         prior_course_timestamp = request.session['prior_course_timestamp']
-        if dateutil.parser.parse(prior_course_timestamp) + datetime.timedelta(seconds=15) >= datetime.datetime.now():
+        if dateutil.parser.parse(prior_course_timestamp) + datetime.timedelta(minutes=10) >= datetime.datetime.now():
             prior_course_id = request.session['prior_course_id']
     request.session['prior_course_id'] = current_course_id
     request.session['prior_course_timestamp'] = datetime.datetime.now().isoformat()
