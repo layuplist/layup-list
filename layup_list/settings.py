@@ -6,7 +6,7 @@ import sys
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = os.environ['DEBUG'] == "True"
-ALLOWED_HOSTS = ['.layuplist.com'] if not DEBUG else ['0.0.0.0', 'localhost']
+ALLOWED_HOSTS = ['ll-prod.herokuapp.com', '.layuplist.com'] if not DEBUG else ['0.0.0.0', 'localhost']
 AUTO_IMPORT_CRAWLED_DATA = os.environ.get('AUTO_IMPORT_CRAWLED_DATA') == "True"
 
 INSTALLED_APPS = [
