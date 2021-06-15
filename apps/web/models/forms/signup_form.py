@@ -6,6 +6,8 @@ from django.db import transaction
 from django.db.models import Q
 from apps.web.models import Student
 
+import logging
+logger = logging.getLogger('layuplist.web')
 
 class SignupForm(forms.Form):
     """
@@ -62,17 +64,23 @@ class SignupForm(forms.Form):
 
     @transaction.atomic()
     def save_and_send_confirmation(self, request):
+        logger.debug('begin saving user')
         new_user = User.objects.create_user(
             username=self.cleaned_data["email"].split("@")[0],
             email=self.cleaned_data["email"],
             password=self.cleaned_data["password1"],
             is_active=False
         )
+        logger.debug('created user object instance')
 
         new_student = Student.objects.create(
             user=new_user,
             confirmation_link=User.objects.make_random_password(length=16)
         )
+        logger.debug('created student object instance')
+
         new_student.send_confirmation_link(request)
+
+        logger.debug('sent email')
 
         return new_user

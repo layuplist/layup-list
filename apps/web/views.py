@@ -37,12 +37,16 @@ from lib.terms import numeric_value_of_term
 from lib.departments import get_department_name
 from lib import constants
 
+import logging
+
 import uuid
 from google.cloud import pubsub_v1
 
+logger = logging.getLogger('layuplist.web')
+
 pub_sub_publisher = pubsub_v1.PublisherClient()
 topic_paths = {
-    'course-views': pub_sub_publisher.topic_path(os.environ['GCLOUD_PROJECT_ID'], 'course-views')
+    'course-views': pub_sub_publisher.topic_path('d-planner-data', 'course-views')
 }
 
 LIMITS = {
@@ -79,15 +83,21 @@ def landing(request):
 
 
 def signup(request):
+    logger.debug('signup request')
     if request.method == 'POST':
+        logger.debug('post request')
         form = SignupForm(request.POST)
+        logger.debug('grabbed signup form', form)
         if form.is_valid():
+            logger.debug('form is valid')
             form.save_and_send_confirmation(request)
+            logger.debug('form saved')
             return render(request, 'instructions.html')
         else:
+            logger.debug('form is not valid')
             return render(request, 'signup.html', {'form': form})
-
     else:
+        logger.debug('not post request')
         return render(request, 'signup.html', {'form': SignupForm()})
 
 

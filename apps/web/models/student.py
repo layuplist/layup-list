@@ -9,6 +9,8 @@ from django.conf import settings
 from apps.web.models import Review, Vote
 from lib import constants
 
+import logging
+logger = logging.getLogger('layuplist.web')
 
 class StudentManager(models.Manager):
 
@@ -39,8 +41,10 @@ class Student(models.Model):
     unauth_session_ids = ArrayField(base_field=models.CharField(max_length=32, unique=True), default=list())
 
     def send_confirmation_link(self, request):
+        logger.debug('sending email')
         full_link = request.build_absolute_uri(
             reverse('confirmation')) + '?link=' + self.confirmation_link
+        logger.debug('build link', full_link)
         if not settings.DEBUG:
             send_mail(
                 'Your confirmation link',
