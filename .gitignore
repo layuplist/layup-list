@@ -75,3 +75,5 @@ node_modules
 # node version compabilities
 .nvmrc
 course-activity-service-account.json
+apps/web/Layup-List.code-workspace
+.vscode/
