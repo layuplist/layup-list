@@ -12,7 +12,8 @@ tasks:
       nvm use 0.12.7
       npm install -g yuglify
       brew install forego
-      pip install virtualenv
+      pyenv install 2.7.16
+      pip2.7 install virtualenv
       virtualenv venv --python=python2.7
       createdb layuplist
       source ./scripts/dev/environment.sh
