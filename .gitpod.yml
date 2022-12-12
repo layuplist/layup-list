@@ -1,10 +1,12 @@
 # the gitpod-provided dockerfile provides the deafult gitpod environment with the addition of Postgres
+image:
+  file: .gitpod.dockerfile
+
 tasks:
   - name: LL terminal
     init: |
       brew tap heroku/brew
       brew install heroku
-      brew install postgres
       brew install redis
       npm install -g yuglify
       brew install forego
@@ -19,10 +21,6 @@ ports:
     onOpen: open-preview
     name: website
     description: Website Preview
-  - port: 5432
-    onOpen: ignore
-    name: db
-    description: Postgres Database
 
 
 
