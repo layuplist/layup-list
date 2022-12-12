@@ -4,20 +4,22 @@ image:
 
 tasks:
   - name: LL terminal
-    init: |
-      brew tap heroku/brew
-      brew install heroku
+    before: |
+      brew tap heroku/brew && brew install heroku
       brew install redis
       npm install -g yuglify
       brew install forego
       pyenv install 2.7.16
       pip2.7 install virtualenv
-      virtualenv venv --python=python2.7
       createdb layuplist
+    init: |
+      virtualenv venv --python=python2.7
+    command: |
+
 
 
 ports:
-  - port: 3000
+  - port: 5000
     onOpen: open-preview
     name: website
     description: Website Preview
