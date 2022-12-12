@@ -1,3 +1,4 @@
+# the gitpod-provided dockerfile provides the deafult gitpod environment with the addition of Postgres
 
 image:
   file: .gitpod.dockerfile
@@ -19,13 +20,13 @@ tasks:
       source ./scripts/dev/virtualize.sh
       pip2.7 install -r requirements.txt
       python manage.py migrate
-    command: |
-      source ./scripts/dev/environment.sh
-      source ./scripts/dev/virtualize.sh
-      redis-server
-      pg_start
-      python manage.py collectstatic
-      forego start
+    # command: |
+    #   source ./scripts/dev/environment.sh
+    #   source ./scripts/dev/virtualize.sh
+    #   redis-server
+    #   pg_start
+    #   python manage.py collectstatic
+    #   forego start
 
 
 ports:
