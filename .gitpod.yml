@@ -4,7 +4,8 @@ image:
   file: .gitpod.dockerfile
 
 tasks:
-  - init: |
+  - name: LL terminal
+    init: |
       brew tap heroku/brew
       brew install heroku
       brew install redis
