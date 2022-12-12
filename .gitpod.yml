@@ -16,10 +16,10 @@ tasks:
       pip2.7 install virtualenv
       virtualenv venv --python=python2.7
       createdb layuplist
-      source ./scripts/dev/environment.sh
-      source ./scripts/dev/virtualize.sh
-      pip2.7 install -r requirements.txt
-      python manage.py migrate
+    # source ./scripts/dev/environment.sh
+    # source ./scripts/dev/virtualize.sh
+    # pip2.7 install -r requirements.txt
+    # python manage.py migrate
     # command: |
     #   source ./scripts/dev/environment.sh
     #   source ./scripts/dev/virtualize.sh
