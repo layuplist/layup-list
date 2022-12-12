@@ -1,23 +1,17 @@
 # the gitpod-provided dockerfile provides the deafult gitpod environment with the addition of Postgres
-
-image:
-  file: .gitpod.dockerfile
-
 tasks:
   - name: LL terminal
     init: |
       brew tap heroku/brew
       brew install heroku
+      brew install postgres
       brew install redis
-      nvm install 0.12.7
       npm install -g yuglify
       brew install forego
       pyenv install 2.7.16
       pip2.7 install virtualenv
       virtualenv venv --python=python2.7
       createdb layuplist
-    command: |
-      nvm use 0.12.7
 
 
 ports:
@@ -35,3 +29,4 @@ ports:
 vscode:
   extensions:
     - ms-python.python
+    - eamodio.gitlens
