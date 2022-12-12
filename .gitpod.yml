@@ -10,31 +10,26 @@ tasks:
       brew install heroku
       brew install redis
       nvm install 0.12.7
-      nvm use 0.12.7
       npm install -g yuglify
       brew install forego
       pyenv install 2.7.16
       pip2.7 install virtualenv
       virtualenv venv --python=python2.7
       createdb layuplist
-    # source ./scripts/dev/environment.sh
-    # source ./scripts/dev/virtualize.sh
-    # pip2.7 install -r requirements.txt
-    # python manage.py migrate
-    # command: |
-    #   source ./scripts/dev/environment.sh
-    #   source ./scripts/dev/virtualize.sh
-    #   redis-server
-    #   pg_start
-    #   python manage.py collectstatic
-    #   forego start
+    command: |
+      nvm use 0.12.7
 
 
 ports:
   - port: 3000
     onOpen: open-preview
-    name: Website
+    name: website
     description: Website Preview
+  - port: 5432
+    onOpen: ignore
+    name: db
+    description: Postgres Database
+
 
 
 vscode:
