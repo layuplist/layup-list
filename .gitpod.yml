@@ -10,9 +10,9 @@ tasks:
       brew tap heroku/brew && brew install heroku
       brew install redis
       brew install forego
-      pyenv install 2.7.16
       npm install -g yuglify
     init: |
+      pyenv install 2.7.16
       pip install virtualenv
       virtualenv venv --python=python2.7
       createdb layuplist
