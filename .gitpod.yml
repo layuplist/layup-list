@@ -7,15 +7,15 @@ tasks:
     before: |
       gp env > .env
       eval $(gp env -e)
-      pyenv install 2.7.16
-      npm install -g yuglify
-      createdb layuplist
-    init: |
       brew tap heroku/brew && brew install heroku
       brew install redis
       brew install forego
+      pyenv install 2.7.16
+      npm install -g yuglify
+    init: |
       pip install virtualenv
       virtualenv venv --python=python2.7
+      createdb layuplist
       source ./scripts/dev/virtualize.sh
       pip install -r requirements.txt
       python manage.py migrate
