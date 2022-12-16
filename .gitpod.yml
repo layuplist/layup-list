@@ -3,11 +3,10 @@ image:
   file: .gitpod.dockerfile
 
 tasks:
-  - name: Redis
-    command: redis-server
   - name: LL terminal
     before: |
       gp env > .env
+      eval $(gp env -e)
       pyenv install 2.7.16
       npm install -g yuglify
       createdb layuplist
@@ -17,14 +16,13 @@ tasks:
       brew install forego
       pip install virtualenv
       virtualenv venv --python=python2.7
-      source ./scripts/dev/environment.sh
       source ./scripts/dev/virtualize.sh
       pip install -r requirements.txt
       python manage.py migrate
     command: |
-      source ./scripts/dev/environment.sh
       source ./scripts/dev/virtualize.sh
       python manage.py collectstatic
+      redis-server &
       forego start
 
 
