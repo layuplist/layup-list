@@ -3,18 +3,30 @@ image:
   file: .gitpod.dockerfile
 
 tasks:
+  - name: Redis
+    command: redis-server
   - name: LL terminal
     before: |
-      brew tap heroku/brew && brew install heroku
-      brew install redis
-      npm install -g yuglify
-      brew install forego
+      gp env > .env
       pyenv install 2.7.16
-      pip2.7 install virtualenv
+      npm install -g yuglify
       createdb layuplist
     init: |
+      brew tap heroku/brew && brew install heroku
+      brew install redis
+      brew install forego
+      pip install virtualenv
       virtualenv venv --python=python2.7
+      source ./scripts/dev/environment.sh
+      source ./scripts/dev/virtualize.sh
+      pip install -r requirements.txt
+      python manage.py migrate
     command: |
+      source ./scripts/dev/environment.sh
+      source ./scripts/dev/virtualize.sh
+      python manage.py collectstatic
+      forego start
+
 
 
 
@@ -30,3 +42,20 @@ vscode:
   extensions:
     - ms-python.python
     - eamodio.gitlens
+
+github:
+  prebuilds:
+    # enable for the default branch (defaults to true)
+    master: false
+    # enable for all branches in this repo (defaults to false)
+    branches: false
+    # enable for pull requests coming from this repo (defaults to true)
+    pullRequests: false
+    # enable for pull requests coming from forks (defaults to false)
+    pullRequestsFromForks: false
+    # add a check to pull requests (defaults to true)
+    addCheck: false
+    # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
+    addComment: false
+    # add a "Review in Gitpod" button to the pull request's description (defaults to false)
+    addBadge: false
