@@ -38,12 +38,12 @@ from lib.departments import get_department_name
 from lib import constants
 
 import uuid
-# from google.cloud import pubsub_v1
+from google.cloud import pubsub_v1
 
-# pub_sub_publisher = pubsub_v1.PublisherClient()
-# topic_paths = {
-#     'course-views': pub_sub_publisher.topic_path(os.environ['GCLOUD_PROJECT_ID'], 'course-views')
-# }
+pub_sub_publisher = pubsub_v1.PublisherClient()
+topic_paths = {
+    'course-views': pub_sub_publisher.topic_path(os.environ['GCLOUD_PROJECT_ID'], 'course-views')
+}
 
 LIMITS = {
     'courses': 20,
