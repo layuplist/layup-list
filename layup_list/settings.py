@@ -176,3 +176,17 @@ SESSION_COOKIE_SECURE = not DEBUG
 CELERY_BROKER_URL = os.environ["REDIS_URL"]
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TIMEZONE = "US/Pacific"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "WARNING",
+    },
+}
