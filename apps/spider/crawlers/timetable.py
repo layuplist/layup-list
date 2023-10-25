@@ -26,8 +26,8 @@ DATA_TO_SEND = (
     "distribs=no_value&distribs_i=no_value&distribs_wc=no_value&deliverymodes=no_value&pmode=public&"
     "term=&levl=&fys=n&wrt=n&pe=n&review=n&crnl=no_value&classyear=2008&"
     "searchtype=Subject+Area%28s%29&termradio=selectterms&terms=no_value&"
-    "deliveryradio=selectdelivery&subjectradio=selectsubjects&hoursradio=allhours&sortorder=dept"
-    "&terms={term}"
+    "deliveryradio=alldelivery&subjectradio=selectsubjects&hoursradio=allhours&sortorder=dept"
+    "&distribs_lang=no_value&terms={term}"
 )
 
 COURSE_TITLE_REGEX = re.compile(
@@ -55,7 +55,7 @@ def crawl_timetable(term):
         preprocess=lambda x: re.sub("</tr>", "", x),
     )
     num_columns = len(soup.find(class_="data-table").find_all("th"))
-    assert num_columns == 20
+    assert num_columns == 21
 
     tds = soup.find(class_="data-table").find_all("td")
     assert len(tds) % num_columns == 0
@@ -92,9 +92,9 @@ def crawl_timetable(term):
             "instructor": _parse_instructors(tds[12].get_text(strip=True)),
             "world_culture": tds[13].get_text(strip=True),
             "distribs": _parse_distribs(tds[14].get_text(strip=True)),
-            "limit": int_or_none(tds[15].get_text(strip=True)),
+            "limit": int_or_none(tds[16].get_text(strip=True)),
             # "enrollment": int_or_none(tds[16].get_text(strip=True)),
-            "status": tds[17].get_text(strip=True),
+            "status": tds[18].get_text(strip=True),
         })
     return course_data
 
