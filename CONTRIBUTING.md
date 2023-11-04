@@ -6,6 +6,16 @@ To contribute code, make a pull request. Github has a great <a href="https://gui
 
 Feel free to email <a href="mailto:support@layuplist.com">support@layuplist.com</a> if you need any help.
 
+Pre-configured Development Environment (Gitpod)
+-----------------
+Layup List has a number of old dependencies and technologies and uses python 2.7.16, [which is deprecated](https://github.com/layuplist/layup-list/issues/62) as its main language. These factors can make setting up a local development for Layup List a little precarious and often frustrating.
+
+Therefore, we have set up a pre-configured development environment for new Layup List contributors using [Gitpod](https://www.gitpod.io/). Developers can make a free Gitpod account and get 50 hours of development time per month for no cost. Even better, students can receive a free upgrade to a Gitpod "personal" plan with the [Github student developer pack](https://education.github.com/pack) to get another 50 hours free.
+
+**To set up your Gitpod account to work with Layup List, see [this Wiki](https://github.com/zack-overflow/layup-list/wiki/Developing-for-Layup-List-with-Gitpod)!**
+
+If you prefer to set up your own local development environment, follow the instructions below.
+
 Local Setup (macOS or OS X)
 -----------------
 #### Installation

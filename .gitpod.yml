@@ -1,0 +1,59 @@
+# the gitpod-provided dockerfile provides the deafult gitpod environment with the addition of Postgres
+image:
+  file: .gitpod.dockerfile
+
+tasks:
+  - name: LL terminal
+    before: |
+      gp env > .env
+      eval $(gp env -e)
+      brew tap heroku/brew && brew install heroku
+      brew install redis
+      brew install forego
+      npm install -g yuglify
+    init: |
+      pyenv install 2.7.16
+      pip install virtualenv
+      virtualenv venv --python=python2.7
+      createdb layuplist
+      source ./scripts/dev/virtualize.sh
+      pip install -r requirements.txt
+      python manage.py migrate
+    command: |
+      source ./scripts/dev/virtualize.sh
+      python manage.py collectstatic
+      redis-server &
+      forego start
+
+
+
+
+ports:
+  - port: 5000
+    onOpen: open-preview
+    name: website
+    description: Website Preview
+
+
+
+vscode:
+  extensions:
+    - ms-python.python
+    - eamodio.gitlens
+
+github:
+  prebuilds:
+    # enable for the default branch (defaults to true)
+    master: false
+    # enable for all branches in this repo (defaults to false)
+    branches: false
+    # enable for pull requests coming from this repo (defaults to true)
+    pullRequests: false
+    # enable for pull requests coming from forks (defaults to false)
+    pullRequestsFromForks: false
+    # add a check to pull requests (defaults to true)
+    addCheck: false
+    # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
+    addComment: false
+    # add a "Review in Gitpod" button to the pull request's description (defaults to false)
+    addBadge: false
