@@ -12,7 +12,7 @@ chardet==3.0.4
 configparser==4.0.2
 decorator==4.0.10
 dj-database-url==0.4.1
-Django==1.11.29
+Django==2.2.24
 django-celery-beat==1.0.1
 django-celery-results==1.0.1
 django-compat==1.0.13
