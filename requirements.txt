@@ -17,7 +17,7 @@ django-celery-beat==1.0.1
 django-celery-results==1.0.1
 django-compat==1.0.13
 django-crispy-forms==1.6.1
-django-debug-toolbar==1.6
+django-debug-toolbar==1.11.1
 django-hijack==2.1.2
 django-hijack-admin==2.1.2
 django-pipeline==1.6.9
