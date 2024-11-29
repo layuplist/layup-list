@@ -6,7 +6,7 @@ backports.shutil-get-terminal-size==1.0.0
 beautifulsoup4==4.5.1
 billiard==3.5.0.2
 cachetools==3.1.1
-celery==4.0.1
+celery==5.2.2
 certifi==2020.6.20
 chardet==3.0.4
 configparser==4.0.2
