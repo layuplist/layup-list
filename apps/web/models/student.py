@@ -44,7 +44,7 @@ class Student(models.Model):
             send_mail(
                 'Your confirmation link',
                 'Please navigate to the following confirmation link: ' +
-                full_link, constants.SUPPORT_EMAIL,
+                full_link, 'contrarians@dartmouth.edu',
                 [self.user.email], fail_silently=False
             )
 
