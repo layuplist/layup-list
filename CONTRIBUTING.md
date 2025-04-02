@@ -4,7 +4,7 @@ Our <a href="https://github.com/layuplist/layup-list/issues">issues</a> page has
 
 To contribute code, make a pull request. Github has a great <a href="https://guides.github.com/activities/contributing-to-open-source/">guide</a> for how you can go about doing this.
 
-Feel free to email <a href="mailto:support@layuplist.com">support@layuplist.com</a> if you need any help.
+Feel free to email <a href="mailto:support@layuplist.org">support@layuplist.org</a> if you need any help.
 
 Local Setup (macOS or OS X)
 -----------------

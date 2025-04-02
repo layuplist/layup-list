@@ -151,7 +151,7 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = os.environ.get('EMAIL_PORT')
 EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS')
-DEFAULT_FROM_EMAIL = 'contrarians@dartmouth.edu'
+DEFAULT_FROM_EMAIL = 'support@layuplist.org'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -177,8 +177,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 if not DEBUG:
-    SERVER_EMAIL = 'support@layuplist.com'
-    ADMINS = [('Support', 'support@layuplist.com')]
+    SERVER_EMAIL = 'support@layuplist.org'
+    ADMINS = [('Support', 'support@layuplist.org')]
 
 
 SESSION_COOKIE_AGE = 3153600000  # 100 years

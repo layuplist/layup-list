@@ -8,7 +8,7 @@ Check out <a href="https://github.com/layuplist/layup-list/blob/master/CONTRIBUT
 
 Our <a href="https://github.com/layuplist/layup-list/issues">issues</a> page has some ideas for buxfixes and feature improvements (though you aren't limited to this list).
 
-Feel free to email <a href="mailto:support@layuplist.com">support@layuplist.com</a> for help.
+Feel free to email <a href="mailto:support@layuplist.org">support@layuplist.org</a> for help.
 
 Features
 --------
