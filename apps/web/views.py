@@ -399,7 +399,7 @@ def course_search(request):
     return render(request, 'course_search.html', {
         'term': constants.CURRENT_TERM,
         'query': query,
-        'department': get_department_name(query),
+        'department': get_department_name(query.upper()),
         'instructor_search': instructor_search,
         'instructor_full_name': instructor_full_name,
         'courses': courses_with_instructor_reviews,
